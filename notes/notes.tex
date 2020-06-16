@@ -30,6 +30,65 @@
     \item Beginning with code in Python, switch to C/C++ if necessary.
 \end{enumerate}
 
+\section{Tuesday, June 16}
+\begin{enumerate}
+        
+    \item Preliminary concepts to understand: 
+        \begin{enumerate}
+            \item scalar field theory on lattice
+            \item Markov chains and Monte Carlo
+            \item the gradient flow
+            \item $O(n)$ symmetry
+        \end{enumerate}
+
+    \item General components to research, executed in parallel
+        \begin{enumerate}    
+            \item Reading
+            \item Mathematical analysis
+            \item Writing code
+            \item Present (writing, plot generation,\dots)
+        \end{enumerate}
+
+    \item Things to get out of dissertation \cite{Schaich2006}
+        \begin{enumerate}
+            \item Markov chain
+            \item Cluster algorithms
+
+            \begin{enumerate}
+                \item Metropolis is a method for narrowing possibilities by accepting only some changes. It can get stuck in a local mininum, loss of ergodicity. We solve these with cluster algoriths. Wolff grows clusters probabilistically and flips, while Swenson and Yang identifies clusters and flips them probabilistically.
+
+                \item Near a phase transition, correlation length grows and changes become less likely to be accepted: need clusters. Clusters dont work far from the phase transition. This is manifested as a sequence of a few metropolis steps and a cluster step.
+            \end{enumerate}
+        \end{enumerate}
+    \item Research plan
+        \begin{enumerate}
+            \item Start with 2D $\phi^4$
+
+            \begin{enumerate}
+                \item Set up lattice with sign flip for reflection
+                \item Use Markov chain Monte Carlo to simulate.
+                \item Measure, magnetization and suseptibility, Binder cumulant
+            \end{enumerate}
+            \item Transition to 3D, then maybe transition to C/C++.
+
+            \item Implement the gradient flow
+
+            \item move to 2-3d nonlinear sigma model. 
+
+            \item Motivation: the nonlinear sigma model works for QCD given the asymtotic freedom. We may also want to explore topology.
+
+
+        \end{enumerate}
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{notes}
+
+\end{enumerate}
+
+
+
+
+
 \end{document}
 
 
