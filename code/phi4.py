@@ -1,7 +1,6 @@
 from random import randint, choices
 from colorsys import hls_to_rgb
 from copy import copy as copy
-from matplotlib import pyplot as plt
 import numpy as np
 import time
 from functools import lru_cache
@@ -75,8 +74,7 @@ class Lattice(object):
         plt.show()
 
     def magnetization(self):
-        return sum(self.data) / self.size
-
+        return sum([1 if phi==True else -1 for phi in self]) / self.size
 
 
 class RandomWalk(object):
@@ -177,3 +175,4 @@ if __name__=="__main__":
     plt.show()
 
     print(l.hamiltonian())
+
