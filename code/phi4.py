@@ -2,15 +2,23 @@ from random import randint, choices, random, seed
 from colorsys import hls_to_rgb
 from copy import copy, deepcopy
 import numpy as np
-import time
+from time import time, sleep
 from functools import lru_cache
 from matplotlib import pyplot as plt
 import sys
 import imageio
+import timeit
+from math import exp, sqrt
+
+if 'line_profiler' not in globals():
+    def profile(f):
+        return f
+
+
 
 class Lattice(object):
 
-    rel_coords = [(-1,0),(0,-1),(1,0),(0,1)]
+    rel_coords = ((-1,0),(0,-1),(1,0),(0,1))
 
     def __init__(self, m, l, data=None, dim=None):
         self._construct( m, l, data, dim)
@@ -19,9 +27,12 @@ class Lattice(object):
         self.m = m
         self.l = l
 
+        self.__redefined_mass = 4 + 1/2 * self.m
+        self.__quarter_lambda = 1/4 * self.l
+
         if data:
             self.data = data
-            self.dim = int(np.sqrt(len(data)))
+            self.dim = int(sqrt(len(data)))
             self.size = len(data)
 
         elif dim:
@@ -33,15 +44,14 @@ class Lattice(object):
             raise Exception("dim and data cannot both be None")
 
         self.sites = list(range(self.size))
-        self.energy = 0
-        for coord in range(self.size):
-            self.energy += self.site_hamiltonian(coord)
-
+        self.__lagrangian_cache = [self.lagrangian(i) for i in self.sites]
+        self.__action = sum(self.__lagrangian_cache)
         self.neighbors = lru_cache(maxsize=self.size) (self.neighbors)
+        self.__previous_state = None
 
     def _rand_init_val(self):
         # random value in [-1.5, 1.5)
-        return random() * 3 - 1.5 # EDIT
+        return random() * 3 - 1.5
 
     def __repr__(self):
         return repr(self.data)
@@ -52,15 +62,38 @@ class Lattice(object):
     def __getitem__(self, i):
         return self.data[i]
 
-    def __setitem__(self, i, val):
-        self.data[i] = val
-        self.update_energy(i)
+    def __setitem__(self, i, new_phi):
+        phi = self[i]
+        self.__previous_state = {
+                'i' : i,
+                'phi' : phi,
+                'lagrangian' : self.__lagrangian_cache[i],
+                'neighbor_lagrangians' : tuple(self.__lagrangian_cache[n] for n in self.neighbors(i)),
+                'action' : self.__action
+        }
+        dphi = new_phi - phi
+        self.data[i] = new_phi
+        self._update_action(i, dphi)
+
+    @profile
+    def revert(self):
+        if self.__previous_state is None:
+            raise Exception("Cannot revert unchanged lattice")
+        x = self.__previous_state['i']
+        self.data[x] = self.__previous_state['phi']
+        self.__lagrangian_cache[x] = self.__previous_state['lagrangian']
+        for i,n in enumerate(self.neighbors(x)):
+            self.__lagrangian_cache[n] = self.__previous_state['neighbor_lagrangians'][i]
+        self.__action = self.__previous_state['action']
 
     def __getstate__(self):
         return self.m, self.l, self.data
 
     def __setstate__(self, state):
         self._construct(*state, None)
+
+    def __copy__(self):
+        return Lattice(self.m, self.l, copy(self.data))
 
     def random(self):
         return randint(0,self.size-1)
@@ -69,27 +102,34 @@ class Lattice(object):
         return range(self.size)
 
     def neighbors(self, coord):
+        # This is cached in __init__
         d = self.dim
         x = coord % d
         y = coord // d
-        ns = []
-        for i,j in Lattice.rel_coords:
-            ns.append( (x+i) % self.dim + d*((y+j) % self.dim) )
-        return tuple(ns)
+        return tuple((x+i) % self.dim + d*((y+j) % self.dim) for i,j in Lattice.rel_coords)
 
-    def site_hamiltonian(self, site):
-        e = 0
+    @profile
+    def lagrangian(self, site):
+        L = 0
         phi = self[site]
         for neighbor in self.neighbors(site):
-            e -= phi * self[neighbor]
+            L -= phi * self[neighbor]
 
-        e += (4 + 0.5 * self.m**2) * phi**2 + 0.25 * self.l * phi**4 # based on 7.16, QUESTION
+        L += self.__redefined_mass * phi**2 + self.__quarter_lambda * phi**4 # based on 7.16, QUESTION
 
-        return e
+        return L
 
-    def update_energy(self, *sites):
-        for site in sites:
-            self.energy += 4 * self.site_hamiltonian(site)
+    def _update_action(self, site, dphi):
+        dS = self.lagrangian(site) - self.__lagrangian_cache[site]
+        self.__lagrangian_cache[site] = self.lagrangian(site)
+        for n in self.neighbors(site):
+            dS -= self[n] * dphi
+            self.__lagrangian_cache[n] -= self[n] * dphi
+
+        self.__action += dS
+
+    def action(self):
+        return self.__action
 
     def show(self, figsize=(6,6), show=True):
         M = np.transpose(np.resize( np.array(self.data), (self.dim, self.dim) ))
@@ -133,22 +173,24 @@ class RandomWalk(object):
     def change(self, i):
         self.lattice[i] += 3 * random() - 1.5
 
+    @profile
     def metropolis(self):
         '''Returns True if accepted'''
-        e = self.lattice.energy
+        S = self.lattice.action()
         site = self.lattice.random()
-        old_val = self.lattice[site]
+        # old_val = self.lattice[site]
         self.change(site)
-        new_e = self.lattice.energy
+        new_S = self.lattice.action()
 
-        if new_e > e:
-            A = np.exp( e - new_e )
-            accept = random() < A
-            if not accept:
-                self.lattice[site] = old_val
+        if new_S > S:
+            A = exp( S - new_S )
+            if not random() < A:
+                # self.lattice[site] = old_val
+                self.lattice.revert()
                 return False
         return True
 
+    @profile
     def wolff(self):
         seed = self.lattice.random()
         cluster = self._generate_cluster(seed, False)
@@ -161,6 +203,7 @@ class RandomWalk(object):
                 if not i in cluster:
                     self.flip(i)
 
+    @profile
     def swendsen_wang(self):
         sites_left = set(self.lattice.sites)
         while len(sites_left) > 0:
@@ -172,7 +215,7 @@ class RandomWalk(object):
                     self.flip(i)
 
     def _Padd(self, site_out, site_in):
-        return 1 - np.exp(-2*self.lattice[site_in]*self.lattice[site_out])
+        return 1 - exp(-2*self.lattice[site_in]*self.lattice[site_out])
 
 
     def _generate_cluster(self, seed, accept_all):
@@ -208,11 +251,12 @@ class GifProducer(object):
 
 if __name__=="__main__":
     seed(a=14231)
-    L = 128
+    L = 248
     m = 1
     lam = 1
-    wolff = False
+    wolff = True
     l = Lattice(dim=L, m=m, l=lam)
+
     rw = RandomWalk(l)
     wolff_rate = 5
     stop_acceptance = 0.001
@@ -227,21 +271,21 @@ if __name__=="__main__":
     record = True
     record_count = 0
     record_rate = l.size
-    thermalization = 200
+    thermalization = 50
     iter_index = []
-    # gp = GifProducer()
+    gp = GifProducer()
     def record_state(lat):
         iter_index.append(sweep_count)
         susceptibilities.append(l.susceptibility())
         binder_cums.append(l.binder_cumulant())
         magnetizations.append(abs(l.magnetization()))
-        energies.append(l.energy/l.size)
-        # gp.save_lat(l)
+        energies.append(l.action()/l.size)
+        gp.save_lat(l)
 
     record_state(l)
     timeout = 100
 
-    start = time.time()
+    start = time()
     running = True
     while running and sweep_count<timeout:
         for _ in range(wolff_rate):
@@ -250,7 +294,7 @@ if __name__=="__main__":
                 percent_accepted += rw.metropolis() / l.size
                 record_count += 1
                 if record and record_count > thermalization and record_count % record_rate == 0:
-                    states.append(deepcopy(l))
+                    states.append(copy(l))
             sweep_count += 1
             record_state(l)
 
@@ -262,10 +306,10 @@ if __name__=="__main__":
             rw.swendsen_wang()
 
         record_state(l)
-    exec_time = time.time() - start
+    exec_time = time() - start
     print(f"Done in {exec_time}")
 
-    # gp.save("test.gif")
+    gp.save("test.gif")
 
     fig, (ax1, ax2, ax3, ax4) = plt.subplots(4,1, figsize=(18,12), sharex = True)
     ax1.plot(iter_index, magnetizations)
@@ -274,13 +318,13 @@ if __name__=="__main__":
     ax4.plot(iter_index, binder_cums)
 
     ax1.set_ylabel("Magnetization")
-    ax2.set_ylabel("Total Energy")
+    ax2.set_ylabel("Total Action")
     ax3.set_ylabel("Susceptibility")
     ax4.set_ylabel("Binder Cumulant")
     ax4.set_xlabel("Sweep")
     # ax3.set_ylim((-0.05,1.05))
-    ax1.set_title(f"Monte Carlo Simulation of $\phi^4$ Model using Metropolis and {'Wolff' if wolff else 'Swenson-Wang'} Algorithms, $L={L}$, $\\lambda={lam}$, $\\mu_0^2={m}$, $t={exec_time:.1f}s$")
-    # plt.savefig('plots/phi_248_sw.png')
-    plt.show()
+    ax1.set_title(f"Monte Carlo Simulation of $\phi^4$ Model using Metropolis and {'Wolff' if wolff else 'Swenson-Wang'} Algorithms, $L={L}$, $\\lambda={lam}$, $\\mu_0^2={m**2}$, $t={exec_time:.1f}s$")
+    plt.savefig('plots/temp.png')
+    # plt.show()
 
 
