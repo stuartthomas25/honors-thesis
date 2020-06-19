@@ -83,7 +83,7 @@ class Lattice(object):
         for neighbor in self.neighbors(site):
             e -= phi * self[neighbor]
 
-        e += 0.5 * self.m**2 * phi**2 + 0.25 * self.l * phi**4 # based on 7.16, QUESTION
+        e += (4 + 0.5 * self.m**2) * phi**2 + 0.25 * self.l * phi**4 # based on 7.16, QUESTION
 
         return e
 
@@ -131,7 +131,6 @@ class RandomWalk(object):
         self.lattice[i] =-self.lattice[i]
 
     def change(self, i):
-        self.flip(i)
         self.lattice[i] += 3 * random() - 1.5
 
     def metropolis(self):
@@ -209,7 +208,7 @@ class GifProducer(object):
 
 if __name__=="__main__":
     seed(a=14231)
-    L = 256
+    L = 128
     m = 1
     lam = 1
     wolff = False
@@ -230,14 +229,14 @@ if __name__=="__main__":
     record_rate = l.size
     thermalization = 200
     iter_index = []
-    gp = GifProducer()
+    # gp = GifProducer()
     def record_state(lat):
         iter_index.append(sweep_count)
         susceptibilities.append(l.susceptibility())
         binder_cums.append(l.binder_cumulant())
         magnetizations.append(abs(l.magnetization()))
         energies.append(l.energy/l.size)
-        gp.save_lat(l)
+        # gp.save_lat(l)
 
     record_state(l)
     timeout = 100
@@ -266,7 +265,7 @@ if __name__=="__main__":
     exec_time = time.time() - start
     print(f"Done in {exec_time}")
 
-    gp.save("test.gif")
+    # gp.save("test.gif")
 
     fig, (ax1, ax2, ax3, ax4) = plt.subplots(4,1, figsize=(18,12), sharex = True)
     ax1.plot(iter_index, magnetizations)
@@ -280,8 +279,8 @@ if __name__=="__main__":
     ax4.set_ylabel("Binder Cumulant")
     ax4.set_xlabel("Sweep")
     # ax3.set_ylim((-0.05,1.05))
-    ax1.set_title(f"Monte Carlo Simulation of Ising Model using Metropolis and {'Wolff' if wolff else 'Swenson-Wang'} Algorithms, $L={L}$, $\\lambda={lam}$, $\\mu_0^2={m}$, $t={exec_time:.1f}s$")
-    plt.savefig('plots/phi_248_sw.png')
+    ax1.set_title(f"Monte Carlo Simulation of $\phi^4$ Model using Metropolis and {'Wolff' if wolff else 'Swenson-Wang'} Algorithms, $L={L}$, $\\lambda={lam}$, $\\mu_0^2={m}$, $t={exec_time:.1f}s$")
+    # plt.savefig('plots/phi_248_sw.png')
     plt.show()
 
 
