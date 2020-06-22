@@ -254,7 +254,7 @@ if __name__=="__main__":
     L = 248
     m = 1
     lam = 1
-    wolff = True
+    wolff = False
     l = Lattice(dim=L, m=m, l=lam)
 
     rw = RandomWalk(l)
@@ -324,7 +324,7 @@ if __name__=="__main__":
     ax4.set_xlabel("Sweep")
     # ax3.set_ylim((-0.05,1.05))
     ax1.set_title(f"Monte Carlo Simulation of $\phi^4$ Model using Metropolis and {'Wolff' if wolff else 'Swenson-Wang'} Algorithms, $L={L}$, $\\lambda={lam}$, $\\mu_0^2={m**2}$, $t={exec_time:.1f}s$")
-    plt.savefig('plots/temp.png')
+    plt.savefig('plots/phi_248_sw.png')
     # plt.show()
 
 
