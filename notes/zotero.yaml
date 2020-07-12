@@ -1,0 +1,250 @@
+---
+references:
+- id: aoki2015
+  abstract: >-
+    We study the gradient ﬂow equation for the O(N) nonlinear sigma model in two
+    dimensions at large N . We parameterize solution of the ﬁeld at ﬂow time t
+    in powers of bare ﬁelds by introducing the coeﬃcient function Xn for the
+    n-th power term (n = 1, 3, · · · ). Reducing the ﬂow equation by keeping
+    only the contributions at leading order in large N , we obtain a set of
+    equations for Xn’s, which can be solved iteratively starting from n = 1. For
+    n = 1 case, we ﬁnd an explicit form of the exact solution. Using this
+    solution, we show that the two point function at ﬁnite ﬂow time t is ﬁnite.
+    As an application, we obtain the non-perturbative running coupling deﬁned
+    from the energy density. We also discuss the solution for n = 3 case.
+  accessed:
+    - year: 2020
+      month: 7
+      day: 10
+  author:
+    - family: Aoki
+      given: Sinya
+    - family: Kikuchi
+      given: Kengo
+    - family: Onogi
+      given: Tetsuya
+  container-title: Journal of High Energy Physics
+  container-title-short: J. High Energ. Phys.
+  DOI: 10.1007/JHEP04(2015)156
+  ISSN: 1029-8479
+  issue: '4'
+  issued:
+    - year: 2015
+      month: 4
+  language: en
+  page: '156'
+  source: arXiv.org
+  title: Gradient Flow of O(N) nonlinear sigma model at large N
+  type: article-journal
+  URL: 'http://arxiv.org/abs/1412.8249'
+  volume: '2015'
+
+- id: horgan2014
+  author:
+    - family: Horgan
+      given: R R
+  issued:
+    - year: 2014
+      month: 12
+      day: 4
+  language: en
+  source: Zotero
+  title: Statistical Field Theory
+  type: book
+
+- id: IntroductionQCDStandard
+  title: Introduction to QCD and the Standard Model
+  type: book
+
+- id: kleinert2001
+  author:
+    - family: Kleinert
+      given: Hagen
+    - family: Schulte-Frohlinde
+      given: Verena
+  issued:
+    - year: 2001
+  language: en
+  source: Zotero
+  title: Critical Properties of $\phi^4$-Theories
+  type: book
+
+- id: makino2015
+  accessed:
+    - year: 2020
+      month: 7
+      day: 10
+  author:
+    - family: Makino
+      given: H.
+    - family: Sugino
+      given: F.
+    - family: Suzuki
+      given: H.
+  container-title: Progress of Theoretical and Experimental Physics
+  container-title-short: Progress of Theoretical and Experimental Physics
+  DOI: 10.1093/ptep/ptv044
+  ISSN: 2050-3911
+  issue: '4'
+  issued:
+    - year: 2015
+      month: 4
+      day: 15
+  language: en
+  page: 43B07-0
+  source: DOI.org (Crossref)
+  title: Large-N limit of the gradient flow in the 2D O(N) nonlinear sigma model
+  type: article-journal
+  URL: 'https://academic.oup.com/ptep/article-lookup/doi/10.1093/ptep/ptv044'
+  volume: '2015'
+
+- id: makino2015a
+  abstract: >-
+    It is known that the gauge field and its composite operators evolved by the
+    Yang--Mills gradient flow are ultraviolet (UV) finite without any
+    multiplicative wave function renormalization. In this paper, we prove that
+    the gradient flow in the 2D $O(N)$ non-linear sigma model possesses a
+    similar property: The flowed $N$-vector field and its composite operators
+    are UV finite without multiplicative wave function renormalization. Our
+    proof in all orders of perturbation theory uses a $(2+1)$-dimensional field
+    theoretical representation of the gradient flow, which possesses local gauge
+    invariance without gauge field. As application of the UV finiteness of the
+    gradient flow, we construct the energy--momentum tensor in the lattice
+    formulation of the $O(N)$ non-linear sigma model that automatically restores
+    the correct normalization and the conservation law in the continuum limit.
+  accessed:
+    - year: 2020
+      month: 7
+      day: 10
+  author:
+    - family: Makino
+      given: Hiroki
+    - family: Suzuki
+      given: Hiroshi
+  container-title: Progress of Theoretical and Experimental Physics
+  container-title-short: Progress of Theoretical and Experimental Physics
+  DOI: 10.1093/ptep/ptv028
+  ISSN: 2050-3911
+  issue: '3'
+  issued:
+    - year: 2015
+      month: 3
+      day: 19
+  language: en
+  page: 33B08-0
+  source: arXiv.org
+  title: >-
+    Renormalizability of the gradient flow in the 2D $O(N)$ non-linear sigma
+    model
+  type: article-journal
+  URL: 'http://arxiv.org/abs/1410.7538'
+  volume: '2015'
+
+- id: monahan2015
+  accessed:
+    - year: 2020
+      month: 7
+      day: 10
+  author:
+    - family: Monahan
+      given: Christopher
+    - family: Orginos
+      given: Kostas
+  container-title: Physical Review D
+  container-title-short: Phys. Rev. D
+  DOI: 10.1103/PhysRevD.91.074513
+  ISSN: '1550-7998, 1550-2368'
+  issue: '7'
+  issued:
+    - year: 2015
+      month: 4
+      day: 20
+  language: en
+  page: '074513'
+  source: DOI.org (Crossref)
+  title: Locally smeared operator product expansions in scalar field theory
+  type: article-journal
+  URL: 'https://link.aps.org/doi/10.1103/PhysRevD.91.074513'
+  volume: '91'
+
+- id: monahan2016
+  accessed:
+    - year: 2020
+      month: 7
+      day: 10
+  author:
+    - family: Monahan
+      given: Christopher
+  container-title: >-
+    Proceedings of The 33rd International Symposium on Lattice Field Theory —
+    PoS(LATTICE 2015)
+  DOI: 10.22323/1.251.0052
+  event: The 33rd International Symposium on Lattice Field Theory
+  event-place: 'Kobe International Conference Center, Kobe, Japan'
+  issued:
+    - year: 2016
+      month: 7
+      day: 15
+  language: en
+  page: '052'
+  publisher: Sissa Medialab
+  publisher-place: 'Kobe International Conference Center, Kobe, Japan'
+  source: DOI.org (Crossref)
+  title: The gradient flow in simple field theories
+  type: paper-conference
+  URL: 'https://pos.sissa.it/251/052'
+
+- id: newman1999
+  author:
+    - family: Newman
+      given: M. E. J.
+    - family: Barkema
+      given: G. T.
+  event-place: Oxford
+  issued:
+    - year: 1999
+  publisher: Oxford University Press
+  publisher-place: Oxford
+  title: Monte Carlo Methods in Statistical Physics
+  type: book
+
+- id: schaich2006
+  author:
+    - family: Schaich
+      given: David A
+    - family: Loinaz
+      given: William
+  issued:
+    - year: 2006
+      month: 5
+      day: 12
+  language: en
+  publisher: Amherst College
+  source: Zotero
+  title: Lattice Simulations of Nonperturbative Quantum Field Theories
+  type: thesis
+
+- id: tong2007
+  author:
+    - family: Tong
+      given: David
+  collection-title: University of Cambridge Part III Mathematical Tripos
+  issued:
+    - year: 2007
+  language: en
+  source: Zotero
+  title: Quantum Field Theory
+  type: book
+
+- id: tong2017
+  author:
+    - family: Tong
+      given: David
+  collection-title: University of Cambridge Part III Mathematical Tripos
+  issued:
+    - year: 2017
+  language: en
+  source: Zotero
+  title: Statistical Field Theory
+  type: book
+...
