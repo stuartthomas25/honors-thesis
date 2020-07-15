@@ -69,6 +69,19 @@ references:
   title: Critical Properties of $\phi^4$-Theories
   type: book
 
+- id: kleinert2016
+  author:
+    - family: Kleinert
+      given: Hagen
+  ISBN: 978-981-4740-91-3
+  issued:
+    - year: 2016
+  language: English
+  note: 'OCLC: 988732289'
+  source: Open WorldCat
+  title: Particles and quantum fields
+  type: book
+
 - id: makino2015
   accessed:
     - year: 2020

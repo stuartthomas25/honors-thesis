@@ -119,6 +119,26 @@ linestretch: 1.5
     -  Charge (See Tong, Noether’s Theorem)
 -  Next week back: start gradient flow on linear phi4 model
 
+## Monday, July 13
+- Update from last week
+    - Implemented MPI, slowdown may be due to thermal throttling?
+    - Questions:
+        - Noether's Theorem, 4-current?
+        - Star vs. dagger
+
+- Invariance vs covariance
+    - $Q$ (charge) is invariant, not covariant. Derivative is 0 (conserved) so no effect of boost. See (StackExchange)[https://physics.stackexchange.com/questions/270296/what-is-the-difference-between-lorentz-invariant-and-lorentz-covariant]
+
+- Operator product expansion
+    - Taylor (Laurent in reality) series for operators
+    - Used to expand nonlocal (slightly) oeprators using local operators
+
+
+
+- TODO:
+    - Read conference proceedings, then paper with Orginos
+    - Define $\rho$ field (Eq. 2.4), implement it using the exact solution (Eq. 2.5). This will require a FFT
+
 \newpage
 
 # References
