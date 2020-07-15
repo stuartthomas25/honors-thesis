@@ -1,31 +1,14 @@
-# from random import randint, choices, random, seed, randrange
-# from copy import copy, deepcopy
-# import numpy as np
 from time import time, sleep
-# from functools import lru_cache
-# from itertools import product
 import sys
-# import imageio
-# import timeit
-# from math import exp, sqrt
-# import inspect
-# import tempfile
-# import multiprocessing as mp
-# import pickle
 import os
 from getopt import getopt
-# import tables
-# from dataclasses import dataclass
-# from typing import Callable
-# import dill
-# from matplotlib import pyplot as plt
 from mpi4py import MPI
-# from datetime import datetime
 
-from lattice import Lattice
+from lattice import Lattice, show
 from random_walk import RandomWalk
 from keys import *
 from recorder import Recorder
+import numpy as np
 
 
 COMM = MPI.COMM_WORLD
@@ -52,20 +35,43 @@ def main():
         seed(a=seed)
         np.random.seed(seed)
 
-    L = int(dopts.get('-L', 8))
-    m = 1
-    lam = 1
-    iterations = 1
-    cluster_method = WOLFF
+    L = int(dopts.get('-L', 64))
+    m02 = -0.68
+    lam = 0.5
+    sweeps = 100
+    cluster_method = None
 
 
 
-    l = Lattice(dim=L, m=m, l=lam)
+    l = Lattice(dim=L, m02=m02, l=lam)
+
+
+
+# Test gradient flow
+    recorder = Recorder()
+
+    def laplacian(a):
+        return np.gradient(np.gradient(a, axis=0), axis=0) + np.gradient(np.gradient(a, axis=1), axis=1)
+
+    last_rho = None
+    for tau in np.linspace(0.,0.01,10):
+        rho = l.rho(tau)
+        recorder.save(rho)
+        if last_rho is not None:
+            dt_data = rho.data - last_rho.data
+            grad_data = laplacian(rho.data)
+        last_rho =rho
+
+    recorder.save_gif("plots/gradient_flow.gif")
+
+    quit() # just testing the gradient flow, so stop here
 
     #set the site assignments (factor of 2 for checkerboard)
 
 
-    wolff_rate = 1
+    cluster_rate = 1
+    record_rate = 1
+    thermalization = 1
 
     recorder = Recorder()
     recorder.save(l)
@@ -73,18 +79,17 @@ def main():
     rw = RandomWalk(l)
 
     start = time()
-    for _ in range(iterations):
-        for _ in range(wolff_rate):
-            rw.checkerboard()
-            recorder.save(l)
+    for i in range(sweeps):
+        rw.checkerboard()
 
-        if RANK==0:
+        if i % cluster_rate ==0 and RANK==0:
             if cluster_method==WOLFF:
                 rw.wolff()
-            elif cluster_method==SWENSDEN_WANG:
+            elif cluster_method==SWENDSEN_WANG:
                 rw.swendsen_wang()
 
-        recorder.save(l)
+        if i % record_rate == 0 and i > thermalization:
+            recorder.save(l)
 
     if RANK==0:
         exec_time = time() - start
@@ -92,8 +97,7 @@ def main():
 
         recorder.save_gif("plots/lattice_visualization.gif")
 
-        recorder.plot(L, m, lam, exec_time, '-S' in dopts)
-
+        recorder.plot(L, m02, lam, exec_time, '-S' in dopts)
 
 if __name__=="__main__":
     main()

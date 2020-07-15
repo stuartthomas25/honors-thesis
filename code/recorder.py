@@ -46,9 +46,10 @@ class Recorder(object):
             ax2.set_ylabel("Total Action")
             ax3.set_ylabel("Susceptibility")
             ax4.set_ylabel("Binder Cumulant")
+            ax4.set_ylim((-0.1,1.1))
             ax4.set_xlabel("Sweep")
             # ax3.set_ylim((-0.05,1.05))
-            ax1.set_title(f"Monte Carlo Simulation of $\phi^4$ Model using Metropolis and Wolff Algorithms, $L={L}$, $\\lambda={lam}$, $\\mu_0^2={m**2}$, $t={exec_time:.1f}s$")
+            ax1.set_title(f"Monte Carlo Simulation of $\phi^4$ Model using Metropolis and Wolff Algorithms, $L={L}$, $\\lambda={lam}$, $\\mu_0^2={m}$, $t={exec_time:.1f}s$")
             plt.savefig('plots/temp_parallel.png')
             if show:
                 plt.show()

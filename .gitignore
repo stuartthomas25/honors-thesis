@@ -1,2 +1,6 @@
 **.swp
 **.swo
+code/plots/**
+code/test.gif
+code/times/**
+code/profiling/**

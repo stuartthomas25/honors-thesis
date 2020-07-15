@@ -3,6 +3,9 @@ from itertools import product
 from colorsys import hls_to_rgb
 from random import randrange
 
+import matplotlib as mpl
+mpl.rcParams['axes.formatter.useoffset'] = False
+
 from matplotlib import pyplot as plt
 import numpy as np
 from mpi4py import MPI
@@ -15,18 +18,40 @@ SIZE = COMM.Get_size()
 
 REL_COORDS = ((-1,0),(0,-1),(1,0),(0,1))
 
+def show(data, figsize=(6,6), show=True):
+    ''' Plots the field.
+    This is a just a helper method for debugging'''
+    M = np.transpose(np.array(data))
+    r = np.abs(M)
+    arg = np.angle(M)
+
+    # This code is generalized for complex fields
+    h = (arg + np.pi)  / (2 * np.pi) + 0.5
+    l = 1.0 - 1.0/(1.0 + r**1.0)
+    s = 0.8
+
+    c = np.vectorize(hls_to_rgb) (h,l,s) # --> tuple
+    c = np.array(c)  # -->  array of (3,n,m) shape, but need (n,m,3)
+    c = c.swapaxes(0,2)
+    plt.figure(figsize=figsize)
+    im = plt.imshow(c)
+    if show:
+        plt.show()
+    return im
+
+
 
 class Lattice(object):
 
-    def __init__(self, m, l, data=None, dim=None):
-        self._construct( m, l, data, dim)
+    def __init__(self, m02, l, data=None, dim=None):
+        self._construct( m02, l, data, dim)
 
 
-    def _construct(self, m, l, data, dim):
-        self.m = m
+    def _construct(self, m02, l, data, dim):
+        self.m02 = m02
         self.l = l
 
-        self.__redefined_mass = 4 + 1/2 * self.m
+        self.__redefined_mass = 2 + 1/2 * self.m02
         self.__quarter_lambda = 1/4 * self.l
 
         if data is not None:
@@ -84,13 +109,13 @@ class Lattice(object):
         return iter(self.data)
 
     def __getstate__(self):
-        return self.m, self.l, self.data
+        return self.m02, self.l, self.data
 
     def __setstate__(self, state):
         self._construct(*state, None)
 
     def __copy__(self):
-        return Lattice(self.m, self.l, np.copy(self.data))
+        return Lattice(self.m02, self.l, np.copy(self.data))
 
     def __getitem__(self, k):
         return self.data[k]
@@ -148,8 +173,18 @@ class Lattice(object):
         return (m2 - m**2)
 
     def binder_cumulant(self):
-        return 0.
         phi_sq = np.sum(self.data**2)
         phi_qu = np.sum(self.data**4)
         return 1 - phi_qu / (3 * phi_sq**2)
+
+
+    def rho(self, tau):
+        m = self.dim**2 / 2
+        fft = np.fft.fft2(self.data)
+        ps = np.concatenate([np.arange(self.dim//2), -np.arange(self.dim//2,0,-1)])
+        px, py = np.meshgrid(ps, ps)
+        rho = np.exp(-tau*(px**2 + py**2)) * fft
+        return Lattice(self.m02, self.l, np.fft.ifft2(rho))
+
+
 
