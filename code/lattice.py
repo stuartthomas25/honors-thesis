@@ -2,6 +2,7 @@ from functools import lru_cache
 from itertools import product
 from colorsys import hls_to_rgb
 from random import randrange
+import abc
 
 import matplotlib as mpl
 mpl.rcParams['axes.formatter.useoffset'] = False
@@ -16,7 +17,7 @@ COMM = MPI.COMM_WORLD
 RANK = COMM.Get_rank()
 SIZE = COMM.Get_size()
 
-REL_COORDS = ((-1,0),(0,-1),(1,0),(0,1))
+REL_COORDS = ((1,0),(0,1),(-1,0),(0,-1))
 
 def show(data, figsize=(6,6), show=True):
     ''' Plots the field.
@@ -39,25 +40,18 @@ def show(data, figsize=(6,6), show=True):
         plt.show()
     return im
 
-
-
 class Lattice(object):
+    __metaclass__ = abc.ABCMeta
+    def __init__(self, data=None, dim=None):
+        self._construct(data, dim)
 
-    def __init__(self, m02, l, data=None, dim=None):
-        self._construct( m02, l, data, dim)
 
-
-    def _construct(self, m02, l, data, dim):
-        self.m02 = m02
-        self.l = l
-
-        self.__redefined_mass = 2 + 1/2 * self.m02
-        self.__quarter_lambda = 1/4 * self.l
-
+    def _construct(self, data, dim):
         if data is not None:
             self.data = data
             self.dim = data.shape[0]
             self.size = data.size
+
 
         elif dim is not None:
             self.dim = dim
@@ -82,25 +76,21 @@ class Lattice(object):
 
         self.mpi_assignment = {}
         if RANK>0:
-            global site_arrays
             for color in [WHITE, BLACK]:
                 all_sites = list(self.checker_iter(color))
                 split_sites = np.array_split(all_sites, SIZE-1)
                 self.mpi_assignment[color] = split_sites[RANK-1]
 
-    @staticmethod
-    def rand_dist(r):
-        return 3 * r - 1.5
+    @abc.abstractmethod
+    def lagrangian(phi, neighbor_phis):
+        pass
 
-    @staticmethod
-    def static_lagrangian(phi, neighbor_phis, redef_mass, quarter_lam):
-        return -phi * sum(neighbor_phis) + redef_mass * phi**2 + quarter_lam * phi**4
+    @abc.abstractmethod
+    def random_dist(r):
+        pass
 
     def calculate_action(self):
-        self.action = sum(self.lagrangian(c) for c in self.sites)
-
-    def get_real_action(self):
-        return sum(self.lagrangian(c) for c in self.sites)
+        self.action = sum(self.lat_lagrangian(c) for c in self.sites)
 
     def __repr__(self):
         return repr(self.data)
@@ -109,13 +99,13 @@ class Lattice(object):
         return iter(self.data)
 
     def __getstate__(self):
-        return self.m02, self.l, self.data
+        return self.data
 
     def __setstate__(self, state):
         self._construct(*state, None)
 
     def __copy__(self):
-        return Lattice(self.m02, self.l, np.copy(self.data))
+        return Lattice( np.copy(self.data))
 
     def __getitem__(self, k):
         return self.data[k]
@@ -142,8 +132,8 @@ class Lattice(object):
         x, y = coord
         return tuple( ((x+i) % self.dim, (y+j) % self.dim) for i,j in REL_COORDS )
 
-    def lagrangian(self, coord):
-        return self.static_lagrangian( self[coord], (self[c] for c in self.neighbors(coord)), self.__redefined_mass, self.__quarter_lambda )
+    def lat_lagrangian(self, coord):
+        return self.static_lagrangian( self[coord], (self[c] for c in self.neighbors(coord)[:2]))
 
     def show(self, figsize=(6,6), show=True):
         M = np.transpose(np.array(self.data))
@@ -169,22 +159,39 @@ class Lattice(object):
 
     def susceptibility(self):
         m = self.magnetization()
-        m2 = 1
+        m2 = np.sum(self.data**2) / self.size
         return (m2 - m**2)
 
     def binder_cumulant(self):
-        phi_sq = np.sum(self.data**2)
-        phi_qu = np.sum(self.data**4)
+        phi_sq = np.sum(self.data**2) / self.size
+        phi_qu = np.sum(self.data**4) / self.size
         return 1 - phi_qu / (3 * phi_sq**2)
 
 
     def rho(self, tau):
-        m = self.dim**2 / 2
         fft = np.fft.fft2(self.data)
         ps = np.concatenate([np.arange(self.dim//2), -np.arange(self.dim//2,0,-1)])
         px, py = np.meshgrid(ps, ps)
         rho = np.exp(-tau*(px**2 + py**2)) * fft
         return Lattice(self.m02, self.l, np.fft.ifft2(rho))
 
+
+class Phi4Lattice(Lattice):
+
+    def __init__(self, m02, lam, dim):
+        self.m02 = m02
+        self.lam = lam
+
+        self.redef_mass = 2 + 0.5 * m02
+        self.quarter_lam = 0.25 * lam
+
+        super().__init__(dim=dim)
+
+    @staticmethod
+    def rand_dist(r):
+        return 3 * r - 1.5
+
+    def static_lagrangian(self, phi, neighbor_phis):
+        return -phi * sum(neighbor_phis) + self.redef_mass * phi**2 + self.quarter_lam * phi**4
 
 

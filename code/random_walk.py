@@ -1,5 +1,6 @@
 from random import random
 from math import exp
+from keys import WOLFF, SWENDSEN_WANG
 
 import numpy as np
 from mpi4py import MPI
@@ -20,12 +21,12 @@ class RandomWalk(object):
 
     @profile
     def checker_met(self, site, color):
-        neighbor_phis = tuple(self.lat.data[n] for n in self.lat.neighbors(site))
+        neighbor_phis = tuple(self.lat.data[n] for n in self.lat.neighbors(site)[:2])
         old_action = self.lat.action
-        old_L = self.lat.lagrangian(site)
+        old_L = self.lat.lat_lagrangian(site)
         dphi = self.lat.rand_dist(random())
         self.lat.data[site] += dphi
-        new_L = self.lat.lagrangian(site)
+        new_L = self.lat.lat_lagrangian(site)
         dS = new_L - old_L
         for nphi in neighbor_phis:
             dS -= nphi * dphi
@@ -86,6 +87,8 @@ class RandomWalk(object):
 
 
     def checkerboard(self):
+        if SIZE<2:
+            raise Exception("Please run with more than one core")
         self.half_checkerboard(False)
         self.half_checkerboard(True)
 
@@ -125,5 +128,34 @@ class RandomWalk(object):
 
         return cluster
 
+    def run(self,
+            sweeps,
+            cluster_method=None,
+            cluster_rate=5,
+            record_rate=5,
+            thermalization=0,
+            recorder=None
+            ):
+
+        if cluster_method==WOLFF:
+            cluster = self.wolff
+        elif cluster_method==SWENDSEN_WANG:
+            cluster = self.swendsen_wang
+        else:
+            cluster = lambda: None
+
+        if thermalization==0 and recorder is not None:
+            recorder.save(self.lat)
+
+        for i in range(sweeps):
+            self.checkerboard()
+
+            if recorder is not None and i % record_rate == 0 and i > thermalization:
+                recorder.save(self.lat)
+            if i % cluster_rate ==0 and RANK==0:
+                cluster()
+
+               #  if recorder is not None and i % record_rate == 0 and i > thermalization:
+                    # recorder.save(self.lat)
 
 

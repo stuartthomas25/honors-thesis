@@ -6,9 +6,12 @@ COMM = MPI.COMM_WORLD
 RANK = COMM.Get_rank()
 
 class Recorder(object):
-    def __init__(self):
+    def __init__(self, gif = False):
         if RANK==0:
-            self.gp = GifProducer()
+            if gif:
+                self.gp = GifProducer()
+            else:
+                self.gp = None
             self.iter_index = []
             self.magnetizations = []
             self.energies = []
@@ -23,18 +26,20 @@ class Recorder(object):
             self.iter_index.append(self.record_count)
             self.susceptibilities.append(l.susceptibility())
             self.binder_cums.append(l.binder_cumulant())
-            self.magnetizations.append(abs(l.magnetization()))
-            l.calculate_action()
+            self.magnetizations.append(l.magnetization())
             self.energies.append(l.action/l.size)
-            self.gp.save_lat(l)
+            if self.gp is not None:
+                self.gp.save_lat(l)
             self.record_count += 1
 
-    def save_gif(self, fname):
+    def save_gif(self, fname, fps=3):
         if RANK==0:
-            self.gp.save(fname)
+            self.gp.save(fname, fps)
 
-    def plot(self, L, m, lam, exec_time, show):
+    def plot(self, title="", fname=None, show=True, xlabel="Sweep"):
         if RANK==0:
+            if fname is None:
+                fname = "Figure.png"
             x = self.iter_index
             fig, (ax1, ax2, ax3, ax4) = plt.subplots(4,1, figsize=(18,12), sharex = True)
             ax1.plot(x, self.magnetizations)
@@ -47,10 +52,10 @@ class Recorder(object):
             ax3.set_ylabel("Susceptibility")
             ax4.set_ylabel("Binder Cumulant")
             ax4.set_ylim((-0.1,1.1))
-            ax4.set_xlabel("Sweep")
+            ax4.set_xlabel(xlabel)
             # ax3.set_ylim((-0.05,1.05))
-            ax1.set_title(f"Monte Carlo Simulation of $\phi^4$ Model using Metropolis and Wolff Algorithms, $L={L}$, $\\lambda={lam}$, $\\mu_0^2={m}$, $t={exec_time:.1f}s$")
-            plt.savefig('plots/temp_parallel.png')
+            ax1.set_title(title)
+            plt.savefig('plots/'+fname)
             if show:
                 plt.show()
 

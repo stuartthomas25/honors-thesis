@@ -9,11 +9,7 @@ from random_walk import RandomWalk
 from keys import *
 from recorder import Recorder
 import numpy as np
-
-
-COMM = MPI.COMM_WORLD
-RANK = COMM.Get_rank()
-SIZE = COMM.Get_size()
+from parallel_utils import COMM, RANK, SIZE
 
 
 if 'line_profiler' not in globals():
@@ -23,10 +19,6 @@ if 'line_profiler' not in globals():
 MPI_RES_CHUNKSIZE = 0
 
 def main():
-    os.environ['OMP_NUM_THREADS'] = '1'
-    os.environ['NUMEXPR_NUM_THREADS'] = '1'
-    os.environ['MKL_NUM_THREADS'] = '1'
-
     opts, args = getopt(sys.argv[1:],'pL:s:S')
     dopts = dict(opts)
 
@@ -48,23 +40,24 @@ def main():
 
 
 # Test gradient flow
-    recorder = Recorder()
+#     recorder = Recorder()
 
-    def laplacian(a):
-        return np.gradient(np.gradient(a, axis=0), axis=0) + np.gradient(np.gradient(a, axis=1), axis=1)
+    # def laplacian(a):
+        # return np.gradient(np.gradient(a, axis=0), axis=0) + np.gradient(np.gradient(a, axis=1), axis=1)
 
-    last_rho = None
-    for tau in np.linspace(0.,0.01,10):
-        rho = l.rho(tau)
-        recorder.save(rho)
-        if last_rho is not None:
-            dt_data = rho.data - last_rho.data
-            grad_data = laplacian(rho.data)
-        last_rho =rho
+    # last_rho = None
+    # for tau in np.linspace(0.,0.005,100):
+        # rho = l.rho(tau)
+        # recorder.save(rho)
+        # if last_rho is not None:
+            # dt_data = rho.data - last_rho.data
+            # grad_data = laplacian(rho.data)
+        # last_rho = rho
+    # recorder.plot(title=f"Effect of gradient flow on observables: $L={L}$, $\\lambda={lam}$, $\\mu_0^2={m02}$", fname="gradient_flow", xlabel=r'$\tau$ (flow time)', show=True)
 
-    recorder.save_gif("plots/gradient_flow.gif")
+    # recorder.save_gif("plots/gradient_flow.gif", fps=30)
 
-    quit() # just testing the gradient flow, so stop here
+    # quit() # just testing the gradient flow, so stop here
 
     #set the site assignments (factor of 2 for checkerboard)
 
@@ -79,17 +72,8 @@ def main():
     rw = RandomWalk(l)
 
     start = time()
-    for i in range(sweeps):
-        rw.checkerboard()
 
-        if i % cluster_rate ==0 and RANK==0:
-            if cluster_method==WOLFF:
-                rw.wolff()
-            elif cluster_method==SWENDSEN_WANG:
-                rw.swendsen_wang()
-
-        if i % record_rate == 0 and i > thermalization:
-            recorder.save(l)
+    rw.run(sweeps, cluster_method, cluster_rate, record_rate, thermalization, recorder)
 
     if RANK==0:
         exec_time = time() - start
@@ -97,7 +81,8 @@ def main():
 
         recorder.save_gif("plots/lattice_visualization.gif")
 
-        recorder.plot(L, m02, lam, exec_time, '-S' in dopts)
+        recorder.plot(title=f"Monte Carlo Simulation of $\phi^4$ Model using Metropolis and Wolff Algorithms, $L={L}$, $\\lambda={lam}$, $\\mu_0^2={m02}$, $t={exec_time:.1f}s$", fname="parallel.png", show=('-S' in dopts))
 
 if __name__=="__main__":
+
     main()
