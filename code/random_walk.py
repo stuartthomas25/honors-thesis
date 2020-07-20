@@ -145,13 +145,13 @@ class RandomWalk(object):
             cluster = lambda: None
 
         if thermalization==0 and recorder is not None:
-            recorder.save(self.lat)
+            recorder.record(self.lat)
 
         for i in range(sweeps):
             self.checkerboard()
 
             if recorder is not None and i % record_rate == 0 and i > thermalization:
-                recorder.save(self.lat)
+                recorder.record(self.lat)
             if i % cluster_rate ==0 and RANK==0:
                 cluster()
 

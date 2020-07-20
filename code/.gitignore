@@ -1,0 +1,5 @@
+plots/**
+times/**
+profiling/**
+test**
+__pycache__/**

@@ -8,22 +8,20 @@ import numpy as np
 from time import time
 
 def main():
-    L = 64
+    L = 258
     lam = 0.5
-    m02s = np.linspace(-1., -0.5, 30)
+    m02s = np.linspace(-0.7, -0.6, 5 )
 
 
     sweeps = 1000
     cluster_method = WOLFF
     thermalization = 20**2
-    record_rate = 100
+    record_rate = 10
     cluster_rate = 5
 
+    quantities = ['magnetization', 'binder_cumulant', 'susceptibility']
 
-    measurements = (sweeps-thermalization) // record_rate - 1
-    m = np.empty((len(m02s), measurements))
-    bc = np.empty((len(m02s), measurements))
-    s = np.empty((len(m02s), measurements))
+    data = {q : np.empty((2, len(m02s))) for q in quantities}
 
     for i,m02 in enumerate(m02s):
         if RANK==0: print('running '+str(i)+'...', end='\r')
@@ -38,30 +36,27 @@ def main():
 
         rw.run(sweeps, cluster_method=cluster_method, thermalization=thermalization, cluster_rate=cluster_rate, recorder=recorder, record_rate=record_rate)
         if RANK==0:
-            m[i,:] = recorder.magnetizations
-            bc[i,:] = recorder.binder_cums
-            s[i,:] = recorder.susceptibilities
             print(f'{i} completed in {time() - start} seconds')
+            for q, arr in data.items():
+                arr[0,i] = recorder.mean(q)
+                arr[1,i] = recorder.error(q)
 
             if recorder.gp is not None:
                 recorder.save_gif("converge.gif")
 
     if RANK==0:
-        fig, (ax1, ax2, ax3) = plt.subplots(3,1,figsize=(16,10))
-        ax1.plot(m02s, m, '.')
-        ax2.plot(m02s, bc, '.')
-        ax3.plot(m02s, s, '.')
-        ax1.set_ylabel(r"$\langle \phi \rangle$")
-        ax2.set_ylabel(r"BC")
-        ax3.set_ylabel(r"S")
-        ax3.set_xlabel(r"$m_0^2$")
-        ax1.set_title(f"Phase transition vs. $m_0^2$: L={L}, $\lambda={lam}$, 100 sweeps with Wolff every 5")
+        fig, axes = plt.subplots(3,1,figsize=(16,10))
+        for ax, (q, arr) in zip(axes, data.items()):
+            ax.errorbar(m02s, arr[0], arr[1], None, '.')
+            ax.set_ylabel(Recorder.quantities[q].label)
+        axes[-1].set_xlabel(r"$m_0^2$")
+        axes[0].set_title(f"Phase transition vs. $m_0^2$: L={L}, $\lambda={lam}$, 100 sweeps with Wolff every 5")
 
         plt.show()
 
 
-# Test gradient flow
-#     recorder = Recorder()
+# # Test gradient flow
+    # recorder = Recorder()
 
     # def laplacian(a):
         # return np.gradient(np.gradient(a, axis=0), axis=0) + np.gradient(np.gradient(a, axis=1), axis=1)
@@ -80,7 +75,7 @@ def main():
 
     # quit() # just testing the gradient flow, so stop here
 
-    #set the site assignments (factor of 2 for checkerboard)
+    # # set the site assignments (factor of 2 for checkerboard)
 
 
     # cluster_rate = 1
