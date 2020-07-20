@@ -129,7 +129,7 @@ linestretch: 1.5
 - Invariance vs covariance
     - $Q$ (charge) is invariant, not covariant. Derivative is 0 (conserved) so no effect of boost. See (StackExchange)[https://physics.stackexchange.com/questions/270296/what-is-the-difference-between-lorentz-invariant-and-lorentz-covariant]
 
-- Operator product expansion
+- Operator product expansion    
     - Taylor (Laurent in reality) series for operators
     - Used to expand nonlocal (slightly) oeprators using local operators
 
@@ -138,6 +138,38 @@ linestretch: 1.5
 - TODO:
     - Read conference proceedings, then paper with Orginos
     - Define $\rho$ field (Eq. 2.4), implement it using the exact solution (Eq. 2.5). This will require a FFT
+
+## Wednesday, July 15
+- Code organization
+    - Perhaps implement the nonlinear $\sigma$ model and the $\phi^4 model$ as subclasses of a generic lattice class with abstract methods of action, etc.
+
+- Gradient flow
+    - Splitting at half is a-ok
+    - Next implement observables
+
+- New terms:
+    - autocorrelation times (see Schaich -> MC Textbook -> Wolff): not a QFT concept!
+    - Gamma analysis: used to calculate autocorrelation
+    - summation window: part of the Gamma analysis
+
+- Three classes of QFTs
+    - renormalizable: infinities can be absorbed by a finite number of counterterms
+    - nonrenormalizeable: requires infinitely many counterterms
+    - super-renormalizeable: there is only one parameter that is divergent
+
+## Friday, July 17
+
+- Critical mass problem
+    - Check multiple measures (Binder Cumulant, bimodality, etc.)
+    - https://journals.aps.org/prd/abstract/10.1103/PhysRevD.58.076003
+    - Infinite volume limit?
+    - Turn off coupling?
+    - Behavior for one node? Two nodes?
+    - Metropolis checkerboard? (see [@schaich2006, pg. 79])
+    - Look at Schaich's calculations
+    - Note: No true phase transition in finite system since phase transitions are defined by correlation lengths going to infinity
+
+
 
 \newpage
 
