@@ -34,7 +34,7 @@ references:
   language: en
   page: '156'
   source: arXiv.org
-  title: Gradient Flow of O(N) nonlinear sigma model at large N
+  title: Gradient Flow of $O(N)$ nonlinear sigma model at large $N$
   type: article-journal
   URL: 'http://arxiv.org/abs/1412.8249'
   volume: '2015'
@@ -81,6 +81,38 @@ references:
   source: Open WorldCat
   title: Particles and quantum fields
   type: book
+
+- id: loinaz1998
+  abstract: >-
+    We perform a Monte Carlo simulation calculation of the critical coupling
+    constant for the continuum {\lambda \over 4} \phi^4_2 theory. The critical
+    coupling constant we obtain is [{\lambda \over \mu^2}]_crit=10.24(3).
+  accessed:
+    - year: 2020
+      month: 7
+      day: 20
+  author:
+    - family: Loinaz
+      given: Will
+    - family: Willey
+      given: R. S.
+  container-title: Physical Review D
+  container-title-short: Phys. Rev. D
+  DOI: 10.1103/PhysRevD.58.076003
+  ISSN: '0556-2821, 1089-4918'
+  issue: '7'
+  issued:
+    - year: 1998
+      month: 9
+      day: 10
+  page: '076003'
+  source: arXiv.org
+  title: >-
+    Monte Carlo Simulation Calculation of Critical Coupling Constant for
+    Continuum $\phi^4_2$
+  type: article-journal
+  URL: 'http://arxiv.org/abs/hep-lat/9712008'
+  volume: '58'
 
 - id: makino2015
   accessed:
@@ -152,6 +184,33 @@ references:
   type: article-journal
   URL: 'http://arxiv.org/abs/1410.7538'
   volume: '2015'
+
+- id: melin2000
+  accessed:
+    - year: 2019
+      month: 10
+      day: 1
+  author:
+    - family: Mélin
+      given: R.
+  container-title: EPL (Europhysics Letters)
+  container-title-short: EPL
+  DOI: 10.1209/epl/i2000-00532-1
+  ISSN: 0295-5075
+  issue: '2'
+  issued:
+    - year: 2000
+      month: 7
+      day: 15
+  language: en
+  page: '202'
+  source: iopscience.iop.org
+  title: >-
+    Spin-resolved Andreev reflection in ferromagnet-superconductor junctions
+    with Zeeman splitting
+  type: article-journal
+  URL: 'https://iopscience.iop.org/article/10.1209/epl/i2000-00532-1/meta'
+  volume: '51'
 
 - id: monahan2015
   accessed:
@@ -260,4 +319,38 @@ references:
   source: Zotero
   title: Statistical Field Theory
   type: book
+
+- id: wolff2007
+  abstract: >-
+    We explain in detail how to estimate mean values and assess statistical
+    errors for arbitrary functions of elementary observables in Monte Carlo
+    simulations. The method is to estimate and sum the relevant autocorrelation
+    functions, which is argued to produce more certain error estimates than
+    binning techniques and hence to help toward a better exploitation of
+    expensive simulations. An effective integrated autocorrelation time is
+    computed which is suitable to benchmark efficiencies of simulation
+    algorithms with regard to specific observables of interest. A Matlab code is
+    offered for download that implements the method. It can also combine
+    independent runs (replica) allowing to judge their consistency.
+  accessed:
+    - year: 2020
+      month: 7
+      day: 20
+  author:
+    - family: Wolff
+      given: Ulli
+  container-title: Computer Physics Communications
+  container-title-short: Computer Physics Communications
+  DOI: 10.1016/j.cpc.2006.12.001
+  ISSN: '00104655'
+  issue: '5'
+  issued:
+    - year: 2007
+      month: 3
+  page: '383'
+  source: arXiv.org
+  title: Monte Carlo errors with less errors
+  type: article-journal
+  URL: 'http://arxiv.org/abs/hep-lat/0306017'
+  volume: '176'
 ...

@@ -117,7 +117,7 @@ linestretch: 1.5
         electron/positron)
     -  Look at Tong (Chap. 4)
     -  Charge (See Tong, Noether’s Theorem)
--  Next week back: start gradient flow on linear phi4 model
+-  Next week back: start gradient flow on linear $\phi^4$ model
 
 ## Monday, July 13
 - Update from last week
@@ -141,11 +141,11 @@ linestretch: 1.5
 
 ## Wednesday, July 15
 - Code organization
-    - Perhaps implement the nonlinear $\sigma$ model and the $\phi^4 model$ as subclasses of a generic lattice class with abstract methods of action, etc.
+    - Perhaps implement the nonlinear $\sigma$ model (at a later date) and the $\phi^4$ model as subclasses of a generic lattice class with abstract methods of action, etc.
 
 - Gradient flow
-    - Splitting at half is a-ok
-    - Next implement observables
+    - Splitting momentum at half of lattice is a-ok.
+    - Next, implement observable!
 
 - New terms:
     - autocorrelation times (see Schaich -> MC Textbook -> Wolff): not a QFT concept!
@@ -169,7 +169,23 @@ linestretch: 1.5
     - Look at Schaich's calculations
     - Note: No true phase transition in finite system since phase transitions are defined by correlation lengths going to infinity
 
+## Monday, July 20
 
+- Remarks on critical point graph
+    - I should be averaging the measurements from run.
+    - Probably will need many more measurements.
+    - Spend more time thermalizing
+    - Calculate autocorrelation time, use to determine the `record_rate`
+    - Production quality: try 10,000 sweeps, with 1000 thermalization
+    - Run with slightly larger lattice to verify critical point
+
+- Todo:
+    - Flow time dependence (with action)
+    - Average all measurements (incorporate this into `recorder.py`)
+        - Plot mean and standard error as error bars
+    - Autocorrelation times using Gamma analysis
+        - Paper has Mathematica notebook link, though it may be broken.
+    - Double check that large lattice volumes show correct critical mass.
 
 \newpage
 
