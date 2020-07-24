@@ -187,6 +187,52 @@ linestretch: 1.5
         - Paper has Mathematica notebook link, though it may be broken.
     - Double check that large lattice volumes show correct critical mass.
 
+## Wednesday, July 22
+
+- Things I did:
+    - Reorganized the `recorder.py` to include measurements and means/errors.
+    -
+
+- Questions:
+    - Implementing the gradient flow: how does this play into the Monte Carlo simulation?
+
+
+- TODO:
+    - Critical mass
+        - Plot histogram for two points of single lattice (thermalized)
+        - See if this is affected by a large thermalization, cold start
+        - Binder cumulant should be step function
+
+    - Autocorrelation times
+        - See Eq. 41
+        - Get MatLab code
+    
+    - Gradient flow
+        - Each measured lattice should be evolved in flow time before recording
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \newpage
 
 # References
