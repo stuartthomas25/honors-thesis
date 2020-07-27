@@ -210,7 +210,21 @@ linestretch: 1.5
     - Gradient flow
         - Each measured lattice should be evolved in flow time before recording
 
-    
+## Friday, July 24
+
+- 
+- Things to do:
+    - Gradient flow
+    - Try $m_0^2 = -0.8$, see if it become bimodal with large thermalization. 
+    - Move towards critical value: does $\tau_{int}$ increase? (This is what we expect)
+    - Perhaps change recording rate?
+
+- Is it time to transcibe the code?
+    - Explore efficiency boost
+    - C++?
+    - Cython?
+    - Local cluster?
+
 
 
 
