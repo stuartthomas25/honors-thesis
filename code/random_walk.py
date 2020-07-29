@@ -1,6 +1,8 @@
 from random import random
 from math import exp
-from keys import WOLFF, SWENDSEN_WANG
+from keys import WOLFF, SWENDSEN_WANG, WHITE, BLACK
+from croutines import sweep
+from time import time
 
 import numpy as np
 from mpi4py import MPI
@@ -9,88 +11,59 @@ COMM = MPI.COMM_WORLD
 RANK = COMM.Get_rank()
 SIZE = COMM.Get_size()
 
-if 'line_profiler' not in globals():
-    def profile(f):
-        return f
-
-
 class RandomWalk(object):
     def __init__(self, lattice):
         self.lat = lattice
         self.mpi_chunksize = lattice.size ** 2 // 2 // SIZE // 2
 
-    @profile
-    def checker_met(self, site, color):
-        neighbor_phis = tuple(self.lat.data[n] for n in self.lat.neighbors(site)[:2])
-        old_action = self.lat.action
-        old_L = self.lat.lat_lagrangian(site)
-        dphi = self.lat.rand_dist(random())
-        self.lat.data[site] += dphi
-        new_L = self.lat.lat_lagrangian(site)
-        dS = new_L - old_L
-        for nphi in neighbor_phis:
-            dS -= nphi * dphi
+        # assign sites for MPI parallelizing
+        self.mpi_assignments = [{} for r in range(SIZE)]
 
-        if dS < 0 or random() <= exp(-dS): # EDIT
-            return dphi, dS
-        else:
-            self.lat.data[site] -= dphi
-            self.lat.action = old_action
-            return None
+        for color in [WHITE, BLACK]:
+            all_sites = list(self.lat.checker_iter(color))
+            if len(all_sites) % SIZE != 0:
+                raise Exception("L should be divisible by MPI group size")
+
+            split_sites = np.array_split(all_sites, SIZE)
+            for r in range(SIZE):
+                self.mpi_assignments[r][color] = split_sites[r]
 
 
-    @profile
     def half_checkerboard(self, color):
+        data_bk = np.copy(self.lat.data)
         COMM.Bcast(self.lat.data, root=0)
         self.lat.action = COMM.bcast(self.lat.action, root=0)
 
-        # One node compiles changes from other nodes
+        sites = self.mpi_assignments[RANK][color]
+
+        start = time()
+        dphis, dS = sweep(self.lat, sites.astype('i'))
+
         if RANK==0:
-            running_nodes = SIZE - 1
-            while running_nodes > 0:
-                data = COMM.recv()
-                xs = data['xs']
-                ys = data['ys']
-                dphis = data['dphis']
-                dS = data['dS']
-
-                self.lat.data[xs, ys] += dphis
-                self.lat.action += dS
-                if data['done']:
-                    running_nodes -= 1
-
+            recv_dphis = np.empty([SIZE, dphis.size], dtype=dphis.dtype)
         else:
-            size = 0
-            xs = []
-            ys = []
-            dphis = []
-            tot_dS = 0
-            for site in self.lat.mpi_assignment[color]:
-                res = self.checker_met(tuple(site), color)
-                if res is not None:
-                    dphi, dS = res
-                    xs.append(site[0])
-                    ys.append(site[1])
-                    dphis.append(dphi)
-                    tot_dS += dS
-                    size += 1
+            recv_dphis = None
 
-                    if size % self.mpi_chunksize == 0:
-                        COMM.send({'xs':xs, 'ys':ys, 'dphis':dphis, 'dS':dS, 'done':False}, dest=0)
-                        xs = []
-                        ys = []
-                        dphis = []
-                        tot_dS = 0
+        COMM.Gather(dphis, recv_dphis, root=0)
+        dS = COMM.gather(dS, root=0)
 
+        if RANK==0:
+            self.lat.data = data_bk
+            for r in range(SIZE):
+                sites = self.mpi_assignments[r][color]
+                self.lat.data[sites[:,0], sites[:,1]] += recv_dphis[r]
 
-            COMM.send({'xs':xs, 'ys':ys, 'dphis':dphis, 'dS':tot_dS, 'done':True}, dest=0)
-
+            self.lat.action += sum(dS)
 
     def checkerboard(self):
-        if SIZE<2:
-            raise Exception("Please run with more than one core")
         self.half_checkerboard(False)
         self.half_checkerboard(True)
+
+    def flip(self, c):
+        phi = self.lat.data[c]
+        self.lat.data[c] = -phi
+        self.lat.action += 4 * phi * sum(self.lat.data[n] for n in self.lat.half_neighbors[c])
+
 
     def wolff(self):
         seed = self.lat.random()
@@ -98,13 +71,11 @@ class RandomWalk(object):
 
         if len(cluster) <= self.lat.size // 2:
             for c in cluster:
-                self.lat.data[c] *= -1
+                self.flip(c)
         else:
             for c in self.lat.sites:
                 if not tuple(c) in cluster:
-                    self.lat.data[c] *= -1
-
-        self.lat.calculate_action()
+                    self.flip(c)
 
     @staticmethod
     def Padd(phi_a, phi_b):
@@ -122,9 +93,9 @@ class RandomWalk(object):
             tested.add(s)
             if np.sign(self.lat[s]) == sign:
                 Padd = self.Padd(phi_a, self.lat[s])
-                if Padd==1 or random()<Padd: # check Padd==1 first to increase efficiency in SW algorithm
+                if False: #Padd==1 or random()<Padd: # check Padd==1 first to increase efficiency in SW algorithm
                     cluster.add(s)
-                    to_test |= set((n, self.lat[s]) for n in self.lat.neighbors(s) if n not in tested)
+                    to_test |= set((n, self.lat[s]) for n in self.lat.full_neighbors[s] if n not in tested)
 
         return cluster
 
@@ -132,9 +103,8 @@ class RandomWalk(object):
             sweeps,
             cluster_method=None,
             cluster_rate=5,
-            record_rate=5,
-            thermalization=0,
-            recorder=None
+            recorder=None,
+            progress=False
             ):
 
         if cluster_method==WOLFF:
@@ -144,18 +114,21 @@ class RandomWalk(object):
         else:
             cluster = lambda: None
 
-        if thermalization==0 and recorder is not None:
-            recorder.record(self.lat)
+        if progress and RANK==0:
+            progressbar_size = 140
+            progressbar_rate = int(sweeps/progressbar_size)
+            print('['+'-'*progressbar_size+']', end='\r', flush=True)
 
         for i in range(sweeps):
             self.checkerboard()
 
-            if recorder is not None and i % record_rate == 0 and i > thermalization:
+            if recorder is not None and i % recorder.rate == 0 and i > recorder.thermalization:
                 recorder.record(self.lat)
             if i % cluster_rate ==0 and RANK==0:
                 cluster()
+            if RANK==0 and progress and i % progressbar_rate == 0:
+                p = int(i/sweeps*progressbar_size)
+                print('['+'='*p+'-'*(progressbar_size-p)+']', end='\r', flush=True)
 
-               #  if recorder is not None and i % record_rate == 0 and i > thermalization:
-                    # recorder.save(self.lat)
-
-
+        if progress and RANK==0:
+            print('['+'='*progressbar_size+']',flush=True)

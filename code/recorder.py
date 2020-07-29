@@ -22,13 +22,15 @@ class Recorder(object):
 
     quantities = {}
 
-    def __init__(self, gif = False):
+    def __init__(self, rate=1, thermalization=0, gif = False):
         if gif:
             self.gp = GifProducer()
         else:
             self.gp = None
 
-        self.xvals = []
+        self.thermalization = thermalization
+        self.rate = rate
+
         self.values = {}
         for quant in type(self).quantities:
             self.values[quant] = []
@@ -45,9 +47,15 @@ class Recorder(object):
             return f
         return decorator
 
+    def num_measurements(self, sweeps):
+        return (sweeps - self.thermalization) // self.rate - 1
+
+    def clear(self):
+        for v in self.values:
+            self.values[v] = []
+
 
     def record(self, lat):
-        self.xvals.append(self.record_count)
         for val, arr in self.values.items():
             arr.append(type(self).quantities[val] (lat))
         if self.gp is not None:
@@ -94,7 +102,12 @@ class Recorder(object):
 
 @Recorder.quantity(r"$|\langle \phi \rangle|$")
 def magnetization(lat):
+    return np.sum(lat.data) / lat.size
+
+@Recorder.quantity(r"$|\langle \phi \rangle|$")
+def abs_magnetization(lat):
     return abs(np.sum(lat.data) / lat.size)
+
 
 @Recorder.quantity(r"$U$")
 def binder_cumulant(lat):

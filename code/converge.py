@@ -2,56 +2,77 @@ from parallel_utils import RANK
 from keys import WOLFF, SWENDSEN_WANG
 from lattice import Phi4Lattice
 from random_walk import RandomWalk
-from matplotlib import pyplot as plt
-from recorder import Recorder
 import numpy as np
+from recorder import Recorder
 from time import time
+import sys
+if 'view' in sys.argv:
+    from matplotlib import pyplot as plt
+import pickle
+from scipy.io import savemat
+from UWerr import UWerr
+
+L = 16
+lam = 0.5
+m02s = [-0.68]
+
+# sweeps = 10**5
+cluster_method = WOLFF
+thermalization = 10**3
+record_rate = 100
+cluster_rate = 5
+
+measurements = 10**3
+
+sweeps = thermalization + record_rate * measurements
+print(sweeps)
+# print(sweeps, "sweeps")
+
+quantities = ['magnetization', 'binder_cumulant', 'susceptibility']
 
 def main():
-    L = 258
-    lam = 0.5
-    m02s = np.linspace(-0.7, -0.6, 5 )
-
-
-    sweeps = 1000
-    cluster_method = WOLFF
-    thermalization = 20**2
-    record_rate = 10
-    cluster_rate = 5
-
-    quantities = ['magnetization', 'binder_cumulant', 'susceptibility']
-
-    data = {q : np.empty((2, len(m02s))) for q in quantities}
-
-    for i,m02 in enumerate(m02s):
-        if RANK==0: print('running '+str(i)+'...', end='\r')
-        start = time()
-        l = Phi4Lattice(dim=L, m02=m02, lam=lam)
-        rw = RandomWalk(l)
-
-        if RANK==0:
-            recorder = Recorder(gif=False)
-        else:
-            recorder = None
-
-        rw.run(sweeps, cluster_method=cluster_method, thermalization=thermalization, cluster_rate=cluster_rate, recorder=recorder, record_rate=record_rate)
-        if RANK==0:
-            print(f'{i} completed in {time() - start} seconds')
-            for q, arr in data.items():
-                arr[0,i] = recorder.mean(q)
-                arr[1,i] = recorder.error(q)
-
-            if recorder.gp is not None:
-                recorder.save_gif("converge.gif")
 
     if RANK==0:
-        fig, axes = plt.subplots(3,1,figsize=(16,10))
-        for ax, (q, arr) in zip(axes, data.items()):
-            ax.errorbar(m02s, arr[0], arr[1], None, '.')
-            ax.set_ylabel(Recorder.quantities[q].label)
-        axes[-1].set_xlabel(r"$m_0^2$")
-        axes[0].set_title(f"Phase transition vs. $m_0^2$: L={L}, $\lambda={lam}$, 100 sweeps with Wolff every 5")
+        recorder = Recorder(thermalization=thermalization, rate=record_rate, gif=False)
+        data = np.empty((len(m02s), recorder.num_measurements(sweeps)))
+    else:
+        recorder = None
 
+
+    for i, m02 in enumerate(m02s):
+
+        l = Phi4Lattice(dim=L, m02=m02, lam=lam)
+        rw = RandomWalk(l)
+        start = time()
+        rw.run(sweeps, cluster_method=cluster_method,  cluster_rate=cluster_rate, recorder=recorder, progress=True)
+
+        if RANK==0:
+            dt = time() - start
+            print(f"Executed in {int(dt//60)}:{str(int(dt%60)).zfill(2)}")
+            data[i,:] = recorder.values['magnetization']
+            recorder.clear()
+
+    if RANK==0:
+        np.save('data/histogram', data)
+        if recorder.gp is not None:
+            recorder.save_gif('plots/lattice.gif')
+
+
+
+def view():
+    if RANK==0:
+        data = np.load('data/histogram.npy')
+        i = 0
+        #UWerr(data[i]**2, name=f"$\\langle \\phi^2 \\rangle$: $L={L}$, $\\lambda={lam}$, $m_0^2={m02s[i]}$, {sweeps} sweeps, {thermalization} sweep thermalization, recording every {record_rate} sweeps", plot=True, whole_plot=True)
+        nseries = data.shape[0]
+        fig, axes = plt.subplots(nseries, 1, sharex=True, figsize=(16, 8*nseries), squeeze=False)
+        axes = [ax for row in axes for ax in row] # flatten
+        for m02, series, ax in zip(m02s, data, axes):
+            ax.hist(series, 100, label=f'$m_0^2={m02}$', alpha=0.7 )
+            ax.legend()
+            # ax.set_xlim((-0.75,0.75))
+        axes[0].set_title(f"$\\langle \\phi \\rangle$ histograms: $L={L}$, $\\lambda={lam}$, {sweeps} sweeps, {thermalization} sweep thermalization, recording every {record_rate} sweeps")
+        axes[-1].set_xlabel(r"$\langle \phi \rangle$")
         plt.show()
 
 
@@ -100,5 +121,7 @@ def main():
         # recorder.plot(title=f"Monte Carlo Simulation of $\phi^4$ Model using Metropolis and Wolff Algorithms, $L={L}$, $\\lambda={lam}$, $\\mu_0^2={m02}$, $t={exec_time:.1f}s$", fname="parallel.png", show=('-S' in dopts))
 
 if __name__=="__main__":
-
-    main()
+    if 'view' in sys.argv:
+        view()
+    else:
+        main()

@@ -3,6 +3,7 @@ from itertools import product
 from colorsys import hls_to_rgb
 from random import randrange
 import abc
+from croutines import lagrangian, rand_dist
 
 import matplotlib as mpl
 mpl.rcParams['axes.formatter.useoffset'] = False
@@ -41,8 +42,7 @@ def show(data, figsize=(6,6), show=True):
     return im
 
 class Lattice(object):
-    __metaclass__ = abc.ABCMeta
-    def __init__(self, data=None, dim=None):
+    def __init__(self, data=None, dim=None, metaclass=abc.ABCMeta):
         self._construct(data, dim)
 
 
@@ -57,55 +57,32 @@ class Lattice(object):
             self.dim = dim
             self.size = dim**2
             if RANK==0:
-                self.data = self.rand_dist(np.random.rand(self.dim, self.dim)) # Hot start
+                self.data = np.vectorize(rand_dist) (np.random.rand(self.dim, self.dim)) # Hot start
             else:
                 self.data = np.empty((self.dim, self.dim))
 
         else:
             raise Exception("dim and data cannot both be None")
 
-        self.__neighbors = lru_cache(maxsize=self.size) (self.__neighbors)
         self.sites = list(product(range(self.dim), repeat=2))
-        # populate cache
-        # for s in self.sites:
-            # self.__neighbors(s)
+        self.full_neighbors = {s:self.neighbors(s) for s in self.sites}
+        self.half_neighbors = {s:self.neighbors(s)[:2] for s in self.sites}
+
         if RANK==0:
             self.calculate_action()
         else:
             self.action=0
 
-        self.mpi_assignment = {}
-        if RANK>0:
-            for color in [WHITE, BLACK]:
-                all_sites = list(self.checker_iter(color))
-                split_sites = np.array_split(all_sites, SIZE-1)
-                self.mpi_assignment[color] = split_sites[RANK-1]
-
-    @abc.abstractmethod
-    def lagrangian(phi, neighbor_phis):
-        pass
-
-    @abc.abstractmethod
-    def random_dist(r):
-        pass
-
     def calculate_action(self):
-        self.action = sum(self.lat_lagrangian(c) for c in self.sites)
+        self.action = 0
+        for c in self.sites:
+            self.action += self.lat_lagrangian(c)
 
     def __repr__(self):
         return repr(self.data)
 
     def __iter__(self):
         return iter(self.data)
-
-    def __getstate__(self):
-        return self.data
-
-    def __setstate__(self, state):
-        self._construct(*state, None)
-
-    def __copy__(self):
-        return Lattice( np.copy(self.data))
 
     def __getitem__(self, k):
         return self.data[k]
@@ -123,17 +100,15 @@ class Lattice(object):
             for i in range((j+offset)%2, self.dim, 2):
                 yield i,j
 
-    def neighbors(self, coord):
-        return self.__neighbors(tuple(coord))
+    @abc.abstractmethod
+    def lat_lagrangian(self, coord):
+        pass
 
-    def __neighbors(self, coord):
-        '''This function is cached in __init__'''
+    def neighbors(self, coord):
         d = self.dim
         x, y = coord
         return tuple( ((x+i) % self.dim, (y+j) % self.dim) for i,j in REL_COORDS )
 
-    def lat_lagrangian(self, coord):
-        return self.static_lagrangian( self[coord], (self[c] for c in self.neighbors(coord)[:2]))
 
     def show(self, figsize=(6,6), show=True):
         M = np.transpose(np.array(self.data))
@@ -168,13 +143,6 @@ class Lattice(object):
         return 1 - phi_qu / (3 * phi_sq**2)
 
 
-    def rho(self, tau):
-        fft = np.fft.fft2(self.data)
-        ps = np.concatenate([np.arange(self.dim//2), -np.arange(self.dim//2,0,-1)])
-        px, py = np.meshgrid(ps, ps)
-        rho = np.exp(-tau*(px**2 + py**2)) * fft
-        return Lattice(self.m02, self.l, np.fft.ifft2(rho))
-
 
 class Phi4Lattice(Lattice):
 
@@ -187,11 +155,11 @@ class Phi4Lattice(Lattice):
 
         super().__init__(dim=dim)
 
-    @staticmethod
-    def rand_dist(r):
-        return 3 * r - 1.5
+    def lat_lagrangian(self, coord):
+        return lagrangian( self[coord], sum(self[c] for c in self.neighbors(coord)[:2]), self.redef_mass, self.quarter_lam)
 
-    def static_lagrangian(self, phi, neighbor_phis):
-        return -phi * sum(neighbor_phis) + self.redef_mass * phi**2 + self.quarter_lam * phi**4
-
-
+    def flow_evolve(self, tau):
+        fft = np.fft.fft2(self.data)
+        ps = np.concatenate([np.arange(self.dim//2), -np.arange(self.dim//2,0,-1)])
+        px, py = np.meshgrid(ps, ps)
+        self.data = np.exp(-tau*(px**2 + py**2)) * fft
