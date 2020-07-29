@@ -211,8 +211,7 @@ linestretch: 1.5
         - Each measured lattice should be evolved in flow time before recording
 
 ## Friday, July 24
-
-- 
+ 
 - Things to do:
     - Gradient flow
     - Try $m_0^2 = -0.8$, see if it become bimodal with large thermalization. 
@@ -224,6 +223,23 @@ linestretch: 1.5
     - C++?
     - Cython?
     - Local cluster?
+
+
+
+## Monday, July 27
+
+- Shift to utilizing the 0th node for computation.
+
+- Things to note:
+    - Histogram in conference proceedings bins single lattice, not average over Markov chain.
+
+- Questions:
+    - collecting plots
+
+
+- To-Do:
+    - Run a proper histogram for different thermalizaitons, see if 10^4 is necessary.
+    
 
 
 
