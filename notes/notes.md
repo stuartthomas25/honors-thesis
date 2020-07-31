@@ -236,9 +236,21 @@ linestretch: 1.5
 - Questions:
     - collecting plots
 
-
 - To-Do:
     - Run a proper histogram for different thermalizaitons, see if 10^4 is necessary.
+
+## Wednesday, July 29
+
+- Plots look good, but are a little wide and not localized on the convergent point
+    - Try a cold start
+    - Look at 256
+    - Average a couple trials
+
+- To-Do:
+    - See if I can find the width issue
+    - Check autocorrelation times (with/without cluster)
+        - close to critical value
+    - wait on gradient flow until we are more confident in Markov chain.
     
 
 
