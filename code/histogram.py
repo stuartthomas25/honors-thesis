@@ -11,13 +11,15 @@ import pickle
 from scipy.io import savemat
 from UWerr import UWerr
 
-Ls = [16, 32, 64, 128]
+Ls = [16,32,64, 128]
 lam = 0.5
 m02 = -0.72
 
 cluster_method = WOLFF
 thermalization = 10**4
 cluster_rate = 5
+trials = 1
+rate = 100
 
 def main():
 
@@ -27,6 +29,8 @@ def main():
     for L in Ls:
 
         l = Phi4Lattice(dim=L, m02=m02, lam=lam)
+        l.data[:,:] = np.sqrt(-m02/lam) # Cold start
+        l.action = l.calculate_action()
 
 #         phis = np.linspace(-2,2,200)
         # Vs = np.empty_like(phis)
@@ -44,7 +48,7 @@ def main():
         # quit()
 
         if RANK==0:
-            recorder = Recorder(thermalization=0, rate=10, gif=False)
+            recorder = Recorder(['data'], rate, thermalization, gif=True)
         else:
             recorder = None
 
@@ -52,12 +56,17 @@ def main():
 
         rw = RandomWalk(l)
         start = time()
-        rw.run(thermalization, cluster_method=cluster_method,  cluster_rate=cluster_rate, recorder=recorder, progress=True)
+        rw.run(rate*trials+thermalization, cluster_method=cluster_method,  cluster_rate=cluster_rate, recorder=recorder, progress=True)
+
 
         if RANK==0:
             print(f"Executed in {(time() - start)} sec")
-            datas[L] = l.data.flatten().tolist()
-            # recorder.save_gif('plots/lattice.gif')
+            all_phis = []
+            for phi_data in recorder.values['data']:
+                all_phis.extend( phi_data.flatten().tolist() )
+            datas[L] = all_phis
+            if recorder.gp is not None:
+                recorder.save_gif('plots/lattice.gif')
 
     if RANK==0:
         pickle.dump(datas, open("data/histogram.pickle", 'wb'))
@@ -77,7 +86,7 @@ def view():
         ax.legend()
         ax.set_xlim((-3,3))
 
-        ax.set_title(f"$\\langle \\phi \\rangle$ histograms: $L={L}$, $\\lambda={lam}$, $m_0^2={m02}$, {thermalization} sweep thermalization")
+        ax.set_title(f"$\\phi$ histograms: $\\lambda={lam}$, $m_0^2={m02}$, {thermalization} sweep thermalization")
         ax.set_xlabel(r"$\langle \phi \rangle$")
         plt.show()
 

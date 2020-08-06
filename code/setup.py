@@ -3,6 +3,6 @@ from Cython.Build import cythonize
 import numpy
 
 setup(
-    ext_modules = cythonize("croutines.pyx"),
+    ext_modules = cythonize("croutines.pyx", language="c++"),
     include_dirs=[numpy.get_include()]
 )

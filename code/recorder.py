@@ -22,7 +22,7 @@ class Recorder(object):
 
     quantities = {}
 
-    def __init__(self, rate=1, thermalization=0, gif = False):
+    def __init__(self, quantities, rate=1, thermalization=0, gif = False):
         if gif:
             self.gp = GifProducer()
         else:
@@ -33,7 +33,8 @@ class Recorder(object):
 
         self.values = {}
         for quant in type(self).quantities:
-            self.values[quant] = []
+            if quant in quantities:
+                self.values[quant] = []
 
         self.record_count = 0
 
@@ -103,6 +104,11 @@ class Recorder(object):
 @Recorder.quantity(r"$|\langle \phi \rangle|$")
 def magnetization(lat):
     return np.sum(lat.data) / lat.size
+
+@Recorder.quantity(r"$\phi$")
+def data(lat):
+    return lat.data
+
 
 @Recorder.quantity(r"$|\langle \phi \rangle|$")
 def abs_magnetization(lat):

@@ -1,15 +1,25 @@
 from random import random
 from math import exp
 from keys import WOLFF, SWENDSEN_WANG, WHITE, BLACK
-from croutines import sweep
+from croutines import sweep, generate_cluster, wolff
 from time import time
 
 import numpy as np
 from mpi4py import MPI
 
+
+CHECK_ACTION = False
+
 COMM = MPI.COMM_WORLD
 RANK = COMM.Get_rank()
 SIZE = COMM.Get_size()
+
+# if 'profile' not in globals():
+    # profile = lambda x : x
+# else:
+    # print("profiling...")
+
+
 
 class RandomWalk(object):
     def __init__(self, lattice):
@@ -62,12 +72,13 @@ class RandomWalk(object):
     def flip(self, c):
         phi = self.lat.data[c]
         self.lat.data[c] = -phi
-        self.lat.action += 4 * phi * sum(self.lat.data[n] for n in self.lat.half_neighbors[c])
+        self.lat.action += 2 * phi * sum(self.lat.data[n] for n in self.lat.half_neighbors[c])
 
 
     def wolff(self):
         seed = self.lat.random()
-        cluster = self.generate_cluster(seed, False)
+        # print(self.lat.data.shape, seed)
+        cluster = generate_cluster(self.lat.data, seed, False)
 
         if len(cluster) <= self.lat.size // 2:
             for c in cluster:
@@ -77,27 +88,27 @@ class RandomWalk(object):
                 if not tuple(c) in cluster:
                     self.flip(c)
 
-    @staticmethod
-    def Padd(phi_a, phi_b):
-        Padd = 1 - exp(-2*phi_a*phi_b) # Eq. 7.17
-        assert Padd>0
-        return Padd
+  #   @staticmethod
+    # def Padd(phi_a, phi_b):
+        # Padd = 1 - exp(-2*phi_a*phi_b) # Eq. 7.17
+        # assert Padd>0
+        # return Padd
 
-    def generate_cluster(self, seed, accept_all):
-        sign = np.sign(self.lat[seed])
-        to_test = {(seed, np.inf*sign)} # site and phi value, using infinity to ensure Padd=1 for first addition
-        tested = set()
-        cluster = set()
-        while len(to_test)>0:
-            s, phi_a = to_test.pop()
-            tested.add(s)
-            if np.sign(self.lat[s]) == sign:
-                Padd = self.Padd(phi_a, self.lat[s])
-                if False: #Padd==1 or random()<Padd: # check Padd==1 first to increase efficiency in SW algorithm
-                    cluster.add(s)
-                    to_test |= set((n, self.lat[s]) for n in self.lat.full_neighbors[s] if n not in tested)
+    # def generate_cluster(self, seed, accept_all):
+        # sign = np.sign(self.lat[seed])
+        # to_test = {(seed, np.inf*sign)} # site and phi value, using infinity to ensure Padd=1 for first addition
+        # tested = set()
+        # cluster = set()
+        # while len(to_test)>0:
+            # s, phi_a = to_test.pop()
+            # tested.add(s)
+            # if np.sign(self.lat[s]) == sign:
+                # Padd = self.Padd(phi_a, self.lat[s])
+                # if Padd==1 or random()<Padd: # check Padd==1 first to increase efficiency in SW algorithm
+                    # cluster.add(s)
+                    # to_test |= set((n, self.lat[s]) for n in self.lat.full_neighbors[s] if n not in tested)
 
-        return cluster
+        # return cluster
 
     def run(self,
             sweeps,
@@ -107,10 +118,10 @@ class RandomWalk(object):
             progress=False
             ):
 
+        progress_char = '#'
+
         if cluster_method==WOLFF:
-            cluster = self.wolff
-        elif cluster_method==SWENDSEN_WANG:
-            cluster = self.swendsen_wang
+            cluster = wolff
         else:
             cluster = lambda: None
 
@@ -121,14 +132,22 @@ class RandomWalk(object):
 
         for i in range(sweeps):
             self.checkerboard()
+            if CHECK_ACTION: self.check_action(self.lat)
 
-            if recorder is not None and i % recorder.rate == 0 and i > recorder.thermalization:
+            if recorder is not None and i % recorder.rate == 0 and i >= recorder.thermalization:
                 recorder.record(self.lat)
             if i % cluster_rate ==0 and RANK==0:
-                cluster()
+                self.lat.data, self.lat.action = cluster(self.lat)
+                # if i>= recorder.thermalization: recorder.record(self.lat)
+                if CHECK_ACTION: self.check_action(self.lat)
             if RANK==0 and progress and i % progressbar_rate == 0:
                 p = int(i/sweeps*progressbar_size)
-                print('['+'='*p+'-'*(progressbar_size-p)+']', end='\r', flush=True)
+                print('['+progress_char*p+'-'*(progressbar_size-p)+']', end='\r', flush=True)
 
         if progress and RANK==0:
-            print('['+'='*progressbar_size+']',flush=True)
+            print('['+progress_char*progressbar_size+']',flush=True)
+
+
+    def check_action(self, tol=1e5):
+        assert np.isclose(self.lat.action, self.lat.calculate_action())
+

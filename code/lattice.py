@@ -41,8 +41,8 @@ def show(data, figsize=(6,6), show=True):
         plt.show()
     return im
 
-class Lattice(object):
-    def __init__(self, data=None, dim=None, metaclass=abc.ABCMeta):
+class Lattice(object, metaclass=abc.ABCMeta):
+    def __init__(self, data=None, dim=None):
         self._construct(data, dim)
 
 
@@ -69,14 +69,15 @@ class Lattice(object):
         self.half_neighbors = {s:self.neighbors(s)[:2] for s in self.sites}
 
         if RANK==0:
-            self.calculate_action()
+            self.action = self.calculate_action()
         else:
-            self.action=0
+            self.action = 0
 
     def calculate_action(self):
-        self.action = 0
+        action = 0
         for c in self.sites:
-            self.action += self.lat_lagrangian(c)
+            action += self.lat_lagrangian(c)
+        return action
 
     def __repr__(self):
         return repr(self.data)

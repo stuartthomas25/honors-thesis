@@ -2,6 +2,7 @@ from parallel_utils import RANK
 from keys import WOLFF, SWENDSEN_WANG
 from lattice import Phi4Lattice
 from random_walk import RandomWalk
+from random import seed
 import numpy as np
 from recorder import Recorder
 from time import time
@@ -11,59 +12,98 @@ if 'view' in sys.argv:
 import pickle
 from scipy.io import savemat
 from UWerr import UWerr
+import pickle
 
-L = 16
+SEED = True
+L = 32
 lam = 0.5
-m02s = [-0.68]
+m02s = [-0.72]
 
 # sweeps = 10**5
 cluster_method = WOLFF
-thermalization = 10**3
-record_rate = 100
+thermalization = 10**4
+record_rate = 1
 cluster_rate = 5
 
-measurements = 10**3
+measurements = 10**4
 
 sweeps = thermalization + record_rate * measurements
-print(sweeps)
 # print(sweeps, "sweeps")
 
-quantities = ['magnetization', 'binder_cumulant', 'susceptibility']
+quantities = ['data', 'magnetization', 'susceptibility', 'action']
 
 def main():
 
     if RANK==0:
-        recorder = Recorder(thermalization=thermalization, rate=record_rate, gif=False)
-        data = np.empty((len(m02s), recorder.num_measurements(sweeps)))
+        recorders = [Recorder(quantities, thermalization=thermalization, rate=record_rate, gif=False) for _ in m02s]
     else:
-        recorder = None
+        recorders = [None for _ in m02s]
 
 
-    for i, m02 in enumerate(m02s):
+    for i, (recorder, m02) in enumerate(zip(recorders, m02s)):
 
         l = Phi4Lattice(dim=L, m02=m02, lam=lam)
+        # l.data[:,:] = np.sqrt(-m02/lam)
+        # l.action = l.calculate_action()
+
         rw = RandomWalk(l)
         start = time()
+        if RANK==0: recorder.record(l)
         rw.run(sweeps, cluster_method=cluster_method,  cluster_rate=cluster_rate, recorder=recorder, progress=True)
 
         if RANK==0:
             dt = time() - start
             print(f"Executed in {int(dt//60)}:{str(int(dt%60)).zfill(2)}")
-            data[i,:] = recorder.values['magnetization']
-            recorder.clear()
 
     if RANK==0:
-        np.save('data/histogram', data)
-        if recorder.gp is not None:
-            recorder.save_gif('plots/lattice.gif')
+        rw.check_action()
+
+        recorders[i].record(l)
+        pickle.dump(recorders, open('data/converge.pickle', 'wb'))
+        print("Saved pickle")
+        if recorders[i].gp is not None:
+            recorders[i].save_gif('plots/lattice.gif')
+            print("Saved gif")
 
 
 
 def view():
     if RANK==0:
-        data = np.load('data/histogram.npy')
+        recorders = pickle.load(open('data/converge.pickle', 'rb'))
         i = 0
-        #UWerr(data[i]**2, name=f"$\\langle \\phi^2 \\rangle$: $L={L}$, $\\lambda={lam}$, $m_0^2={m02s[i]}$, {sweeps} sweeps, {thermalization} sweep thermalization, recording every {record_rate} sweeps", plot=True, whole_plot=True)
+        recorder=recorders[i]
+        data = np.array(recorder.values['data'])
+        phi_sq = np.mean(data**2, axis=(1,2))
+
+        UWerr(phi_sq, name=f"$\\langle \\phi^2 \\rangle$: $L={L}$, $\\lambda={lam}$, $m_0^2={m02s[i]}$, {sweeps} sweeps, {thermalization} sweep thermalization, recording every {record_rate} sweeps", plot=True, whole_plot=True)
+
+        fig, axes = plt.subplots(4, 1, figsize=(16,16))
+        sweep_x = np.arange(recorder.record_count)
+
+        phi_broken =np.sqrt(-m02s[i]/lam)
+
+        axes[0].axhline(phi_broken, ls=':', c='k')
+        axes[0].axhline(0, ls=':', c='k')
+        axes[0].plot(sweep_x, np.abs(recorder.values['magnetization']))
+        axes[0].set_ylabel(r'$\langle \phi \rangle$')
+
+
+        axes[1].set_ylabel("$\chi$")
+        axes[1].plot(sweep_x, recorder.values['susceptibility'])
+        axes[2].set_ylabel("$U$")
+        #axes[2].plot(sweep_x, recorder.values['binder_cumulant'])
+        axes[3].set_ylabel("$S$")
+        axes[3].plot(sweep_x, recorder.values['action'])
+        axes[3].axhline(0., ls=':', c='r')
+        axes[3].axhline(-0.25 * m02s[i]**2/lam, ls=':', c='k')
+
+        plt.show()
+        plt.hist(data[-1].flatten(), bins=100)
+        plt.axvline(-np.sqrt(-m02s[i]/lam),c='k')
+        plt.axvline( np.sqrt(-m02s[i]/lam),c='k')
+        plt.show()
+        quit()
+
         nseries = data.shape[0]
         fig, axes = plt.subplots(nseries, 1, sharex=True, figsize=(16, 8*nseries), squeeze=False)
         axes = [ax for row in axes for ax in row] # flatten
