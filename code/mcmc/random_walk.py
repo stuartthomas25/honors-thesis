@@ -1,7 +1,7 @@
 from random import random
 from math import exp
-from keys import WOLFF, SWENDSEN_WANG, WHITE, BLACK
-from croutines import sweep, generate_cluster, wolff
+from .keys import WOLFF, SWENDSEN_WANG, WHITE, BLACK
+from .croutines import sweep, generate_cluster, wolff
 from time import time
 
 import numpy as np
@@ -123,7 +123,7 @@ class RandomWalk(object):
         if cluster_method==WOLFF:
             cluster = wolff
         else:
-            cluster = lambda: None
+            cluster = None
 
         if progress and RANK==0:
             progressbar_size = 140
@@ -137,7 +137,8 @@ class RandomWalk(object):
             if recorder is not None and i % recorder.rate == 0 and i >= recorder.thermalization:
                 recorder.record(self.lat)
             if i % cluster_rate ==0 and RANK==0:
-                self.lat.data, self.lat.action = cluster(self.lat)
+                if cluster is not None:
+                    self.lat.data, self.lat.action = cluster(self.lat)
                 # if i>= recorder.thermalization: recorder.record(self.lat)
                 if CHECK_ACTION: self.check_action(self.lat)
             if RANK==0 and progress and i % progressbar_rate == 0:

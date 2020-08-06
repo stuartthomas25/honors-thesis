@@ -1,10 +1,8 @@
 from parallel_utils import RANK
-from keys import WOLFF, SWENDSEN_WANG
-from lattice import Phi4Lattice
-from random_walk import RandomWalk
+from mcmc.keys import WOLFF, SWENDSEN_WANG
+from mcmc import Phi4Lattice, RandomWalk, Recorder
 from random import seed
 import numpy as np
-from recorder import Recorder
 from time import time
 import sys
 if 'view' in sys.argv:
@@ -15,12 +13,12 @@ from UWerr import UWerr
 import pickle
 
 SEED = True
-L = 32
+L = 64
 lam = 0.5
 m02s = [-0.72]
 
 # sweeps = 10**5
-cluster_method = WOLFF
+cluster_method = None
 thermalization = 10**4
 record_rate = 1
 cluster_rate = 5
@@ -30,7 +28,7 @@ measurements = 10**4
 sweeps = thermalization + record_rate * measurements
 # print(sweeps, "sweeps")
 
-quantities = ['data', 'magnetization', 'susceptibility', 'action']
+quantities = ['data', 'magnetization', 'susceptibility', 'binder_cumulant', 'action']
 
 def main():
 
@@ -91,7 +89,7 @@ def view():
         axes[1].set_ylabel("$\chi$")
         axes[1].plot(sweep_x, recorder.values['susceptibility'])
         axes[2].set_ylabel("$U$")
-        #axes[2].plot(sweep_x, recorder.values['binder_cumulant'])
+        axes[2].plot(sweep_x, recorder.values['binder_cumulant'])
         axes[3].set_ylabel("$S$")
         axes[3].plot(sweep_x, recorder.values['action'])
         axes[3].axhline(0., ls=':', c='r')

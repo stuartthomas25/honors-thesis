@@ -3,7 +3,7 @@ from itertools import product
 from colorsys import hls_to_rgb
 from random import randrange
 import abc
-from croutines import lagrangian, rand_dist
+from .croutines import lagrangian, rand_dist
 
 import matplotlib as mpl
 mpl.rcParams['axes.formatter.useoffset'] = False
@@ -12,7 +12,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 from mpi4py import MPI
 
-from keys import *
+from .keys import *
 
 COMM = MPI.COMM_WORLD
 RANK = COMM.Get_rank()

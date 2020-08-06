@@ -1,3 +1,5 @@
+# distutils: language = c++
+
 '''
 This file must be compiled to run. Call
     
@@ -5,7 +7,6 @@ This file must be compiled to run. Call
 
 to compile this file. The functions can then be called through the `croutines` module. 
 '''
-
 
 import numpy as np
 cimport numpy as np
@@ -42,13 +43,13 @@ cdef void full_neighbors((int,int) site, (int, int) neighbors[4], int dim):
     neighbors[2] = (site[0], wrap(site[1]+1,dim))
     neighbors[3] = (site[0], wrap(site[1]-1,dim))
     
-cdef void forward_neighbors((int,int) site, (int,int) neighbors[2], int dim):    
-    neighbors[0] = (site[0]+1, site[1])
-    neighbors[2] = (site[0], site[1]+1)
+# cdef void forward_neighbors((int,int) site, (int,int) neighbors[2], int dim):    
+    # neighbors[0] = (site[0]+1, site[1])
+    # neighbors[2] = (site[0], site[1]+1)
 
-cdef void backward_neighbors((int,int) site, (int,int) neighbors[2], int dim):    
-    neighbors[1] = (site[0]-1, site[1])
-    neighbors[3] = (site[0], site[1]-1)
+# cdef void backward_neighbors((int,int) site, (int,int) neighbors[2], int dim):    
+    # neighbors[1] = (site[0]-1, site[1])
+    # neighbors[3] = (site[0], site[1]-1)
 
 cdef double randf():
     return <double>rand() / RAND_MAX
@@ -183,7 +184,8 @@ def wolff(lat):
     cdef vector [(int,int)] cluster
     cdef double[:,:] lat_view = lat.data
     cdef (int,int) neighbors[4]
-    
+    cdef (int,int) n
+
     cluster = generate_cluster(lat.data, seed, False)
     
     cdef double action = lat.action
