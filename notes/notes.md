@@ -251,9 +251,27 @@ linestretch: 1.5
     - Check autocorrelation times (with/without cluster)
         - close to critical value
     - wait on gradient flow until we are more confident in Markov chain.
+
+
+## Friday, July 31
+
+- Calculate autocorrelation times (as a function of mass), binder cumulant
+- Check Wolff algorithm, try Swendsen Wang
+- Multigrid algorithm?
+
+- Focus on metropolis algorithm. We don't want to study a cluster algorithm on the backdrop of a broken metropolis algorithm.
+
+- Literature search: must the metropolis algorithm have randomly included sites?
     
 
+## Thursday, August 6
 
+- Progress:
+    - Autocorrelation: see page 6 from Schaich
+        - Affected by the measurement rate?
+    - Wolff implemented in C, large speed-up
+    - Fixed neighbor bug in Wolff algorithm
+    - Histogram issue still persists
 
 
 
