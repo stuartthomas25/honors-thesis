@@ -274,8 +274,53 @@ linestretch: 1.5
     - Histogram issue still persists
 
 
+## Friday, August 7
+
+- Binder cumulant shows very different critical mass
+
+- Going forward:
+    - Start taking personal notes on the research with sketches, ideas, progress
+    - Always calculate all of the observables
 
 
+- Try the Binder Cumulant without Wolff
+- See if the result depends on thermalization
+    - This result should not be the same as 0 thermalization.
+    - 
+
+
+
+## Wednesdesday, August 12
+
+- There are some major problems with my averaging.
+- TODO: implement this fix
+
+Graduate School:
+
+- Aim high
+- Best possible school that you're happy at
+- Name recognition matters
+- If you can afford to do the applications, apply to a lot
+- Maybe not scientific instrument lab?
+
+- You will have a choice betweeen famous advisors:
+    - Famous: letters and papers will carry weight
+    - Not-famous: much less attanetion
+
+
+- Are you emailing your future advisor?
+    - depends on place
+    - At MIT, less important to single out a specific professor.
+    - At a small school (W&M), you need to identify someone before hand.
+        - People can actually change advisors
+- Possible schools:
+    - UCSD
+    - Berkley
+    - Rutgers
+    - UMD
+    - UCSB
+    - MIT
+    - Yale
 
 
 
