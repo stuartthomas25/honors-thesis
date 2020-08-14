@@ -1,4 +1,5 @@
 # distutils: language = c++
+# cython: profile=True
 
 '''
 This file must be compiled to run. Call
@@ -20,17 +21,19 @@ from libc.float cimport DBL_MAX
 from libcpp.stack cimport stack
 from libcpp.vector cimport vector
 from libcpp.set cimport set
+# from libcpp.algorithm cimport find
 
 import sys
 
-cdef extern from "<algorithm>" namespace "std" nogil:
+# The current distribution of Cython does not include a wrapper for "std::find"
+cdef extern from "<algorithm>" namespace "std" nogil: 
     Iter find[Iter, T](Iter first, Iter last, const T& value) except +
 
-
-def seed(int seed):
+cdef seed(int seed):
     '''Python wrapper to seed C rand()'''
     srand(seed)
 
+@cython.cdivision(True)
 cdef unsigned int wrap( int c, unsigned int dim):
     cdef int mod = c % <int>dim
     if mod < 0:
@@ -51,12 +54,13 @@ cdef void full_neighbors((int,int) site, (int, int) neighbors[4], int dim):
     # neighbors[1] = (site[0]-1, site[1])
     # neighbors[3] = (site[0], site[1]-1)
 
+@cython.cdivision(True)
 cdef double randf():
     return <double>rand() / RAND_MAX
 
 cdef int randint(int n):
     # Chop off all of the values that would cause skew...
-    cdef int end = RAND_MAX / n # truncate skew
+    cdef int end = RAND_MAX // n # truncate skew
     end *= n
 
     cdef int r = rand()
@@ -143,35 +147,33 @@ cpdef vector [(int,int)] generate_cluster(double [:,:] lat_data, (int,int) seed,
     cdef double phi_b
     cdef (int,int) s
     cdef (int,int) n
-    
+    cdef (int,int) c
     cdef int dim = lat_data.shape[0]
     
     cdef double Padd
-    cdef stack [((int,int), double)] to_test
-    cdef set [int] tested # for some reason, can't use a tuple for set
+    cdef stack [((int, int), double)] to_test
     cdef (int,int) neighbors[4]
     cdef vector [(int,int)] cluster
         
     phi_a = lat_data.__getitem__(seed)
     phi_sign = sign(phi_a) # get the sign of phi_a
     to_test.push((seed, DBL_MAX * phi_sign)) # site and phi value, using infinity to ensure Padd=1 for first addition
-    
     while to_test.size()>0:
         s, phi_a = to_test.top()
         to_test.pop()
-        if tested.find(s[0] + dim * s[1]) != tested.end(): # contains
-            continue
-        tested.insert( s[0] + dim * s[1] )
-        
-        phi_b = lat_data.__getitem__(s)
-        if sign(phi_b) == phi_sign:
-            Padd = cPadd(phi_a, phi_b)
-            if accept_all or randf() < Padd: # check Padd==1 first to increase efficiency in SW algorithm
-                cluster.push_back(s)
-                full_neighbors(s, neighbors, dim)
-                for n in neighbors:
-                    if tested.find(n[0] + dim * n[1]) == tested.end(): #does not contain
-                        to_test.push(( n, lat_data.__getitem__(s) ))
+
+        for c in cluster: # the std::find function doesnt seem to work in Cython
+            if c[0]==s[0] and c[1]==s[1]:
+                break
+        else:
+            phi_b = lat_data.__getitem__(s)
+            if sign(phi_b) == phi_sign:
+                Padd = cPadd(phi_a, phi_b)        
+                if accept_all or randf() < Padd:
+                    cluster.push_back(s)
+                    full_neighbors(s, neighbors, dim)
+                    for n in neighbors:
+                        to_test.push( (n, lat_data.__getitem__(s)) )
 
     return cluster
 
@@ -185,6 +187,7 @@ def wolff(lat):
     cdef double[:,:] lat_view = lat.data
     cdef (int,int) neighbors[4]
     cdef (int,int) n
+
 
     cluster = generate_cluster(lat.data, seed, False)
     

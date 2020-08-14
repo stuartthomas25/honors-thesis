@@ -3,6 +3,10 @@ from math import exp
 from .keys import WOLFF, SWENDSEN_WANG, WHITE, BLACK
 from .croutines import sweep, generate_cluster, wolff
 from time import time
+import sys
+import cProfile, pstats
+
+
 
 import numpy as np
 from mpi4py import MPI
@@ -115,7 +119,8 @@ class RandomWalk(object):
             cluster_method=None,
             cluster_rate=5,
             recorder=None,
-            progress=False
+            progress=False,
+            record_on_cluster=False
             ):
 
         progress_char = '#'
@@ -136,11 +141,16 @@ class RandomWalk(object):
 
             if recorder is not None and i % recorder.rate == 0 and i >= recorder.thermalization:
                 recorder.record(self.lat)
-            if i % cluster_rate ==0 and RANK==0:
-                if cluster is not None:
-                    self.lat.data, self.lat.action = cluster(self.lat)
-                # if i>= recorder.thermalization: recorder.record(self.lat)
-                if CHECK_ACTION: self.check_action(self.lat)
+
+            if i % cluster_rate ==0 and RANK==0 and cluster is not None:
+                self.lat.data, self.lat.action = cluster(self.lat)
+                # cProfile.runctx("cluster(self.lat)", globals(), locals(), "profiling/wolff.prof")
+
+                if recorder is not None and i % recorder.rate == 0 and i >= recorder.thermalization and record_on_cluster:
+                    recorder.record(self.lat)
+                if CHECK_ACTION:
+                    self.check_action(self.lat)
+
             if RANK==0 and progress and i % progressbar_rate == 0:
                 p = int(i/sweeps*progressbar_size)
                 print('['+progress_char*p+'-'*(progressbar_size-p)+']', end='\r', flush=True)

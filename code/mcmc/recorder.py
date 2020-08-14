@@ -10,19 +10,19 @@ import numpy as np
 
 
 class Quantity(object):
-    def __init__(self, f, label):
+    def __init__(self, f, label=None):
         self.f = f
         self.label = label
 
     def __call__(self, *args, **kwargs):
         return self.f(*args, **kwargs)
 
-
 class Recorder(object):
 
-    quantities = {}
+    primary_observables = {}
+    derived_observables = {}
 
-    def __init__(self, quantities, rate=1, thermalization=0, gif = False):
+    def __init__(self, rate=1, thermalization=0, gif = False):
         if gif:
             self.gp = GifProducer()
         else:
@@ -32,21 +32,28 @@ class Recorder(object):
         self.rate = rate
 
         self.values = {}
-        for quant in type(self).quantities:
-            if quant in quantities:
-                self.values[quant] = []
+
+        for obsrv in type(self).primary_observables:
+            self.values[obsrv] = []
 
         self.record_count = 0
 
         # print("Recorder",Recorder.quantities)
 
     @classmethod
-    def quantity(cls, label):
+    def derived_observable(cls, label):
         def decorator(f):
             name = f.__name__
-            cls.quantities[name] = Quantity(f, label)
+            cls.derived_observables[name] = Quantity(f, label)
             return f
         return decorator
+
+    @classmethod
+    def primary_observable(cls, f):
+        name = f.__name__
+        cls.primary_observables[name] = Quantity(f)
+        return f
+
 
     def num_measurements(self, sweeps):
         return (sweeps - self.thermalization) // self.rate - 1
@@ -55,10 +62,9 @@ class Recorder(object):
         for v in self.values:
             self.values[v] = []
 
-
     def record(self, lat):
         for val, arr in self.values.items():
-            arr.append(type(self).quantities[val] (lat))
+            arr.append(type(self).primary_observables[val] (lat))
         if self.gp is not None:
             self.gp.save_lat(lat)
         self.record_count += 1
@@ -66,70 +72,54 @@ class Recorder(object):
     def save_gif(self, fname, fps=3):
         self.gp.save(fname, fps)
 
-    # def plot(self, title="", fname=None, show=True, xlabel="Sweep"):
-        # if fname is None:
-            # fname = "Figure.png"
-        # x = self.iter_index
-        # fig, (ax1, ax2, ax3, ax4) = plt.subplots(4,1, figsize=(18,12), sharex = True)
-        # ax1.plot(x, self.magnetizations)
-        # ax2.plot(x, self.energies)
-        # ax3.plot(x, self.susceptibilities)
-        # ax4.plot(x, self.binder_cums)
+    @property
+    def means(self):
+        return {k : sum(self.values[k]) / self.record_count for k in self.values}
 
-        # ax1.set_ylabel("Magnetization")
-        # ax2.set_ylabel("Total Action")
-        # ax3.set_ylabel("Susceptibility")
-        # ax4.set_ylabel("Binder Cumulant")
-        # ax4.set_ylim((-0.1,1.1))
-        # ax4.set_xlabel(xlabel)
-        # # ax3.set_ylim((-0.05,1.05))
-        # ax1.set_title(title)
-        # plt.savefig('plots/'+fname)
-        # if show:
-            # plt.show()
+    @property
+    def errors(self):
+        stderrs = {}
+        for key in self.values:
+            nparr = np.array(self.values[key])
+            stddev = np.std(nparr)
+            stderrs[key] = stddev / sqrt(nparr.size)
 
-    def mean(self, key):
-        arr = self.values[key]
-        return sum(arr) / len(arr)
+        return stderrs
 
-    def error(self, key):
-        if key not in self.values:
-            raise Exception("Quantity key not found")
-        nparr = np.array(self.values[key])
-        stddev = np.std(nparr)
-        stderr = stddev / sqrt(nparr.size)
+    def derived_value(self, key):
+        return type(self).derived_observables[key] (**self.means)
 
-        return stderr
-
-@Recorder.quantity(r"$|\langle \phi \rangle|$")
-def magnetization(lat):
+@Recorder.primary_observable
+def phi(lat):
     return np.sum(lat.data) / lat.size
 
-@Recorder.quantity(r"$\phi$")
-def data(lat):
-    return lat.data
+@Recorder.primary_observable
+def abs_phi(lat):
+    return abs(np.sum(lat.data)) / lat.size
+
+@Recorder.primary_observable
+def phi2(lat):
+    return np.sum(lat.data**2) / lat.size
+
+@Recorder.primary_observable
+def phi4(lat):
+    return np.sum(lat.data**4) / lat.size
 
 
-@Recorder.quantity(r"$|\langle \phi \rangle|$")
-def abs_magnetization(lat):
-    return abs(np.sum(lat.data) / lat.size)
 
 
-@Recorder.quantity(r"$U$")
-def binder_cumulant(lat):
-    phi_sq = np.sum(lat.data**2) / lat.size
-    phi_qu = np.sum(lat.data**4) / lat.size
-    return 1 - phi_qu / (3 * phi_sq**2)
+@Recorder.derived_observable(r"$\langle|\bar \phi|\rangle$")
+def magnetization(abs_phi, **kwargs):
+    return abs_phi
 
-@Recorder.quantity(r"$\chi$")
-def susceptibility(lat):
-    m =  np.sum(lat.data) / lat.size
-    m2 = np.sum(lat.data**2) / lat.size
-    return (m2 - m**2)
+@Recorder.derived_observable(r"$U$")
+def binder_cumulant(phi4, phi2, **kwargs):
+    return 1 - phi4 / (3 * phi2**2)
 
-@Recorder.quantity(r"$S$")
-def action(lat):
-    return lat.action / lat.size
+@Recorder.derived_observable(r"$\chi$")
+def susceptibility(phi2, abs_phi, **kwargs):
+    return phi2 - abs_phi**2
+
 
 class GifProducer(object):
     def __init__(self):
@@ -142,3 +132,4 @@ class GifProducer(object):
 
     def save(self, fn, fps=3):
         imageio.mimwrite(fn, self.frames, fps=fps)
+
