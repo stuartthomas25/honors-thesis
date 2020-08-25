@@ -99,11 +99,12 @@ def abs_phi(lat):
 
 @Recorder.primary_observable
 def phi2(lat):
-    return np.sum(lat.data**2) / lat.size
+    # return np.sum(lat.data**2) / lat.size
+    return (np.sum(lat.data) / lat.size) **2
 
 @Recorder.primary_observable
 def phi4(lat):
-    return np.sum(lat.data**4) / lat.size
+    return (np.sum(lat.data) / lat.size) **4
 
 
 

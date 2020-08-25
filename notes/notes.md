@@ -286,7 +286,6 @@ linestretch: 1.5
 - Try the Binder Cumulant without Wolff
 - See if the result depends on thermalization
     - This result should not be the same as 0 thermalization.
-    - 
 
 
 
@@ -321,6 +320,11 @@ Graduate School:
     - UCSB
     - MIT
     - Yale
+
+
+## Friday, August 14
+- First, check previous version and make sure the numbers are not the same.
+- Try saving some lattices, then calculating observables in Mathematica
 
 
 

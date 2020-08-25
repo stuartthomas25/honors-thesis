@@ -21,20 +21,7 @@ SIZE = COMM.Get_size()
 REL_COORDS = ((1,0),(0,1),(-1,0),(0,-1))
 
 def show(data, figsize=(6,6), show=True):
-    ''' Plots the field.
-    This is a just a helper method for debugging'''
-    M = np.transpose(np.array(data))
-    r = np.abs(M)
-    arg = np.angle(M)
-
-    # This code is generalized for complex fields
-    h = (arg + np.pi)  / (2 * np.pi) + 0.5
-    l = 1.0 - 1.0/(1.0 + r**1.0)
-    s = 0.8
-
-    c = np.vectorize(hls_to_rgb) (h,l,s) # --> tuple
-    c = np.array(c)  # -->  array of (3,n,m) shape, but need (n,m,3)
-    c = c.swapaxes(0,2)
+(0,2)
     plt.figure(figsize=figsize)
     im = plt.imshow(c)
     if show:

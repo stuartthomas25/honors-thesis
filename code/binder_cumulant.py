@@ -70,7 +70,7 @@ def view():
     for ax, quantity in zip(axes, quantities):
         for i,L in enumerate(Ls):
             some_recorders = recorders[i::len(Ls)]
-            means = np.array([r.derived_value(quantity) for r in some_recorders])
+            derived_values = np.array([r.derived_value(quantity) for r in some_recorders])
             stds  = np.array([0 for r in some_recorders]) # EDIT
 
             print(m02s, means)

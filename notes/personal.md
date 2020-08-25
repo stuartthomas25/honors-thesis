@@ -6,4 +6,7 @@
     - It looks like near the critical mass, the field is too chaotic to form meaningful clusters.
     - By looking at the list of sites in a cluster, I discovered that sometimes a point is counted twice. I think this is because neighbors are checked against the cluster BEFORE they are run. This means that a site can appear in `to_test` twice.
 
+- Problem with Binder-Cumulant: I should be taking the ensemble average, then calculating the Binder Cumulant.
+    - I implemented this change using `primary_observables` and `derived_observables`.
+
 
