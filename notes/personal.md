@@ -10,3 +10,16 @@
     - I implemented this change using `primary_observables` and `derived_observables`.
 
 
+## Aug 25
+- Issue: binder cumulant approached 2/3 very slowly below the critical mass.
+- I determined that the square needs to happen after the volume-average. This fixed the issue with the binder cumulant.
+- I implemented this order to compute derived quantities:
+    1. calculate volume-average
+    2. take any exponents
+    3. take the ensemble average
+    4. compute any derived quantities
+
+
+
+
+

@@ -326,10 +326,21 @@ Graduate School:
 - First, check previous version and make sure the numbers are not the same.
 - Try saving some lattices, then calculating observables in Mathematica
 
+## Thursday, August 25
+- Progress:
+    - Fixed BC issue by fixing the order of calculations. New order:    
+        1. calculate volume-average
+        2. take any exponents
+        3. take the ensemble average
+        4. compute any derived quantities
 
+    - This is supported by Eq. 4.19 [@newman1999].
 
-
-
+Future work:
+    - Calculate errors for derived quantities using `gvar`.
+    - Transition to GitHub (ID is `cjmonahan`).
+    - Run through measurements that you can think of. Try other measurements (e.g. bimodality) and generate definitive list of plots.
+    - Create plots without connected lines
 
 
 
