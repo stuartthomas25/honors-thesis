@@ -21,7 +21,6 @@ SIZE = COMM.Get_size()
 REL_COORDS = ((1,0),(0,1),(-1,0),(0,-1))
 
 def show(data, figsize=(6,6), show=True):
-(0,2)
     plt.figure(figsize=figsize)
     im = plt.imshow(c)
     if show:
