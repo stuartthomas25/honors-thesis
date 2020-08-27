@@ -4,6 +4,7 @@ import imageio
 from functools import wraps
 from math import sqrt
 import numpy as np
+import gvar
 
 # COMM = MPI.COMM_WORLD
 # RANK = COMM.Get_rank()
@@ -19,8 +20,9 @@ class Quantity(object):
 
 class Recorder(object):
 
-    primary_observables = {}
-    derived_observables = {}
+    primary_observables = {} # phi
+    secondary_observables = {} # |phi|, phi^2, phi^4, ...
+    derived_observables = {} # U, chi, mu, etc
 
     def __init__(self, rate=1, thermalization=0, gif = False):
         if gif:
@@ -52,6 +54,12 @@ class Recorder(object):
     def primary_observable(cls, f):
         name = f.__name__
         cls.primary_observables[name] = Quantity(f)
+        return f
+
+    @classmethod
+    def secondary_observable(cls, f):
+        name = f.__name__
+        cls.secondary_observables[name] = Quantity(f)
         return f
 
 
@@ -86,25 +94,65 @@ class Recorder(object):
 
         return stderrs
 
+    @property
+    def gvars(self):
+        primary_keys = []
+        secondary_keys = []
+
+        all_values = np.empty((len(type(self).primary_observables) + len(type(self).secondary_observables), self.record_count))
+
+        for i,(k,pv) in enumerate(self.values.items()):
+            primary_keys.append(k)
+            all_values[i,:] = pv
+        for i,(k,q) in enumerate(type(self).secondary_observables.items()):
+            offset = len(primary_keys)
+            secondary_keys.append(k)
+            for j in range(self.record_count):
+                sv = q(**{key:val[j] for  key,val in self.values.items()})
+                all_values[i+offset,j] = sv
+
+        cov_mat = np.cov(all_values)
+        means = np.mean(all_values, axis=1)
+
+
+        gvars = gvar.gvar(means, cov_mat, verify=True)
+#         print(*[gv.sdev for gv in gvars], sep='\t')
+        # print(*[np.std(arr)/np.sqrt(self.record_count) for arr in all_values], sep='\t')
+        # print(*[np.std(arr) for arr in all_values], sep='\t')
+        # print()
+
+
+        return {k:gv for k,gv in zip(primary_keys + secondary_keys, gvars)}
+
+
+        # for k, q in type(self).secondary_observables.items():
+            # secondary_values[k] = np.array([q(**{k:v[i] for k,v in self.values.items()}) for i in range(self.record_count)])
+        # obsrv_matrix
+
+            # errors = np.std(nparr) / sqrt(nparr.size)
+        # return {k : gvar.gvar(means[k], errors[k]) for k in self.values}
+
     def derived_value(self, key):
         return type(self).derived_observables[key] (**self.means)
+
+    def derived_gvar(self, key):
+        return type(self).derived_observables[key] (**self.gvars)
 
 @Recorder.primary_observable
 def phi(lat):
     return np.sum(lat.data) / lat.size
 
-@Recorder.primary_observable
-def abs_phi(lat):
-    return abs(np.sum(lat.data)) / lat.size
+@Recorder.secondary_observable
+def abs_phi(phi):
+    return abs(phi)
 
-@Recorder.primary_observable
-def phi2(lat):
-    # return np.sum(lat.data**2) / lat.size
-    return (np.sum(lat.data) / lat.size) **2
+@Recorder.secondary_observable
+def phi2(phi):
+    return phi**2
 
-@Recorder.primary_observable
-def phi4(lat):
-    return (np.sum(lat.data) / lat.size) **4
+@Recorder.secondary_observable
+def phi4(phi):
+    return phi**4
 
 
 

@@ -1,12 +1,14 @@
 from parallel_utils import RANK
 from mcmc.keys import WOLFF, SWENDSEN_WANG
 from mcmc import Phi4Lattice, RandomWalk, Recorder
+from mcmc.recorder import binder_cumulant
 import numpy as np
 from time import time
 import sys
 if 'view' in sys.argv:
     from matplotlib import pyplot as plt
 import pickle
+import gvar
 
 SEED = True
 Ls = [16, 32, 64]
@@ -21,9 +23,11 @@ thermalization = 10**4
 record_rate = 100
 cluster_rate = 5
 
-measurements = 10**4
+measurements = 10**3
 
 sweeps = thermalization + record_rate * measurements
+if RANK==0:
+    print(f"{sweeps} sweeps")
 
 
 
@@ -91,21 +95,58 @@ def view():
 
             # ax.set_ylabel(quantity)
     # plt.show()
+   #  for r in recorders:
+        # phi = r.gvars['phi']
+        # phi2 = r.gvars['phi2']
+        # phi4 = r.gvars['phi4']
+        # print(1,np.sqrt(phi2.mean - phi.mean**2), phi.sdev)
+        # print(2,np.sqrt(phi4.mean - phi2.mean**2), phi2.sdev)
 
     fig, axes = plt.subplots(3,1, figsize=(16,10))
     for ax, quantity in zip(axes, quantities):
         for i,L in enumerate(Ls):
             some_recorders = recorders[i::len(Ls)]
-            derived_values = np.array([r.derived_value(quantity) for r in some_recorders])
+
+
+            # test_r = some_recorders[-1]
+            # phis = np.array(test_r.values['phi'])
+
+            # gvs = test_r.gvars
+            # phi4 = gvs['phi4']
+            # phi2 = gvs['phi2']
+            # plt.figure()
+            # plt.plot(phis**2, label='$\phi^2$')
+            # plt.plot(phis**4, label='$\phi^4$')
+            # plt.legend()
+            # plt.show()
+
+            # print( 1 + phi2.sdev**2 / phi2.mean**2)
+            # print( phi4.mean / phi2.mean**2)
+            # print(gvar.evalcov([phi4, phi2**2]))
+            # print(np.sqrt(gvar.evalcov([phi4, phi2**2])))
+
+            # phi2_ = gvar.gvar(phi2.mean, phi2.sdev)
+            # phi4_ = gvar.gvar(phi4.mean, phi4.sdev)
+
+            # print(phi4, phi2**2)
+            # print(phi4/ phi2**2)
+            # print(phi4/ phi2**2)
+            # print(phi4_/ phi2_**2)
+            # print(1 - gvs['phi4'] / ( 3 * gvs['phi2'] ** 2))
+            # quit()
+
+            derived_gvars = np.array([r.derived_gvar(quantity) for r in some_recorders])
             # stds  = np.array([r.errors[quantity] for r in some_recorders])
             stds  = np.array([0. for r in some_recorders]) # EDIT
 
-            ax.errorbar(m02s, derived_values, yerr=stds, label=f"$N={L}$")
+            ax.errorbar(m02s, [g.mean for g in derived_gvars], yerr=[g.sdev for g in derived_gvars], fmt='o', label=f"$N={L}$", capsize=5,zorder=i)
             ax.legend()
             if quantity=="binder_cumulant":
                 ax.axhline(2/3, c='r')
-            if quantity=="abs_magnetization":
+                ax.axhline(0, c='k')
+            if quantity=="magnetization":
                 ax.set_ylim( (0.0, np.sqrt(-m02s[-1]/lam)) )
+                ax.set_title(f"{measurements} measurements every {record_rate} sweeps, {thermalization} thermalization")
             # print("phi2",[r.values['phi2'] for r in some_recorders]) # EDIT
 
             ax.set_ylabel(Recorder.derived_observables[quantity].label)
