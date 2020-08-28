@@ -102,6 +102,9 @@ def view():
         # print(1,np.sqrt(phi2.mean - phi.mean**2), phi.sdev)
         # print(2,np.sqrt(phi4.mean - phi2.mean**2), phi2.sdev)
 
+    for r in recorders:
+        r.finalize_values()
+
     fig, axes = plt.subplots(3,1, figsize=(16,10))
     for ax, quantity in zip(axes, quantities):
         for i,L in enumerate(Ls):
@@ -135,11 +138,11 @@ def view():
             # print(1 - gvs['phi4'] / ( 3 * gvs['phi2'] ** 2))
             # quit()
 
-            derived_gvars = np.array([r.derived_gvar(quantity) for r in some_recorders])
+            means = np.array([r.derived_values[quantity] for r in some_recorders])
             # stds  = np.array([r.errors[quantity] for r in some_recorders])
-            stds  = np.array([0. for r in some_recorders]) # EDIT
+            stds  = np.array([r.derived_errors[quantity] for r in some_recorders])
 
-            ax.errorbar(m02s, [g.mean for g in derived_gvars], yerr=[g.sdev for g in derived_gvars], fmt='o', label=f"$N={L}$", capsize=5,zorder=i)
+            ax.errorbar(m02s, means, yerr=stds, fmt='o', label=f"$N={L}$", capsize=5,zorder=i)
             ax.legend()
             if quantity=="binder_cumulant":
                 ax.axhline(2/3, c='r')

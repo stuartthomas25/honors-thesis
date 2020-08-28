@@ -3,3 +3,6 @@ times/**
 profiling/**
 test**
 __pycache__/**
+**.lprof
+ppython
+data/**
