@@ -326,7 +326,7 @@ Graduate School:
 - First, check previous version and make sure the numbers are not the same.
 - Try saving some lattices, then calculating observables in Mathematica
 
-## Thursday, August 25
+## Tuesday, August 25
 - Progress:
     - Fixed BC issue by fixing the order of calculations. New order:    
         1. calculate volume-average
@@ -336,12 +336,21 @@ Graduate School:
 
     - This is supported by Eq. 4.19 [@newman1999].
 
-Future work:
+- Future work
+
     - Calculate errors for derived quantities using `gvar`.
     - Transition to GitHub (ID is `cjmonahan`).
     - Run through measurements that you can think of. Try other measurements (e.g. bimodality) and generate definitive list of plots.
     - Create plots without connected lines
 
+
+## Thursday, August 27
+
+- Problem with Binder-Cumulant: errors are too large.
+    - Implement Jackknife method (see [@toussaint1989]) to measure statistics of variables.
+        - Try this on 128 lattice, maybe once overnight
+    - Migrate to cluster
+    - Or perhaps beforehand, try gradient flow.
 
 
 

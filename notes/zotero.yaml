@@ -352,6 +352,19 @@ references:
   title: Statistical Field Theory
   type: book
 
+- id: toussaint1989
+  author:
+    - family: Toussaint
+      given: D
+  issue: AZPH-TH-89-72
+  issued:
+    - year: 1989
+      month: 12
+  page: 12 p
+  title: 'Error analysis of simulation results: a sample problem'
+  type: article-journal
+  URL: 'https://cds.cern.ch/record/204810'
+
 - id: wolff2007
   abstract: >-
     We explain in detail how to estimate mean values and assess statistical

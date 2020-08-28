@@ -23,3 +23,16 @@
 
 
 
+## Wednesday, August 26
+- Started implementing errors.
+- Created "secondary observables" for powers of phi.
+- Issue: BC exhibits very large errors in symmetric phase.
+
+
+
+## Friday Aug 28
+
+- Implemented the Jackknife method by rewriting much of the Recorder class. I am still not sure if the current implementation is the best but it seems to work for the time being. I have seperated the quantities into "primary observables" for independent quantites that are calculated for each lattice, "secondary observables" which depend on the primary observables, and "derived quantities" which depend on the ensemble averages of the secondary and primary observables.
+- This method provides more realistic errors for the Binder cumulant and the susceptibility.
+
+- The next step is a migration to the cluster. I am setting up a job script on `bora`.
