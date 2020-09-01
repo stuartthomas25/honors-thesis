@@ -9,13 +9,12 @@ if 'view' in sys.argv:
     from matplotlib import pyplot as plt
 import pickle
 import gvar
+from datetime import timedelta
 
 SEED = True
-Ls = [16, 32, 64]
+Ls = [16, 32, 64, 128]
 lam = 0.5
-# m02s = [-3, -2.5, -2, -1.5, -1]
-m02s = [-0.80, -0.76, -0.72, -0.70, -0.68, -0.64]
-
+m02s = [-0.80, -0.78, -0.76, -0.74, -0.72, -0.70, -0.68, -0.66, -0.64]
 
 # sweeps = 10**5
 cluster_method = WOLFF
@@ -28,6 +27,7 @@ measurements = 10**3
 sweeps = thermalization + record_rate * measurements
 if RANK==0:
     print(f"{sweeps} sweeps")
+
 
 
 
@@ -105,9 +105,24 @@ def view():
     for r in recorders:
         r.finalize_values()
 
-    fig, axes = plt.subplots(3,1, figsize=(16,10))
-    for ax, quantity in zip(axes, quantities):
-        for i,L in enumerate(Ls):
+    tds = []
+    with open('data/log.out','r') as log_file:
+        for line in log_file.readlines():
+            if line[:8] == "Executed":
+                time_str = line.split(" ")[-1]
+                minutes,seconds = time_str.split(":")
+                td = timedelta(minutes=int(minutes), seconds=int(seconds))
+                tds.append(td.total_seconds()//60)
+
+    def bimodality(phi, dphi=0.1, **kwargs):
+        bin_i = ((phi+0.5*dphi)//dphi).astype(int)
+        reshuffled = np.where(bin_i<0, np.abs(bin_i), bin_i*2)
+        bincounts = np.bincount(reshuffled)
+        return 1 - bincounts[0] / np.amax(bincounts)
+
+    fig, axes = plt.subplots(5,1, figsize=(16,10))
+    for i,L in enumerate(Ls):
+        for ax, quantity in zip(axes[:-1], quantities):
             some_recorders = recorders[i::len(Ls)]
 
 
@@ -149,10 +164,27 @@ def view():
                 ax.axhline(0, c='k')
             if quantity=="magnetization":
                 ax.set_ylim( (0.0, np.sqrt(-m02s[-1]/lam)) )
-                ax.set_title(f"{measurements} measurements every {record_rate} sweeps, {thermalization} thermalization")
             # print("phi2",[r.values['phi2'] for r in some_recorders]) # EDIT
 
             ax.set_ylabel(Recorder.derived_observables[quantity].label)
+
+
+
+        bimod_axis = axes[-2]
+        bimod_axis.plot(m02s, [bimodality(r.values['phi']) for r in some_recorders], 'o', label=f"$N={L}$")
+        bimod_axis.set_ylabel("B")
+
+
+        time_ax = axes[-1]
+        some_tds = tds[i::len(Ls)]
+        time_ax.plot(m02s, some_tds, 'o', label=f"$N={L}$")
+        time_ax.set_ylabel("Execution time (m)")
+        time_ax.set_yscale("log")
+        time_ax.grid(b=True, which='both')
+        # time_ax.set_ylim(10**3, 10**6)
+
+    execution_time_str = f"{sum(tds)//60:.0f}h{sum(tds)%60:.0f}m"
+    axes[0].set_title(f"{measurements} measurements every {record_rate} sweeps, {thermalization} thermalization, Jackknife errors, (execution time: {execution_time_str})")
 
     plt.show()
 
