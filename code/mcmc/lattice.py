@@ -8,7 +8,7 @@ from .croutines import lagrangian, rand_dist
 import matplotlib as mpl
 mpl.rcParams['axes.formatter.useoffset'] = False
 
-from matplotlib import pyplot as plt
+# from matplotlib import pyplot as plt
 import numpy as np
 from mpi4py import MPI
 

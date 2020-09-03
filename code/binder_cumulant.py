@@ -8,13 +8,12 @@ import sys
 if 'view' in sys.argv:
     from matplotlib import pyplot as plt
 import pickle
-import gvar
 
 SEED = True
-Ls = [16, 32, 64]
+Ls = [16, 32, 64, 128]
 lam = 0.5
 # m02s = [-3, -2.5, -2, -1.5, -1]
-m02s = [-0.80, -0.76, -0.72, -0.70, -0.68, -0.64]
+m02s = [-0.80, -0.78, -0.76, -0.74, -0.72, -0.70, -0.68, -0.66, -0.64]
 
 
 # sweeps = 10**5
@@ -50,7 +49,7 @@ def main():
             if RANK==0:
                 start = time()
 
-            rw.run(sweeps, cluster_method=cluster_method,  cluster_rate=cluster_rate, recorder=recorder, progress=True)
+            rw.run(sweeps, cluster_method=cluster_method,  cluster_rate=cluster_rate, recorder=recorder, progress=False)
 
             if RANK==0:
                 dt = time() - start

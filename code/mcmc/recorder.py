@@ -1,10 +1,9 @@
 from mpi4py import MPI
-from matplotlib import pyplot as plt
+# from matplotlib import pyplot as plt
 import imageio
 from functools import wraps
 from math import sqrt
 import numpy as np
-import gvar
 from math import sqrt
 
 # COMM = MPI.COMM_WORLD
