@@ -118,17 +118,24 @@ class RandomWalk(object):
             sweeps,
             cluster_method=None,
             cluster_rate=5,
-            recorder=None,
+            hooks=None,
+            recorders=[],
             progress=False,
             record_on_cluster=False
             ):
 
         progress_char = '#'
 
+        start = time()
+
         if cluster_method==WOLFF:
             cluster = wolff
         else:
             cluster = None
+        if hooks is None:
+            hooks = [lambda x : x for r in recorders]
+        if len(hooks) != len(recorders):
+            raise Exception("Hooks and recorders don't match!")
 
         if progress and RANK==0:
             progressbar_size = 140
@@ -137,19 +144,14 @@ class RandomWalk(object):
 
         for i in range(sweeps):
             self.checkerboard()
-            if CHECK_ACTION: self.check_action(self.lat)
-
-            if recorder is not None and i % recorder.rate == 0 and i >= recorder.thermalization:
-                recorder.record(self.lat)
-
             if i % cluster_rate ==0 and RANK==0 and cluster is not None:
                 self.lat.data, self.lat.action = cluster(self.lat)
-                # cProfile.runctx("cluster(self.lat)", globals(), locals(), "profiling/wolff.prof")
 
-                if recorder is not None and i % recorder.rate == 0 and i >= recorder.thermalization and record_on_cluster:
-                    recorder.record(self.lat)
-                if CHECK_ACTION:
-                    self.check_action(self.lat)
+            for j,r in enumerate(recorders):
+                if i % r.rate == 0 and i >= r.thermalization:
+                    r.record( hooks[j](self.lat) )
+
+
 
             if RANK==0 and progress and i % progressbar_rate == 0:
                 p = int(i/sweeps*progressbar_size)
@@ -157,6 +159,11 @@ class RandomWalk(object):
 
         if progress and RANK==0:
             print('['+progress_char*progressbar_size+']',flush=True)
+
+        for r in recorders:
+            r.execution_time = time() - start
+            r.finalize_values()
+
 
 
     def check_action(self, tol=1e5):

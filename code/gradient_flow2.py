@@ -1,6 +1,6 @@
 from parallel_utils import RANK
 from mcmc.keys import WOLFF, SWENDSEN_WANG
-from mcmc import Phi4Lattice, RandomWalk, Recorder
+from mcmc import Phi4Lattice, RandomWalk, GradientFlow, Recorder
 from mcmc.recorder import binder_cumulant
 import numpy as np
 from time import time
@@ -8,15 +8,15 @@ import sys
 if 'view' in sys.argv:
     from matplotlib import pyplot as plt
 import pickle
-
+import gvar
+from datetime import timedelta
+from functools import partial
+import os
 SEED = True
-Ls = [16, 32, 64, 128]
+Ls = [16]
 lam = 0.5
-m02s = [-0.80, -0.78, -0.76, -0.74, -0.72, -0.70, -0.68, -0.66, -0.64]
-
-=======
-m02s = [-0.80, -0.78, -0.76, -0.74, -0.72, -0.70, -0.68, -0.66, -0.64]
->>>>>>> 54fb150d28b3b772a798f940a76f444bb6e5199c
+m02s = [-0.80,-0.72, -0.64]
+taus = [0., 0.1, 0.5]
 
 # sweeps = 10**5
 cluster_method = WOLFF
@@ -33,17 +33,21 @@ if RANK==0:
 
 
 
+DATAPATH = f'data/{os.path.basename(__file__)}.pickle'
+
 def main():
 
-    recorders = []
+    GF = GradientFlow()
+    all_recorders = []
     for m02 in m02s:
         if RANK==0: print(f"m02 = {m02:.2f}")
         for L in Ls:
 
             if RANK==0:
-                recorder = Recorder(thermalization=thermalization, rate=record_rate, gif=False)
+                hooks = [partial(GF.flow_evolution, tau=tau, action=True) for tau in taus]
+                recorders = [Recorder(thermalization=thermalization, rate=record_rate, gif=False) for tau in taus]
             else:
-                recorder = None
+                recorders = []
 
             l = Phi4Lattice(dim=L, m02=m02, lam=lam)
             rw = RandomWalk(l)
@@ -52,26 +56,26 @@ def main():
             if RANK==0:
                 start = time()
 
-            rw.run(sweeps, cluster_method=cluster_method,  cluster_rate=cluster_rate, recorder=recorder, progress=False)
+            rw.run(sweeps, cluster_method=cluster_method,  cluster_rate=cluster_rate, hooks=hooks, recorders=recorders, progress=True)
 
             if RANK==0:
                 dt = time() - start
                 print(f"Executed in {int(dt//60)}:{str(int(dt%60)).zfill(2)}")
-                if recorder.gp is not None: recorder.save_gif("plots/BC.gif")
-
-            recorders.append(recorder)
+                # if recorder.gp is not None: recorder.save_gif("plots/BC.gif")
+            all_recorders.extend(recorders)
 
     if RANK==0:
-        pickle.dump(recorders, open('data/binder_cumulant.pickle', 'wb'))
-        print("Saved pickle")
+        pickle.dump(all_recorders, open(DATAPATH, 'wb'))
+        print(f"Saved pickle to {DATAPATH}")
+
 
 
 
 
 def view():
-    recorders = pickle.load(open('data/binder_cumulant.pickle', 'rb'))
+    recorders = pickle.load(open(DATAPATH, 'rb'))
 
-    quantities = ['magnetization','susceptibility','binder_cumulant']
+    quantities = ['magnetization','susceptibility','binder_cumulant', 'action']
 
     # for i,r in enumerate(recorders):
         # n = r.record_count
@@ -104,6 +108,8 @@ def view():
         # print(1,np.sqrt(phi2.mean - phi.mean**2), phi.sdev)
         # print(2,np.sqrt(phi4.mean - phi2.mean**2), phi2.sdev)
 
+    print(len(recorders))
+
     for r in recorders:
         r.finalize_values()
 
@@ -123,9 +129,10 @@ def view():
         return 1 - bincounts[0] / np.amax(bincounts)
 
     fig, axes = plt.subplots(5,1, figsize=(16,10))
-    for i,L in enumerate(Ls):
+    L = Ls[0]
+    for i,m02 in enumerate(m02s):
         for ax, quantity in zip(axes[:-1], quantities):
-            some_recorders = recorders[i::len(Ls)]
+            some_recorders = recorders[i::len(m02s)]
 
 
             # test_r = some_recorders[-1]
@@ -153,13 +160,13 @@ def view():
             # print(phi4/ phi2**2)
             # print(phi4_/ phi2_**2)
             # print(1 - gvs['phi4'] / ( 3 * gvs['phi2'] ** 2))
+            print(len(some_recorders))
             # quit()
 
             means = np.array([r.derived_values[quantity] for r in some_recorders])
-            # stds  = np.array([r.errors[quantity] for r in some_recorders])
             stds  = np.array([r.derived_errors[quantity] for r in some_recorders])
 
-            ax.errorbar(m02s, means, yerr=stds, fmt='o', label=f"$N={L}$", capsize=5,zorder=i)
+            ax.errorbar(taus, means, yerr=stds, fmt='o', label=f"$m_0^2={m02}$", capsize=5,zorder=i)
             ax.legend()
             if quantity=="binder_cumulant":
                 ax.axhline(2/3, c='r')
@@ -172,19 +179,19 @@ def view():
 
 
 
-        bimod_axis = axes[-2]
+        bimod_axis = axes[-1]
         bimod_axis.plot(m02s, [bimodality(r.values['phi']) for r in some_recorders], 'o', label=f"$N={L}$")
         bimod_axis.set_ylabel("B")
 
 
-        time_ax = axes[-1]
-        some_tds = tds[i::len(Ls)]
-        time_ax.plot(m02s, some_tds, 'o', label=f"$N={L}$")
-        time_ax.set_ylabel("Execution time (m)")
-        time_ax.set_yscale("log")
-        time_ax.grid(b=True, which='both')
+        # time_ax = axes[-1]
+        # some_tds = tds[i::len(Ls)]
+        # time_ax.plot(m02s, some_tds, 'o', label=f"$N={L}$")
+        # time_ax.set_ylabel("Execution time (m)")
+        # time_ax.set_yscale("log")
+        # time_ax.grid(b=True, which='both')
         # time_ax.set_ylim(10**3, 10**6)
-
+    tds = [0.]
     execution_time_str = f"{sum(tds)//60:.0f}h{sum(tds)%60:.0f}m"
     axes[0].set_title(f"{measurements} measurements every {record_rate} sweeps, {thermalization} thermalization, Jackknife errors, (execution time: {execution_time_str})")
 

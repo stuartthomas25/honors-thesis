@@ -353,7 +353,23 @@ Graduate School:
     - Or perhaps beforehand, try gradient flow.
 
 
+## Tuesday, Sept 1
+- Questions:
+    - Do I apply it to every measurement?
+        - Yes
+    - Are flow time and Monte Carlo time independent?
+        - Not really. This is actually where the gradient flow originates, but its not the point of our research.
+    - What is the graident flow scale?
+        - We know that $mass \times length$ is dimensionless, so we can measure the flow time in $mass^{-1}$.
+        - In other more realistic theories, we can write the flow time as something physical, like the proton size.
+        - In scalar field theory, we can do the same thing, but there is no physical analog.
+        - The length scale of flow time should be written in terms of $\lambda$ or $m_0^2$, with $m_0^2$ being the slightly more natural choice.
 
+- Todo:
+    - Pick three fixed masses, study the flow time at each.
+    - Evolve in flow time for each measurement.
+    - Try this at $N=96$.
+    - Add the action as an observable.
 
 
 

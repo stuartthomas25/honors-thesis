@@ -46,6 +46,7 @@ class Recorder(object):
             self.values[obsrv] = []
 
         self.record_count = 0
+        self.execution_time = None
 
         # print("Recorder",Recorder.quantities)
 
@@ -158,19 +159,18 @@ class Recorder(object):
             # # errors = np.std(nparr) / sqrt(nparr.size)
         # # return {k : gvar.gvar(means[k], errors[k]) for k in self.values}
 
-    def derived_value(self, key):
-        return type(self).derived_observables[key] (**self.means())
+  #   def derived_value(self, key):
+        # return type(self).derived_observables[key] (**self.means())
 
-    def derived_gvar(self, key):
-        return type(self).derived_observables[key] (**self.gvars)
+    # def derived_gvar(self, key):
+        # return type(self).derived_observables[key] (**self.gvars)
 
-    def derived_error(self, key, tau=0.5):
-        cumsum = 0.
-        mu = self.derived_value(key)
-        for i in range(self.record_count):
-            cumsum += (type(self).derived_observables[key] (**self.means(i)) - mu) **2
+    # def derived_error(self, key, tau=0.5):
+        # cumsum = 0.
+        # mu = self.derived_value(key)
+        # for i in range(self.record_count):
+            # cumsum += (type(self).derived_observables[key] (**self.means(i)) - mu) **2
 
-        return sqrt(2 * tau * cumsum)
 
     def __getstate__(self):
         d = {}
@@ -184,19 +184,23 @@ class Recorder(object):
             self.__dict__[k] = v
 
 @Recorder.primary_observable
-def phi(lat):
+def phi(lat, **kwargs):
     return np.sum(lat.data) / lat.size
 
+@Recorder.primary_observable
+def action(lat, **kwargs):
+    return lat.action
+
 @Recorder.secondary_observable
-def abs_phi(phi):
+def abs_phi(phi, **kwargs):
     return abs(phi)
 
 @Recorder.secondary_observable
-def phi2(phi):
+def phi2(phi, **kwargs):
     return phi**2
 
 @Recorder.secondary_observable
-def phi4(phi):
+def phi4(phi, **kwargs):
     return phi**4
 
 
@@ -204,6 +208,10 @@ def phi4(phi):
 @Recorder.derived_observable(r"$\langle|\bar \phi|\rangle$")
 def magnetization(abs_phi, **kwargs):
     return abs_phi
+
+@Recorder.derived_observable(r"$S$")
+def action(action, **kwargs):
+    return action
 
 @Recorder.derived_observable(r"$U$")
 def binder_cumulant(phi4, phi2, **kwargs):
@@ -213,16 +221,17 @@ def binder_cumulant(phi4, phi2, **kwargs):
 def susceptibility(phi2, abs_phi, **kwargs):
     return phi2 - abs_phi**2
 
-
 class GifProducer(object):
     def __init__(self):
         self.frames = []
 
     def save_lat(self, lat):
+
         im = lat.show(show=False)
         self.frames.append(im.make_image("AGG")[0])
         plt.close()
 
     def save(self, fn, fps=3):
         imageio.mimwrite(fn, self.frames, fps=fps)
+
 
