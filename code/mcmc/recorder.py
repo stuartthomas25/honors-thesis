@@ -47,6 +47,7 @@ class Recorder(object):
             self.values[obsrv] = []
 
         self.record_count = 0
+        self.execution_time = None
 
         # print("Recorder",Recorder.quantities)
 
@@ -184,19 +185,23 @@ class Recorder(object):
             self.__dict__[k] = v
 
 @Recorder.primary_observable
-def phi(lat):
+def phi(lat, **kwargs):
     return np.sum(lat.data) / lat.size
 
+@Recorder.primary_observable
+def action(lat, **kwargs):
+    return lat.action
+
 @Recorder.secondary_observable
-def abs_phi(phi):
+def abs_phi(phi, **kwargs):
     return abs(phi)
 
 @Recorder.secondary_observable
-def phi2(phi):
+def phi2(phi, **kwargs):
     return phi**2
 
 @Recorder.secondary_observable
-def phi4(phi):
+def phi4(phi, **kwargs):
     return phi**4
 
 
@@ -204,6 +209,10 @@ def phi4(phi):
 @Recorder.derived_observable(r"$\langle|\bar \phi|\rangle$")
 def magnetization(abs_phi, **kwargs):
     return abs_phi
+
+@Recorder.derived_observable(r"$S$")
+def action(action, **kwargs):
+    return action
 
 @Recorder.derived_observable(r"$U$")
 def binder_cumulant(phi4, phi2, **kwargs):

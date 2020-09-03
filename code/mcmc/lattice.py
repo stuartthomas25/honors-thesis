@@ -4,6 +4,7 @@ from colorsys import hls_to_rgb
 from random import randrange
 import abc
 from .croutines import lagrangian, rand_dist
+from copy import copy
 
 import matplotlib as mpl
 mpl.rcParams['axes.formatter.useoffset'] = False
@@ -28,6 +29,7 @@ def show(data, figsize=(6,6), show=True):
     return im
 
 class Lattice(object, metaclass=abc.ABCMeta):
+
     def __init__(self, data=None, dim=None):
         self._construct(data, dim)
 
@@ -145,8 +147,13 @@ class Phi4Lattice(Lattice):
     def lat_lagrangian(self, coord):
         return lagrangian( self[coord], sum(self[c] for c in self.neighbors(coord)[:2]), self.redef_mass, self.quarter_lam)
 
-    def flow_evolve(self, tau):
-        fft = np.fft.fft2(self.data)
-        ps = np.concatenate([np.arange(self.dim//2), -np.arange(self.dim//2,0,-1)])
+class GradientFlow(object):
+    def flow_evolution(self, lat, tau, action=False):
+        fft = np.fft.fft2(lat.data)
+        ps = np.concatenate([np.arange(lat.dim//2), -np.arange(lat.dim//2,0,-1)])
         px, py = np.meshgrid(ps, ps)
-        self.data = np.exp(-tau*(px**2 + py**2)) * fft
+        new_lat = copy(lat) # make shallow copy so as not to copy the entire field
+        new_lat.data = np.exp(-tau*(px**2 + py**2)) * fft
+        if action:
+            new_lat.calculate_action()
+        return new_lat
