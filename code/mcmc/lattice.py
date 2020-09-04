@@ -153,7 +153,7 @@ class GradientFlow(object):
         ps = np.concatenate([np.arange(lat.dim//2), -np.arange(lat.dim//2,0,-1)])
         px, py = np.meshgrid(ps, ps)
         new_lat = copy(lat) # make shallow copy so as not to copy the entire field
-        new_lat.data = np.exp(-tau*(px**2 + py**2)) * fft
+        new_lat.data = np.fft.ifft2(np.exp(-tau*(px**2 + py**2)) * fft)
         if action:
             new_lat.calculate_action()
         return new_lat
