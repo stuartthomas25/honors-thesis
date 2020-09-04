@@ -13,10 +13,10 @@ from datetime import timedelta
 from functools import partial
 import os
 SEED = True
-Ls = [16]
+Ls = [32]
 lam = 0.5
 m02s = [-0.80,-0.72, -0.64]
-taus = [0., 0.1, 0.5]
+taus = [0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0]
 
 # sweeps = 10**5
 cluster_method = WOLFF
@@ -34,6 +34,7 @@ if RANK==0:
 
 
 DATAPATH = f'data/{os.path.basename(__file__)}.pickle'
+DATAPATH = f'data/binder_cumulant.pickle'
 
 def main():
 
@@ -46,8 +47,12 @@ def main():
             if RANK==0:
                 hooks = [partial(GF.flow_evolution, tau=tau, action=True) for tau in taus]
                 recorders = [Recorder(thermalization=thermalization, rate=record_rate, gif=False) for tau in taus]
+                # EDIT
+                hooks[0] = lambda x : x
             else:
+                hooks = []
                 recorders = []
+
 
             l = Phi4Lattice(dim=L, m02=m02, lam=lam)
             rw = RandomWalk(l)
@@ -86,6 +91,7 @@ def view():
         # plt.plot(r.values['phi2'], label='$\phi^2$')
         # plt.legend()
         # plt.show()
+
         # print(phi2_avg**2, phi4_avg)
         # print(i, 1 - phi4_avg/(3*phi2_avg**2))
         # print()
@@ -160,7 +166,6 @@ def view():
             # print(phi4/ phi2**2)
             # print(phi4_/ phi2_**2)
             # print(1 - gvs['phi4'] / ( 3 * gvs['phi2'] ** 2))
-            print(len(some_recorders))
             # quit()
 
             means = np.array([r.derived_values[quantity] for r in some_recorders])
@@ -179,9 +184,9 @@ def view():
 
 
 
-        bimod_axis = axes[-1]
-        bimod_axis.plot(m02s, [bimodality(r.values['phi']) for r in some_recorders], 'o', label=f"$N={L}$")
-        bimod_axis.set_ylabel("B")
+       #  bimod_axis = axes[-1]
+        # bimod_axis.plot(m02s, [bimodality(r.values['phi']) for r in some_recorders], 'o', label=f"$N={L}$")
+        # bimod_axis.set_ylabel("B")
 
 
         # time_ax = axes[-1]
