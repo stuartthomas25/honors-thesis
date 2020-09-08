@@ -36,3 +36,22 @@
 - This method provides more realistic errors for the Binder cumulant and the susceptibility.
 
 - The next step is a migration to the cluster. I am setting up a job script on `bora`.
+
+## Tuesday September 1
+- Had some difficulty connecting `mpi4py` on `bora`. The trick is to make sure the current `conda` implementation does not have MPI since `distutils` always check `conda` first. Also, make sure to build it from scratch where `mpicc` links to the desired MPI implementation.
+- It looks like a higher number of cores does not necessarily mean faster for these small lattices.
+- After running on cluster, $N=128$ looks really good.
+- In order to make 12 cores work, I plan on transitioning to L=96
+-Begin implementation of the gradient flow
+
+## Thursday, September 3
+- Implement the gradient flow as a new class with a single method. Use a shallow copy of the previous lattice so as not to copy the entire lattice. Reassign the `data` attribute with the evolved data.
+- Implement a `hooks` parameter to the `RandomWalk.run` method, a list of functions to be run before each measurement. This is accompanied by a list of recorders that corresponds to each hook.
+- ISSUE: The gradient flow makes the lattice complex. How does this affect observables?
+- Start plotting the same observables as a function of flow time, not as a function of $m_0^2$.
+
+
+
+## Tuesday, September 8
+- Since the momenta in different directions are scaled equally, the inverse Fourier transform is real and should be casted as such.
+- The problem in the flowed values is the ordering of the recorders. This was a simple fix which produced a much clearer plot with all observables remaining unchanged except the action, which drops sharply at $\tau=0.1$ and stays at this level.

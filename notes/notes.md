@@ -372,10 +372,13 @@ Graduate School:
     - Add the action as an observable.
 
 
+## Friday, Sept 4
+- Gradient flow should have a 0 imaginary component, so I can take the real component safely, though I should check this.
 
 
-
-
+Todo:
+- Add momentum constant to Gradient Flow evolution function.
+- Fix flow evolution bug!
 
 
 \newpage
