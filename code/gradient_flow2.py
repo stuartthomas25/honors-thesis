@@ -13,7 +13,7 @@ from datetime import timedelta
 from functools import partial
 import os
 SEED = True
-Ls = [32]
+Ls = [16]
 lam = 0.5
 m02s = [-0.80,-0.72, -0.64]
 taus = [0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0]
@@ -34,7 +34,6 @@ if RANK==0:
 
 
 DATAPATH = f'data/{os.path.basename(__file__)}.pickle'
-DATAPATH = f'data/binder_cumulant.pickle'
 
 def main():
 
@@ -47,8 +46,6 @@ def main():
             if RANK==0:
                 hooks = [partial(GF.flow_evolution, tau=tau, action=True) for tau in taus]
                 recorders = [Recorder(thermalization=thermalization, rate=record_rate, gif=False) for tau in taus]
-                # EDIT
-                hooks[0] = lambda x : x
             else:
                 hooks = []
                 recorders = []
@@ -88,7 +85,7 @@ def view():
         # phi2_avg = sum(r.values['phi2'])/n
         # phi4_avg = sum(r.values['phi4'])/n
         # plt.plot(r.values['phi4'], label='$\phi^4$')
-        # plt.plot(r.values['phi2'], label='$\phi^2$')
+        # plt.plot(r.values['phi2'], label='$\phi^2$'):w
         # plt.legend()
         # plt.show()
 
@@ -136,10 +133,10 @@ def view():
 
     fig, axes = plt.subplots(5,1, figsize=(16,10))
     L = Ls[0]
+
     for i,m02 in enumerate(m02s):
         for ax, quantity in zip(axes[:-1], quantities):
-            some_recorders = recorders[i::len(m02s)]
-
+            some_recorders = recorders[i*len(taus):(i+1)*len(taus)]
 
             # test_r = some_recorders[-1]
             # phis = np.array(test_r.values['phi'])
@@ -176,8 +173,8 @@ def view():
             if quantity=="binder_cumulant":
                 ax.axhline(2/3, c='r')
                 ax.axhline(0, c='k')
-            if quantity=="magnetization":
-                ax.set_ylim( (0.0, np.sqrt(-m02s[-1]/lam)) )
+            # if quantity=="magnetization":
+                # ax.set_ylim( (0.0, np.sqrt(-m02s[-1]/lam)) )
             # print("phi2",[r.values['phi2'] for r in some_recorders]) # EDIT
 
             ax.set_ylabel(Recorder.derived_observables[quantity].label)
