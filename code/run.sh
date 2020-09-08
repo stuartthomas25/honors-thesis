@@ -6,9 +6,10 @@
 #PBS -M snthomas01@email.wm.edu
 #PBS -l nodes=1:vortex:ppn=12
 
-cd $PBS_O_WORKDIR
+#if ( ! (-e $PBS_O_WORKDIR) ) then
+    #cd $PBS_O_WORKDIR
 
 
-set N=8
-mpiexec -n $N python binder_cumulant.py >& log.out
+set N=12
+mpiexec -n $N python gradient_flow2.py 48 >& log.out
 echo "Finished"

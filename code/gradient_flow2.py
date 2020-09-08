@@ -8,7 +8,6 @@ import sys
 if 'view' in sys.argv:
     from matplotlib import pyplot as plt
 import pickle
-import gvar
 from datetime import timedelta
 from functools import partial
 import os
