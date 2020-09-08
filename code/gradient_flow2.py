@@ -13,7 +13,7 @@ from datetime import timedelta
 from functools import partial
 import os
 SEED = True
-Ls = [16]
+Ls = [int(sys.argv[1])]
 lam = 0.5
 m02s = [-0.80,-0.72, -0.64]
 taus = [0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0]
