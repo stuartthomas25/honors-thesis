@@ -147,10 +147,10 @@ class RandomWalk(object):
             if i % cluster_rate ==0 and RANK==0 and cluster is not None:
                 self.lat.data, self.lat.action = cluster(self.lat)
 
+
             for j,r in enumerate(recorders):
                 if i % r.rate == 0 and i >= r.thermalization:
                     r.record( hooks[j](self.lat) )
-
 
 
             if RANK==0 and progress and i % progressbar_rate == 0:

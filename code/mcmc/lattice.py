@@ -5,9 +5,12 @@ from random import randrange
 import abc
 from .croutines import lagrangian, rand_dist
 from copy import copy
+import sys
 
-import matplotlib as mpl
-mpl.rcParams['axes.formatter.useoffset'] = False
+if sys.platform == 'darwin':
+    import matplotlib as mpl
+    mpl.rcParams['axes.formatter.useoffset'] = False
+    from matplotlib import pyplot as plt
 
 # from matplotlib import pyplot as plt
 import numpy as np
@@ -100,6 +103,10 @@ class Lattice(object, metaclass=abc.ABCMeta):
 
 
     def show(self, figsize=(6,6), show=True):
+        if sys.platform != "darwin":
+            print("WARNING: Cannot show lattice on this machine")
+            return None
+
         M = np.transpose(np.array(self.data))
         r = np.abs(M)
         arg = np.angle(M)
@@ -148,12 +155,19 @@ class Phi4Lattice(Lattice):
         return lagrangian( self[coord], sum(self[c] for c in self.neighbors(coord)[:2]), self.redef_mass, self.quarter_lam)
 
 class GradientFlow(object):
+
+
     def flow_evolution(self, lat, tau, action=False):
         fft = np.fft.fft2(lat.data)
         ps = np.concatenate([np.arange(lat.dim//2), -np.arange(lat.dim//2,0,-1)])
         px, py = np.meshgrid(ps, ps)
         new_lat = copy(lat) # make shallow copy so as not to copy the entire field
-        new_lat.data = np.fft.ifft2(np.exp(-tau*(px**2 + py**2)) * fft)
+
+
+        p2 = px**2 + py**2
+
+        new_lat.data = np.real(np.fft.ifft2(np.exp(-tau*p2) * fft))
         if action:
-            new_lat.calculate_action()
+            new_lat.action = new_lat.calculate_action()
         return new_lat
+
