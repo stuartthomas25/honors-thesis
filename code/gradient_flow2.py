@@ -131,11 +131,11 @@ def view():
         bincounts = np.bincount(reshuffled)
         return 1 - bincounts[0] / np.amax(bincounts)
 
-    fig, axes = plt.subplots(5,1, figsize=(16,10))
+    fig, axes = plt.subplots(4,1, figsize=(16,10))
     L = Ls[0]
 
     for i,m02 in enumerate(m02s):
-        for ax, quantity in zip(axes[:-1], quantities):
+        for ax, quantity in zip(axes, quantities):
             some_recorders = recorders[i*len(taus):(i+1)*len(taus)]
 
             # test_r = some_recorders[-1]
@@ -196,6 +196,7 @@ def view():
     tds = [0.]
     execution_time_str = f"{sum(tds)//60:.0f}h{sum(tds)%60:.0f}m"
     axes[0].set_title(f"{measurements} measurements every {record_rate} sweeps, {thermalization} thermalization, Jackknife errors, (execution time: {execution_time_str})")
+    axes[-1].set_xlabel(r"$\tau$")
 
     plt.show()
 
