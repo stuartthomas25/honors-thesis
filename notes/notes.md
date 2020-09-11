@@ -353,13 +353,13 @@ Graduate School:
     - Or perhaps beforehand, try gradient flow.
 
 
-## Tuesday, Sept 1
+## Tuesday, September 1
 - Questions:
     - Do I apply it to every measurement?
         - Yes
     - Are flow time and Monte Carlo time independent?
         - Not really. This is actually where the gradient flow originates, but its not the point of our research.
-    - What is the graident flow scale?
+    - What is the gradient flow scale?
         - We know that $mass \times length$ is dimensionless, so we can measure the flow time in $mass^{-1}$.
         - In other more realistic theories, we can write the flow time as something physical, like the proton size.
         - In scalar field theory, we can do the same thing, but there is no physical analog.
@@ -372,13 +372,19 @@ Graduate School:
     - Add the action as an observable.
 
 
-## Friday, Sept 4
+## Friday, September 4
 - Gradient flow should have a 0 imaginary component, so I can take the real component safely, though I should check this.
 
 
-Todo:
-- Add momentum constant to Gradient Flow evolution function.
-- Fix flow evolution bug!
+- Todo:
+    - Add momentum constant to Gradient Flow evolution function.
+    - Fix flow evolution bug!
+
+## Tuesday September 8
+- Issue: Observable values are actually completely flat, may be a memory error in the code. This needs debugging.
+- Plot the results on a smaller flow time scale.
+
+
 
 
 \newpage
