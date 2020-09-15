@@ -380,9 +380,20 @@ Graduate School:
     - Add momentum constant to Gradient Flow evolution function.
     - Fix flow evolution bug!
 
-## Tuesday September 8
+## Tuesday, September 8
 - Issue: Observable values are actually completely flat, may be a memory error in the code. This needs debugging.
 - Plot the results on a smaller flow time scale.
+
+
+## Friday, September 11
+- Reminder: Must rescale momenta by $\pi/L$.
+- Problem: Observables look flat
+
+- We won't reproduce Figure 3 from proceedings.
+- Continue to nonlinear sigma model.
+    - Use [@aoki2015] to find other sources
+    - Use inspirehep to find other sources.
+    - Check out [http://www.scholarpedia.org/article/Nonlinear_Sigma_model]
 
 
 
