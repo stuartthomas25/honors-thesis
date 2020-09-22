@@ -1,5 +1,36 @@
 ---
 references:
+- id: alles2007
+  abstract: >-
+    It has been conjectured that the mass spectrum of the O(3) non-linear sigma
+    model with a theta term in 2 dimensions may possess an excited state, which
+    decays when theta is lowered from pi below a critical value. Since the
+    direct numerical investigation of the model is prevented by a sign problem,
+    we try to infer some information on the mass spectrum at real theta by
+    studying the model at imaginary theta via analytic continuation. A modified
+    Swendsen-Wang cluster algorithm has been introduced to simulate the model
+    with the theta term.
+  accessed:
+    - year: 2020
+      month: 9
+      day: 18
+  author:
+    - family: Alles
+      given: B.
+    - family: Papa
+      given: A.
+  container-title: 'arXiv:0711.1803 [hep-lat]'
+  issued:
+    - year: 2007
+      month: 11
+      day: 12
+  source: arXiv.org
+  title: >-
+    Numerical study of the mass spectrum in the 2D O(3) sigma model with a theta
+    term
+  type: article-journal
+  URL: 'http://arxiv.org/abs/0711.1803'
+
 - id: aoki2015
   abstract: >-
     We study the gradient ﬂow equation for the O(N) nonlinear sigma model in two
@@ -39,6 +70,53 @@ references:
   URL: 'http://arxiv.org/abs/1412.8249'
   volume: '2015'
 
+- id: balog2012
+  abstract: >-
+    We investigate the cutoff effects in 2-d lattice O(N) models for a variety
+    of lattice actions, and we identify a class of very simple actions for which
+    the lattice artifacts are extremely small. One action agrees with the
+    standard action, except that it constrains neighboring spins to a maximal
+    relative angle delta. We fix delta by demanding that a particular value of
+    the step scaling function agrees with its continuum result already on a
+    rather coarse lattice. Remarkably, the cutoff effects of the entire step
+    scaling function are then reduced to the per mille level. This also applies
+    to the theta-vacuum effects of the step scaling function in the 2-d O(3)
+    model. The cutoff effects of other physical observables including the
+    renormalized coupling and the mass in the isotensor channel are also reduced
+    drastically. Another choice, the mixed action, which combines the standard
+    quadratic with an appropriately tuned large quartic term, also has extremely
+    small cutoff effects. The size of cutoff effects is also investigated
+    analytically in 1-d and at N = infinity in 2-d.
+  accessed:
+    - year: 2020
+      month: 9
+      day: 15
+  author:
+    - family: Balog
+      given: J.
+    - family: Niedermayer
+      given: F.
+    - family: Pepe
+      given: M.
+    - family: Weisz
+      given: P.
+    - family: Wiese
+      given: U.-J.
+  container-title: Journal of High Energy Physics
+  container-title-short: J. High Energ. Phys.
+  DOI: 10.1007/JHEP11(2012)140
+  ISSN: 1029-8479
+  issue: '11'
+  issued:
+    - year: 2012
+      month: 11
+  page: '140'
+  source: arXiv.org
+  title: Drastic Reduction of Cutoff Effects in 2-d Lattice O(N) Models
+  type: article-journal
+  URL: 'http://arxiv.org/abs/1208.6232'
+  volume: '2012'
+
 - id: horgan2014
   author:
     - family: Horgan
@@ -51,6 +129,35 @@ references:
   source: Zotero
   title: Statistical Field Theory
   type: book
+
+- id: hoshen1976
+  accessed:
+    - year: 2020
+      month: 9
+      day: 18
+  author:
+    - family: Hoshen
+      given: J.
+    - family: Kopelman
+      given: R.
+  container-title: Physical Review B
+  container-title-short: Phys. Rev. B
+  DOI: 10.1103/PhysRevB.14.3438
+  ISSN: 0556-2805
+  issue: '8'
+  issued:
+    - year: 1976
+      month: 10
+      day: 15
+  language: en
+  page: 3438-3445
+  source: DOI.org (Crossref)
+  title: >-
+    Percolation and cluster distribution. I. Cluster multiple labeling technique
+    and critical concentration algorithm
+  type: article-journal
+  URL: 'https://link.aps.org/doi/10.1103/PhysRevB.14.3438'
+  volume: '14'
 
 - id: IntroductionQCDStandard
   title: Introduction to QCD and the Standard Model
@@ -212,6 +319,31 @@ references:
   URL: 'https://iopscience.iop.org/article/10.1209/epl/i2000-00532-1/meta'
   volume: '51'
 
+- id: michael1986
+  accessed:
+    - year: 2020
+      month: 9
+      day: 18
+  author:
+    - family: Michael
+      given: C.
+  container-title: Physical Review B
+  container-title-short: Phys. Rev. B
+  DOI: 10.1103/PhysRevB.33.7861
+  ISSN: 0163-1829
+  issue: '11'
+  issued:
+    - year: 1986
+      month: 6
+      day: 1
+  language: en
+  page: 7861-7862
+  source: DOI.org (Crossref)
+  title: Fast heat-bath algorithm for the Ising model
+  type: article-journal
+  URL: 'https://link.aps.org/doi/10.1103/PhysRevB.33.7861'
+  volume: '33'
+
 - id: monahan2015
   accessed:
     - year: 2020
@@ -365,6 +497,30 @@ references:
   type: article-journal
   URL: 'https://cds.cern.ch/record/204810'
 
+- id: wang1989
+  accessed:
+    - year: 2020
+      month: 9
+      day: 18
+  author:
+    - family: Wang
+      given: Jian-Sheng
+  container-title: 'Physica A: Statistical Mechanics and its Applications'
+  container-title-short: 'Physica A: Statistical Mechanics and its Applications'
+  DOI: 10.1016/0378-4371(89)90468-8
+  ISSN: 03784371
+  issue: '2'
+  issued:
+    - year: 1989
+      month: 11
+  language: en
+  page: 249-268
+  source: DOI.org (Crossref)
+  title: Clusters in the three-dimensional Ising model with a magnetic field
+  type: article-journal
+  URL: 'https://linkinghub.elsevier.com/retrieve/pii/0378437189904688'
+  volume: '161'
+
 - id: wolff2007
   abstract: >-
     We explain in detail how to estimate mean values and assess statistical
@@ -398,13 +554,4 @@ references:
   type: article-journal
   URL: 'http://arxiv.org/abs/hep-lat/0306017'
   volume: '176'
-
-- id: zotero-205
-  accessed:
-    - year: 2020
-      month: 9
-      day: 1
-  title: 1.27 at DuckDuckGo
-  type: webpage
-  URL: 'https://duckduckgo.com/?q=1.27&t=osx&ia=web'
 ...

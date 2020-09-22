@@ -395,7 +395,13 @@ Graduate School:
     - Use inspirehep to find other sources.
     - Check out [http://www.scholarpedia.org/article/Nonlinear_Sigma_model]
 
+## Friday, September 18
 
+- For Wolff algorithm, chose arbitrary vector to flip along.
+
+<!--## Tuesday, September-->
+
+<!--- For Wollf-->
 
 
 \newpage
