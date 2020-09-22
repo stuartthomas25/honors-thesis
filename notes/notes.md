@@ -82,6 +82,7 @@ linestretch: 1.5
 -  Reading
     -  Start to focus more on understanding the theory behind research.
     -  Read dissertation [@schaich2006] Chap. 6.5 and 6.6, take notes
+
         on questions.
     -  Newman [@newman1999] (Main textbook for Monte Carlo in
         Statistical Physics)
@@ -399,9 +400,17 @@ Graduate School:
 
 - For Wolff algorithm, chose arbitrary vector to flip along.
 
-<!--## Tuesday, September-->
+## Tuesday, September
 
-<!--- For Wollf-->
+- Converting Cython to C++
+    - Converting to flat lattice
+    - Swendsen & Wang? we should implement this if Wolff works.
+
+- The nonlinear $\sigma$ lagrangian:
+    - $g$ value is related to $\sqrt{\lambda}$.
+    - also does affect system since factor of action is significant in path integral formalism.
+    - No mass term.
+
 
 
 \newpage
