@@ -400,7 +400,7 @@ Graduate School:
 
 - For Wolff algorithm, chose arbitrary vector to flip along.
 
-## Tuesday, September
+## Tuesday, September 22
 
 - Converting Cython to C++
     - Converting to flat lattice
@@ -411,6 +411,21 @@ Graduate School:
     - also does affect system since factor of action is significant in path integral formalism.
     - No mass term.
 
+## Friday, September 25
+
+
+- 
+- Questions:
+    - New phi value, guarantee magnitude less than 1 with the other 3 components?
+        - Should be using rotation matrices.
+        - Take a look at SU(2) Metropolis literature and see how they generate norm-preserving rotation matrices computationally.
+    - What exactly are we calculating?
+        - Twist-2 operators
+        - Condensates
+            - VEV in non-perturbative theory.
+        - Topology?
+        - These could all be topics of our research
+    - Prof. Chris: write notes next week about why the nonlinear $\sigma$ model is "cool".
 
 
 \newpage

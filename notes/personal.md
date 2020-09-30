@@ -55,3 +55,10 @@
 ## Tuesday, September 8
 - Since the momenta in different directions are scaled equally, the inverse Fourier transform is real and should be casted as such.
 - The problem in the flowed values is the ordering of the recorders. This was a simple fix which produced a much clearer plot with all observables remaining unchanged except the action, which drops sharply at $\tau=0.1$ and stays at this level.
+
+
+## Friday, Septemer 25
+- Begin large rewrite
+    - Transition calculations to C++
+    - Transition run() method to C++ so as to decrease lattice transfer of data
+    - Define phi as a  vector to so that process works with nonlinear $\sigma$ model.
