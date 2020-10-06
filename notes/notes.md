@@ -430,6 +430,24 @@ Graduate School:
 
 \newpage
 
+## Wednesday, September 30
+
+- Implement MPI in C++.
+
+- There actually is an application of nonlinear-sigma, in fact multiple. 
+    - Heisenbuerg Ferro Magnetic, real application to condensed matter.
+    - Applications to string theory.
+    - Same properties as Yang-Mills Gauge Theories
+        - O(2) renormalizable, nontopological solutions of classical EOM at finite action
+        - Asymtoticaly free
+        - Mass gap in nonperturbative theory
+        - Large N limit
+        - Dynamical generation of bosons, (like phonons, not explicit in Lagrangian).
+    - In $d=4$, the NLSM is starting point for chiral perturbation theory.
+    - 
+
+
+
 # References
 
 
