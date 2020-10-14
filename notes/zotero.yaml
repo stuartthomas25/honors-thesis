@@ -189,6 +189,16 @@ references:
   title: Particles and quantum fields
   type: book
 
+- id: koerner
+  author:
+    - family: Körner
+      given: Daniel
+  language: de
+  page: '124'
+  source: Zotero
+  title: Non-perturbative renormalization on the lattice
+  type: article-journal
+
 - id: loinaz1998
   abstract: >-
     We perform a Monte Carlo simulation calculation of the critical coupling
@@ -291,33 +301,6 @@ references:
   type: article-journal
   URL: 'http://arxiv.org/abs/1410.7538'
   volume: '2015'
-
-- id: melin2000
-  accessed:
-    - year: 2019
-      month: 10
-      day: 1
-  author:
-    - family: Mélin
-      given: R.
-  container-title: EPL (Europhysics Letters)
-  container-title-short: EPL
-  DOI: 10.1209/epl/i2000-00532-1
-  ISSN: 0295-5075
-  issue: '2'
-  issued:
-    - year: 2000
-      month: 7
-      day: 15
-  language: en
-  page: '202'
-  source: iopscience.iop.org
-  title: >-
-    Spin-resolved Andreev reflection in ferromagnet-superconductor junctions
-    with Zeeman splitting
-  type: article-journal
-  URL: 'https://iopscience.iop.org/article/10.1209/epl/i2000-00532-1/meta'
-  volume: '51'
 
 - id: michael1986
   accessed:

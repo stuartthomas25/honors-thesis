@@ -444,7 +444,11 @@ Graduate School:
         - Large N limit
         - Dynamical generation of bosons, (like phonons, not explicit in Lagrangian).
     - In $d=4$, the NLSM is starting point for chiral perturbation theory.
-    - 
+
+## Tuesday, October 6
+- Added MPI to C++
+    - Some issues with conversion to C array
+- Make sure in implementation to keep lattice data continuous.
 
 
 
