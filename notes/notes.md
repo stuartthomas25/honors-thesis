@@ -448,9 +448,16 @@ Graduate School:
 ## Tuesday, October 6
 - Added MPI to C++
     - Some issues with conversion to C array
+
 - Make sure in implementation to keep lattice data continuous.
 
+## Wednesday, October 14
+- How to debug compilation errors?
+    - Can't use print statements like Python.
+    - I can use dummy routines to isolate issues.
 
+- Priorities:
+    - Ensure that Enrico's project is on the Arxiv while still doing work on my thesis in good faith.
 
 # References
 
