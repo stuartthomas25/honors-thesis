@@ -62,3 +62,18 @@
     - Transition calculations to C++
     - Transition run() method to C++ so as to decrease lattice transfer of data
     - Define phi as a  vector to so that process works with nonlinear $\sigma$ model.
+    
+
+## Wednesday, October 28
+- I've implemented a command line program that runs the Monte Carlo algorithm on a lattice
+- It is called by a python program which should manage all the parameters, passing them as cmd line arguments to the C++ executable.
+- Problems with C++ code:
+    - Cluster doesn't work yet
+    - MPI doesn't work yet
+    - Gives wrong critical mass for $\phi^4$.
+
+Other concerns:
+    - Picking new values for $\sigma$ model, options:
+        1. Using rotation matrices
+        2. adding random values and then normalizing
+        

@@ -459,6 +459,21 @@ Graduate School:
 - Priorities:
     - Ensure that Enrico's project is on the Arxiv while still doing work on my thesis in good faith.
 
+## Wednesday, October 21
+- Prof. Chris will ask Prof. Orginos about static memory allocation for rank and size.
+- Code finally compiles!
+- Action looks good but magnetization is incorrect.
+    - Get other measurements (suscpetibility, BC, etc.)
+    - No need to export lattice average of $\phi^2$.
+
+## Wednesday, October 28
+- Progress
+    - Plot with $U$ and $\chi$
+    - I think I can statically allocate data in the Sweeper class using an initializer list.
+
+
+
+
 # References
 
 

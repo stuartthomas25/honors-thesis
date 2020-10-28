@@ -16,7 +16,7 @@
 using namespace std;
 
 #define N 1
-#define DIM 64
+#define DIM 16
 #define MASTER 0
 #define PROG_CHAR "#"
 
@@ -137,7 +137,7 @@ namespace croutines {
         ~progress_bar()
         {
             write(1.0);
-            os << '\n';
+            //os << '\n';
         }
 
         void write(double fraction);

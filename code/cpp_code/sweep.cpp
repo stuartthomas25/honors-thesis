@@ -229,7 +229,7 @@ namespace croutines {
         for (int i=0; i<2*sweeps; i++) {
             color = i%2;
             i_sweep = i/2;
-            progress.write((double)i_sweep /sweeps);
+            progress.write((double)record_rate /sweeps);
             broadcast_lattice();
             tie(dphis, dS) = sweep(color);
             collect_changes(dphis, dS, color);
@@ -281,8 +281,8 @@ namespace croutines {
             A = exp(-dS);
             r = randf();
 
-            //if (dS < 0 || r <= A) { 
-            if (dS < 0 ) { 
+            if (dS < 0 || r <= A) { 
+            //if (dS < 0 ) { 
                 dphis.push_back(dphi);
                 tot_dS += dS;
             } else {
