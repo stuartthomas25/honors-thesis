@@ -15,7 +15,7 @@ namespace croutines {
         for (int i=0; i<N; i++) {
             phi[i] = 0;
         }
-    };
+    }
 
 
 
@@ -85,7 +85,13 @@ namespace croutines {
     }
 
 
-    Sweeper::Sweeper (double m02, double lam, MPI_Comm c) : process_Rank(get_rank(c)), size_Of_Cluster(get_size(c)), sites_per_node((DIM*DIM)/2 / get_size(c)) {
+    Sweeper::Sweeper (double m02, double lam, int DIM, MPI_Comm c) : 
+        process_Rank(get_rank(c)), 
+        size_Of_Cluster(get_size(c)), 
+        sites_per_node((DIM*DIM)/2 / get_size(c)),
+        DIM{DIM}
+
+    {
         
         this->redef_mass = 2 + 0.5 * m02;
         this->quarter_lam = 0.25 * lam;
@@ -96,13 +102,10 @@ namespace croutines {
         Phi zero_phi(zero_array);
 
         for (int i=0; i<DIM*DIM; i++) {
-            lat[i] = new_value(zero_phi);
+            lat.push_back(new_value(zero_phi));
         }
 
 
-        // generate MPI assignments
-        vector<int> black_sites;
-        vector<int> white_sites;
         int site, i;
         Phi forward_nphi_sum;
 
@@ -115,22 +118,20 @@ namespace croutines {
             action += lagrangian(lat[s], forward_nphi_sum);
         }
         
+        // generate MPI assignments
         for (i = 0; i<DIM; i++){
             for (int j = 0; j<DIM; j++) {
                 site = i*DIM + j;
                 if ( (i+j)%2 ) {
-                    black_sites.push_back(site);
+                    mpi_assignments[COLOR::black].push_back(site);
                 } else {
-                    white_sites.push_back(site);
+                    mpi_assignments[COLOR::white].push_back(site);
                 }   
             }
         }
        
         int offset = process_Rank *  sites_per_node;
-        for (i = 0; i < sites_per_node; i++) {
-            mpi_assignments[0][i] = white_sites[offset + i];
-            mpi_assignments[1][i] = black_sites[offset + i];
-        }
+
     }
 
     int Sweeper::wrap( int c) {
@@ -209,11 +210,11 @@ namespace croutines {
                                     int cluster_rate = 5
                                 ) {
        
-
         if (cluster_algorithm != WOLFF) { throw invalid_argument("Currently, Wolff is the only allowed algorithm"); }
 
         int process_Rank, size_Of_Cluster;
-        int i_sweep, color;
+        int i_sweep;
+        COLOR color;
 
         progress_bar progress{cout, 70u, "Working"};
 
@@ -227,7 +228,7 @@ namespace croutines {
         double norm_factor = 1 / (double) (DIM*DIM);
 
         for (int i=0; i<2*sweeps; i++) {
-            color = i%2;
+            color = i%2==0 ? COLOR::black : COLOR::white;
             i_sweep = i/2;
             progress.write((double)record_rate /sweeps);
             broadcast_lattice();
@@ -250,7 +251,7 @@ namespace croutines {
     }
 
 
-    tuple<vector<Phi>, double> Sweeper::sweep(int color){
+    tuple<vector<Phi>, double> Sweeper::sweep(COLOR color){
 
         vector<Phi> dphis;
 
@@ -264,7 +265,7 @@ namespace croutines {
         Phi zero_phi(zero_array);
 
         for (int i = 0; i<sites_per_node; i++){
-            site = mpi_assignments[color][i];
+            site = mpi_assignments[color] [i];
 
             phi = this->lat[site];
 
@@ -290,6 +291,7 @@ namespace croutines {
             }
 
         }
+
         return make_tuple(dphis, tot_dS);
 
     }
@@ -343,7 +345,7 @@ namespace croutines {
         return cluster;
     }
 
-    tuple<array<Phi, DIM*DIM>, double> Sweeper::wolff() {
+    tuple<vector<Phi>, double> Sweeper::wolff() {
 
         int seed = randint(pow(this->dim,2));
         set <int>  cluster;
@@ -392,7 +394,7 @@ namespace croutines {
 
     }
 
-    void Sweeper::collect_changes(vector<Phi> dphis, double dS, int color){
+    void Sweeper::collect_changes(vector<Phi> dphis, double dS, COLOR color){
         const int recv_data_size = N*DIM*DIM/2;
         double send_data[N*sites_per_node];
 
@@ -406,7 +408,9 @@ namespace croutines {
         double recv_data[recv_data_size];
         double recv_actions[size_Of_Cluster];
 
-        MPI_Gather(&(mpi_assignments[color]), sites_per_node, MPI_INT, &recv_sites, DIM*DIM/2, MPI_INT, MASTER, MPI_COMM_WORLD);
+
+
+        MPI_Gather(mpi_assignments[color].data(), sites_per_node, MPI_INT, &recv_sites, DIM*DIM/2, MPI_INT, MASTER, MPI_COMM_WORLD);
         MPI_Gather(&send_data, N*sites_per_node, MPI_DOUBLE, &recv_data, recv_data_size, MPI_DOUBLE, MASTER, MPI_COMM_WORLD);
         MPI_Gather(&dS, 1, MPI_DOUBLE, &recv_actions, size_Of_Cluster, MPI_DOUBLE, MASTER, MPI_COMM_WORLD);
 

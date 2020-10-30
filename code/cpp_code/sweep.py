@@ -38,7 +38,7 @@ if "run" in sys.argv:
         if term.height+1<len(m02s):
             raise Exception("terminal too short")
     for i,(m02, o_filename) in enumerate(zip(m02s, o_filenames)):
-        cmd = ["./sweep", "-m", str(m02), "-o", o_filename]
+        cmd = ["./bin/sweep", "-m", str(m02), "-o", o_filename]
         processes.append( Popen(cmd, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True) )
 
     #Now watch the results

@@ -41,13 +41,17 @@ int main(int argc, char *argv[]) {
     int c;
     float m02;
     char* filename;
-    while ((c = getopt(argc, (char **)argv, "o:m:")) != -1) {
+    int dim;
+    while ((c = getopt(argc, (char **)argv, "o:m:L:")) != -1) {
         switch((char)c) {
             case 'o':    
                 filename = optarg;
                 break;
             case 'm':    
                 m02 = atof(optarg);
+                break;
+            case 'L':    
+                dim = atof(optarg);
                 break;
             default:
                 cout << "Unrecognized argument: " << (char)c << endl;
@@ -61,7 +65,7 @@ int main(int argc, char *argv[]) {
     MPI_Comm_size(MPI_COMM_WORLD, &size_Of_Cluster);
     MPI_Comm_rank(MPI_COMM_WORLD, &process_Rank);
 
-    if (DIM * DIM % size_Of_Cluster != 0) {
+    if (dim * dim % size_Of_Cluster != 0) {
         cout << "ERROR: Size of lattice must be divisible by cluster size" << endl;
         return 1;
     }
@@ -92,7 +96,8 @@ int main(int argc, char *argv[]) {
     ofstream outputfile;
     outputfile.open(filename);
 
-    Sweeper sweeper(m02, 0.5, MPI_COMM_WORLD);
+
+    Sweeper sweeper(m02, 0.5, dim, MPI_COMM_WORLD);
 
     auto start = high_resolution_clock::now();
     int sweeps = 10000;

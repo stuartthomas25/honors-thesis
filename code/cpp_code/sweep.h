@@ -10,20 +10,20 @@
 #include <math.h>
 #include <iomanip>
 #include <ostream>
+#include <map>
 #include <string>
 #include "mpi.h"
 
 using namespace std;
 
 #define N 1
-#define DIM 16
 #define MASTER 0
 #define PROG_CHAR "#"
 
 namespace croutines {
 
     enum ClusterAlgorithm { WOLFF, SWENDSEN_WANG };
-
+    
     class Phi {
         array<double, N> phi;
 
@@ -42,18 +42,26 @@ namespace croutines {
             bool operator== (const Phi & phi) const;
             void print();
     };
-            
+      
+
+
     struct measurement {
         Phi phibar;
         double action;
     };
+    
 
     class Sweeper {
         const int process_Rank;
         const int size_Of_Cluster;
         const int sites_per_node;
-
-        int mpi_assignments[2][DIM*DIM/2];
+        const int DIM;
+        enum COLOR {
+            black,
+            white
+        };
+        
+        map<COLOR, vector<int>> mpi_assignments;
         private:
             static int get_rank(MPI_Comm c) {
                 int rank;
@@ -66,14 +74,14 @@ namespace croutines {
                 return size;
             }
         public:
+
             int dim;
-            array<Phi, DIM*DIM> lat;
+            vector<Phi> lat;
             double action;
 
             double redef_mass, quarter_lam, beta;
-            array<Phi, DIM*DIM> lattice;
             Sweeper();
-            Sweeper(double m02, double lam, MPI_Comm c);
+            Sweeper(double m02, double lam, int DIM, MPI_Comm c);
             int wrap(int c);
             void full_neighbors(int site, int neighbors[4]);
             double lagrangian(Phi phi, Phi nphi_sum);
@@ -84,11 +92,11 @@ namespace croutines {
             Phi proj_vec();
 
             vector<measurement> full_sweep(int sweeps, int thermalization, int record_rate, ClusterAlgorithm cluster_algorithm, int cluster_rate);
-            tuple<vector<Phi>, double> sweep(int color);
-            tuple<array<Phi, DIM*DIM>, double> wolff();
+            tuple<vector<Phi>, double> sweep(COLOR color);
+            tuple<vector<Phi>, double> wolff();
 
             void broadcast_lattice();
-            void collect_changes(vector<Phi> dphis, double dS, int color);
+            void collect_changes(vector<Phi> dphis, double dS, COLOR color);
 
             double Padd(Phi phi_a, Phi phi_b);
             set<int> generate_cluster(int seed, bool accept_all);
