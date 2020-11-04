@@ -471,7 +471,13 @@ Graduate School:
     - Plot with $U$ and $\chi$
     - I think I can statically allocate data in the Sweeper class using an initializer list.
 
+- Do we need MPI?
+    - Yes, in 3D it may be necessary since we won't have as many points.
+    - Also is necessary for psychological help
+    - Also allows adaptive sampling
 
+
+- Mid Year report due Monday
 
 
 # References

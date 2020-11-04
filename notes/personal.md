@@ -76,4 +76,20 @@ Other concerns:
     - Picking new values for $\sigma$ model, options:
         1. Using rotation matrices
         2. adding random values and then normalizing
-        
+
+
+TODO:
+    - Quantitatively compare results from python and C++ codes.
+        - Implement errors and use them to compare.
+    -
+
+## Friday, October 30
+
+- Make dim and N constants of Sweeper
+
+## Wednesday, Nov 4
+
+- Added cluster algorithm, not successfully compiling
+- Minor Issue: Progress bar stuck, doesnt move past 1% until process is done.
+- Issue: results look strange at higher values of $N$
+- Todo: compare python and C++ techniques
