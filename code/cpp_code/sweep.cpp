@@ -17,6 +17,14 @@ namespace croutines {
         }
     }
 
+    double Phi::norm_sq() const {
+        double cumsum = 0;
+        for (int i=0; i<N; i++) {
+            cumsum += phi[i] * phi[i];
+        }
+        return cumsum;
+
+    }
 
 
     Phi Phi::operator+ (const Phi & aPhi) const {
@@ -105,21 +113,11 @@ namespace croutines {
             lat.push_back(new_value(zero_phi));
         }
 
+        int site;
 
-        int site, i;
-        Phi forward_nphi_sum;
-
-        int neighbors[4];
-        action = 0;
-        // initial action
-        for (int s=0; s<DIM*DIM; s++) {
-            full_neighbors(s, neighbors);
-            forward_nphi_sum  = lat[neighbors[2]] + lat[neighbors[3]];
-            action += lagrangian(lat[s], forward_nphi_sum);
-        }
-        
+        action = full_action(); 
         // generate MPI assignments
-        for (i = 0; i<DIM; i++){
+        for (int i = 0; i<DIM; i++){
             for (int j = 0; j<DIM; j++) {
                 site = i*DIM + j;
                 if ( (i+j)%2 ) {
@@ -131,6 +129,21 @@ namespace croutines {
         }
        
         int offset = process_Rank *  sites_per_node;
+
+    }
+
+    double Sweeper::full_action() {
+        int site, i;
+        Phi forward_nphi_sum;
+        int neighbors[4];
+        double S = 0;
+        // initial action
+        for (int s=0; s<DIM*DIM; s++) {
+            full_neighbors(s, neighbors);
+            forward_nphi_sum  = lat[neighbors[2]] + lat[neighbors[3]];
+            S += lagrangian(lat[s], forward_nphi_sum);
+        }
+        return S;
 
     }
 
@@ -202,6 +215,21 @@ namespace croutines {
         return Phi();
     }
 
+    Phi Sweeper::random_phi() {
+        bool phi4 = true;
+        if (phi4) {
+            Phi ret_phi({3 * randf() - 1.5});
+            return ret_phi;
+        } else {
+            Phi new_phi;
+            for (int i=0; i<N; i++) {
+                new_phi[i] = 2 * randf() - 1;
+            }
+            return new_phi * (1/sqrt(new_phi.norm_sq()));
+        }  
+
+    }
+
 
     vector<measurement> Sweeper::full_sweep(int sweeps,
                                     int thermalization,
@@ -212,7 +240,6 @@ namespace croutines {
        
         if (cluster_algorithm != WOLFF) { throw invalid_argument("Currently, Wolff is the only allowed algorithm"); }
 
-        int process_Rank, size_Of_Cluster;
         int i_sweep;
         COLOR color;
 
@@ -232,8 +259,11 @@ namespace croutines {
             i_sweep = i/2;
             progress.write((double)record_rate /sweeps);
             broadcast_lattice();
+
+            //cout << "Met: " << action << " vs " << full_action() << endl;
             tie(dphis, dS) = sweep(color);
             collect_changes(dphis, dS, color);
+            //cout << "Met: " << action << " vs " << full_action() << endl;
 
             if (i_sweep%record_rate==0 && i_sweep>=thermalization) {
                 phibar.init_as_zero();
@@ -242,6 +272,13 @@ namespace croutines {
                 }
                 measurement aMeasurement = {phibar*norm_factor, action};
                 measurements.push_back(aMeasurement);
+                
+            }
+
+            if (i_sweep%cluster_rate==0) {
+                //cout << "Wolff: " << action << " vs " << full_action() << endl;
+                wolff();
+                //cout << "Wolff: " << action << " vs " << full_action() << endl;
                 
             }
 
@@ -307,47 +344,54 @@ namespace croutines {
     }
 
     double Sweeper::Padd(Phi phi_a, Phi phi_b){
-        return 1 - exp(-2*(phi_a*phi_b)); // Schaich Eq. 7.17
+        return 1 - exp(-2*(phi_a*phi_b)); // Schaich Eq. 7.17, promoted for vectors
     }
 
     set <int> Sweeper::generate_cluster(int seed, bool accept_all) {
-        int s, n, c, i;
-        Phi phi_sign, phi_a, phi_b;
+        int s, c, i;
+        Phi phi_a, phi_b;
 
-        double Padd;
+        double Padd_val;
         stack <tuple<int, Phi>> to_test;
         int neighbors[4];
         set <int> cluster;
 
         phi_a = lat[seed];
         
-        Phi r;
-        phi_sign = sign(phi_a); // get the sign of phi_a
-        to_test.push(make_tuple(seed, phi_sign * numeric_limits<double>::max() )); // site and phi value, using infinity to ensure Padd=1 for first addition
+        Phi r = random_phi();
+        double r_projection = phi_a * r;
+        double proj_sign = sign(r_projection);
+        to_test.push(make_tuple(seed, phi_a * numeric_limits<double>::max() )); // site and phi value, using infinity to ensure Padd=1 for first addition
         while (to_test.size()>0) {
             tie(s, phi_a) = to_test.top();
             to_test.pop();
+
+
             
-            if (cluster.find(s)==cluster.end()) { continue; }
+            if (cluster.find(s)!=cluster.end()) { 
+                continue; 
+            }
 
             phi_b = lat[s];
-            if (sign(phi_b) == phi_sign) {
-                Padd = this->Padd(phi_a, phi_b);
-                if (accept_all || randf() < Padd) {
+            if (sign(r * phi_b) == proj_sign) {
+                Padd_val = Padd(phi_a, phi_b);
+                if (accept_all || randf() < Padd_val) {
                     cluster.insert(s);
-                    this->full_neighbors(s, neighbors);
+                    full_neighbors(s, neighbors);
                     for (i=0; i<4; i++){
-                        to_test.push( make_tuple(n, phi_b) );
+                        to_test.push( make_tuple(neighbors[i], phi_b) );
                     }
                 }
+
             }
         }
         return cluster;
     }
 
-    tuple<vector<Phi>, double> Sweeper::wolff() {
+    //tuple<vector<Phi>, double> Sweeper::wolff() {
+    void Sweeper::wolff() {
 
-        int seed = randint(pow(this->dim,2));
+        int seed = randint(pow(DIM,2));
         set <int>  cluster;
         int neighbors[4];
         int n, i, c;
@@ -356,6 +400,7 @@ namespace croutines {
         
         double dS = 0;
         Phi phi;
+
 
         set<int>::iterator it;
         for (it = cluster.begin(); it != cluster.end(); ++it) {
@@ -369,7 +414,8 @@ namespace croutines {
             }
         }
 
-        return make_tuple(lat, dS);
+        action+=dS;
+
     }
 
     void Sweeper::broadcast_lattice() {
@@ -431,6 +477,10 @@ namespace croutines {
         Phi phi_sign;
         phi_sign[0] = (x[0] > 0) - (x[0] < 0);
         return phi_sign;
+    }
+
+    double sign(double x){
+        return (x>0) - (x<0);
     }
 
     /*double dot(array<double, N> a, array<double, N> b){*/

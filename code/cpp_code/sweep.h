@@ -31,6 +31,7 @@ namespace croutines {
             Phi();
             Phi(array<double, N> phi);
             void init_as_zero();
+            double norm_sq() const;
             Phi operator+ (const Phi & phi) const;
             Phi operator- (const Phi & phi) const;
             Phi operator- () const;
@@ -56,12 +57,14 @@ namespace croutines {
         const int size_Of_Cluster;
         const int sites_per_node;
         const int DIM;
+
         enum COLOR {
             black,
             white
         };
         
         map<COLOR, vector<int>> mpi_assignments;
+
         private:
             static int get_rank(MPI_Comm c) {
                 int rank;
@@ -82,6 +85,7 @@ namespace croutines {
             double redef_mass, quarter_lam, beta;
             Sweeper();
             Sweeper(double m02, double lam, int DIM, MPI_Comm c);
+            double full_action();
             int wrap(int c);
             void full_neighbors(int site, int neighbors[4]);
             double lagrangian(Phi phi, Phi nphi_sum);
@@ -90,10 +94,11 @@ namespace croutines {
             double rand_dist(double r);
             Phi new_value(Phi old_phi);
             Phi proj_vec();
+            Phi random_phi();
 
             vector<measurement> full_sweep(int sweeps, int thermalization, int record_rate, ClusterAlgorithm cluster_algorithm, int cluster_rate);
             tuple<vector<Phi>, double> sweep(COLOR color);
-            tuple<vector<Phi>, double> wolff();
+            void wolff();
 
             void broadcast_lattice();
             void collect_changes(vector<Phi> dphis, double dS, COLOR color);
@@ -107,6 +112,7 @@ namespace croutines {
     double randf();
     int randint(int n);
     Phi sign(Phi x);
+    double sign(double x);
 
 
 

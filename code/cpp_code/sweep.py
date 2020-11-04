@@ -7,29 +7,48 @@ from blessings import Terminal
 from subprocess import Popen, PIPE, CalledProcessError
 # from io import StringIO
 import time
+from gvar import gvar
 
 actions = []
 phibars = []
 # m02s = [-0.80, -0.76, -0.72, -0.68, -0.64];
 # m02s = np.linspace(-0.80,-0.64, 17)
-m02s = np.linspace(-1.80, 1.00, 29)
+# m02s = np.linspace(-1.80, 1.00, 29)
+m02s = np.linspace(-0.8, -0.64, 9)
 # m02s = [-0.80]
 o_filenames = [f"outputs/data_{m02}.csv" for m02 in m02s]
 # streams = [StringIO for _ in m02s]
 processes = []
+L = 32
 
 refresh_rate = 0.1
 
 # some functions
 
+def statvar(arr, tau=0.5):
+    arr = np.array(arr)
+    mean = np.mean(arr)
+
+    # use jackknife to calculate errs
+    def C_i(arr, i=None):
+        ''' i indicates measurement to leave out (for jackknife)'''
+        return (np.sum(arr) - arr[i]) / (arr.size-1)
+
+    cumsum = 0
+    for i in range(arr.size):
+       cumsum += (C_i(arr, i) - mean)**2
+    stddev = np.sqrt(2 * tau * cumsum)
+    return gvar(mean, stddev)
+
+
 def magnetization(phi):
-    return np.mean(np.abs(phi))
+    return statvar(np.abs(phi))
 
 def binder_cumulant(phi):
-    return 1 - np.mean(phi**4) / (3 * np.mean(phi**2)**2)
+    return 1 - statvar(phi**4) / (3 * statvar(phi**2)**2)
 
 def susceptibility(phi):
-    return np.mean(phi**2) - np.mean(np.abs(phi))**2
+    return statvar(phi**2) - statvar(np.abs(phi))**2
 
 if "run" in sys.argv:
     quiet = "-q" in sys.argv
@@ -38,7 +57,7 @@ if "run" in sys.argv:
         if term.height+1<len(m02s):
             raise Exception("terminal too short")
     for i,(m02, o_filename) in enumerate(zip(m02s, o_filenames)):
-        cmd = ["./bin/sweep", "-m", str(m02), "-o", o_filename]
+        cmd = ["./bin/sweep", "-m", str(m02), "-L", str(L), "-o", o_filename]
         processes.append( Popen(cmd, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True) )
 
     #Now watch the results
@@ -50,6 +69,7 @@ if "run" in sys.argv:
     finished = [False for _ in processes]
     while not all(finished):
         for i,p in enumerate(processes):
+
             line = p.stdout.readline()[:-1]
             if line != "":
                 if not started[i]:
@@ -75,6 +95,14 @@ elif "view" in sys.argv:
     axes[3].set_ylabel("S")
     axes[-1].set_xlabel("$m_0^2$")
 
+    plot_data = {
+            'magnetizations' : [],
+            'susceptibilities': [],
+            'binder_cumulants': [],
+            'actions' : []
+    }
+    labels = [r'$\langle|\bar\phi|\rangle$', r'$\chi$', r'$U$', r'$S$']
+
     for m02, o_filenames in zip(m02s, o_filenames):
         actions = []
         phibars = []
@@ -86,10 +114,18 @@ elif "view" in sys.argv:
         actions = np.array(actions)
         phibars = np.array(phibars)
 
-        axes[0].plot([m02], magnetization(phibars), '.', label=r"m_0^2={m02}")
-        axes[1].plot([m02], susceptibility(phibars), '.', label=r"m_0^2={m02}")
-        axes[2].plot([m02], binder_cumulant(phibars), '.', label=r"m_0^2={m02}")
-        axes[3].plot([m02], np.mean(actions), '.', label=f"$m_0^2={m02}$")
+        plot_data['magnetizations'].append( magnetization(phibars) )
+        plot_data['susceptibilities'].append( susceptibility(phibars) )
+        plot_data['binder_cumulants'].append( binder_cumulant(phibars) )
+        plot_data['actions'].append( statvar(actions) )
+
+    for ax, d, l in zip(axes, plot_data.values(), labels):
+        ax.errorbar(m02s, [x.mean for x in d], yerr=[x.sdev for x in d], fmt='k.', capsize=3.)
+        ax.set_ylabel(l)
+
+    axes[0].set_ylim((0., 1.1))
+    axes[2].axhline(2/3,ls=':')
+    axes[2].set_ylim((-0.1, None))
     plt.show()
 
 elif "evolution" in sys.argv:
