@@ -86,6 +86,7 @@ TODO:
 ## Friday, October 30
 
 - Make dim and N constants of Sweeper
+- Vectors are continuous! Begin shift to vectors
 
 ## Wednesday, Nov 4
 
@@ -93,3 +94,5 @@ TODO:
 - Minor Issue: Progress bar stuck, doesnt move past 1% until process is done.
 - Issue: results look strange at higher values of $N$
 - Todo: compare python and C++ techniques
+- Rewriting some of the new phi techniques
+

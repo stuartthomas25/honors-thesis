@@ -480,6 +480,33 @@ Graduate School:
 - Mid Year report due Monday
 
 
+
+## November 4 
+
+- Comparing Python and C++ part. Some issues:
+    - Susceptibilities have errors that are too large.
+    - Ratio of susceptibilities also wrong, expect a sharper dropoff.
+    - Binder Cumulant has wrong final values, susceptibilities.
+    - A good future solution is plotting the difference and a horizontal 0 line, also plot error.
+    - I should rerun everything with the same data.
+    - Also put the data in a nice plot.
+    - Make note of the speed up.
+
+
+- Transition to $O(3)$ model.
+- I realized that vectors are continuous memory, almost no slowdown.
+## November 11
+
+- Updates:
+    - Ran calculations again
+        - Execution time is actually on a similar order or magnitude
+        - MPI on 4 cores actually slows progress
+        - A couple of outliers, checked closer, seems right
+    - Redeveloped gif debugging tool for C++
+        - Shows similar lattice for both methods.
+        - Can be ported to $O(3)$ model
+
+
 # References
 
 
