@@ -1,6 +1,7 @@
 #include <iostream>
 #include "sweep.h"
 #include <algorithm>
+
 using namespace std;
 
 namespace croutines {
@@ -93,17 +94,24 @@ namespace croutines {
     }
 
 
-    Sweeper::Sweeper (double m02, double lam, int DIM, MPI_Comm c) : 
+    Sweeper::Sweeper (double m02, double lam, int DIM, MPI_Comm c, bool gif=false) : 
         process_Rank(get_rank(c)), 
         size_Of_Cluster(get_size(c)), 
         sites_per_node((DIM*DIM)/2 / get_size(c)),
-        DIM{DIM}
+        DIM{DIM},
+        gif{gif}
 
     {
+
         
         this->redef_mass = 2 + 0.5 * m02;
         this->quarter_lam = 0.25 * lam;
         this->beta=1; //EDIT
+
+
+        if (gif) {
+            GifBegin(&gif_writer, gif_filename, DIM, DIM, gif_delay);
+        }
 
         // generate lattice
         array<double, N> zero_array = {};
@@ -111,7 +119,13 @@ namespace croutines {
 
         for (int i=0; i<DIM*DIM; i++) {
             lat.push_back(new_value(zero_phi));
+            if (gif) {
+                for (int j=0; j<4; j++) {
+                    gif_vec.push_back(0);
+                }
+            }
         }
+
 
         int site;
 
@@ -130,6 +144,10 @@ namespace croutines {
        
         int offset = process_Rank *  sites_per_node;
 
+    }
+
+    Sweeper::~Sweeper(){
+        GifEnd(&gif_writer);
     }
 
     double Sweeper::full_action() {
@@ -230,20 +248,40 @@ namespace croutines {
 
     }
 
+    void Sweeper::write_gif_frame(double rate=3) {
+        int val;
+        Phi aPhi;
+        array<uint8_t, 4> pixel = {0,0,0,0};
+        fill(gif_vec.begin(), gif_vec.end(), 50);
 
-    vector<measurement> Sweeper::full_sweep(int sweeps,
-                                    int thermalization,
-                                    int record_rate,
-                                    ClusterAlgorithm cluster_algorithm = WOLFF, 
-                                    int cluster_rate = 5
-                                ) {
+        if (gif) {
+            for (int i=0; i<DIM*DIM; i++) {
+                aPhi = lat[i];
+                val = 255 * (1 - exp(-rate * aPhi[0])) / (1 + exp(-rate * aPhi[0]));
+                if (val >= 0) {
+                    gif_vec[4*i] = static_cast<uint8_t>(val);
+                } else {
+                    gif_vec[4*i+1] = static_cast<uint8_t>(-val);
+                }
+
+                gif_vec[4*i + 3] = 0; 
+                
+            }
+            GifWriteFrame(&gif_writer, gif_vec.data(), DIM, DIM, gif_delay);
+        }
+    }
+
+
+    vector<measurement> Sweeper::full_sweep(const sweep_args& args = sweep_args()) {
        
-        if (cluster_algorithm != WOLFF) { throw invalid_argument("Currently, Wolff is the only allowed algorithm"); }
+        if (args.cluster_algorithm != WOLFF) { throw invalid_argument("Currently, Wolff is the only allowed algorithm"); }
 
-        int i_sweep;
-        COLOR color;
-
-        progress_bar progress{cout, 70u, "Working"};
+        shared_ptr<progress_bar> progress;
+        if (args.progress) {
+            progress = make_shared<progress_bar>(cout, 70u, "Working");
+        } else {
+            progress = nullptr; 
+        }
 
         vector<measurement> measurements;
 
@@ -252,20 +290,32 @@ namespace croutines {
         Phi phibar;
         int s;
 
+        vector<uint8_t> white_vec(DIM*DIM*4,255);
+
         double norm_factor = 1 / (double) (DIM*DIM);
+        write_gif_frame();
+        COLOR colors[2] = {COLOR::white, COLOR::black};
+        for (int i=0; i<args.sweeps; i++) {
+            for (const auto &color : colors) {
 
-        for (int i=0; i<2*sweeps; i++) {
-            color = i%2==0 ? COLOR::black : COLOR::white;
-            i_sweep = i/2;
-            progress.write((double)record_rate /sweeps);
-            broadcast_lattice();
+                if (progress != nullptr) {
+                    progress->write((double)i/args.sweeps);
 
+                }
+                broadcast_lattice();
+
+                //cout << "Met: " << action << " vs " << full_action() << endl;
+                tie(dphis, dS) = sweep(color);
+                collect_changes(dphis, dS, color);
+            }
+            write_gif_frame();
             //cout << "Met: " << action << " vs " << full_action() << endl;
-            tie(dphis, dS) = sweep(color);
-            collect_changes(dphis, dS, color);
-            //cout << "Met: " << action << " vs " << full_action() << endl;
 
-            if (i_sweep%record_rate==0 && i_sweep>=thermalization) {
+            if (i==args.thermalization && gif){
+                GifWriteFrame(&gif_writer, white_vec.data(), DIM, DIM, gif_delay);
+            }
+
+            if (i%args.record_rate==0 && i>=args.thermalization) {
                 phibar.init_as_zero();
                 for (Phi l : lat) {
                     phibar = phibar + l;
@@ -275,9 +325,10 @@ namespace croutines {
                 
             }
 
-            if (i_sweep%cluster_rate==0) {
+            if (i%args.cluster_rate==0) {
                 //cout << "Wolff: " << action << " vs " << full_action() << endl;
                 wolff();
+                write_gif_frame();
                 //cout << "Wolff: " << action << " vs " << full_action() << endl;
                 
             }
@@ -419,23 +470,25 @@ namespace croutines {
     }
 
     void Sweeper::broadcast_lattice() {
-        const int raw_data_len = DIM*DIM*N;
-        double raw_data[raw_data_len];
-        if (process_Rank == MASTER) {
-            for (int i = 0; i < raw_data_len; i++) {
-                raw_data[i] = lat[i/N][i%N];
-            };
-        }
+        if (size_Of_Cluster>1) {
+            const int raw_data_len = DIM*DIM*N;
+            double raw_data[raw_data_len];
+            if (process_Rank == MASTER) {
+                for (int i = 0; i < raw_data_len; i++) {
+                    raw_data[i] = lat[i/N][i%N];
+                };
+            }
 
 
-        MPI_Bcast(&raw_data, raw_data_len, MPI_DOUBLE, MASTER, MPI_COMM_WORLD);
-        MPI_Bcast(&action, 1, MPI_INT, MASTER, MPI_COMM_WORLD);
+            MPI_Bcast(&raw_data, raw_data_len, MPI_DOUBLE, MASTER, MPI_COMM_WORLD);
+            MPI_Bcast(&action, 1, MPI_INT, MASTER, MPI_COMM_WORLD);
 
 
-        if (process_Rank != MASTER) {
-            for (int i = 0; i < raw_data_len; i++) {
-                lat[i/N] [i%N] = raw_data[i];
-            };
+            if (process_Rank != MASTER) {
+                for (int i = 0; i < raw_data_len; i++) {
+                    lat[i/N] [i%N] = raw_data[i];
+                };
+            }
         }
 
     }
@@ -456,9 +509,13 @@ namespace croutines {
 
 
 
+        //cout << 0;
         MPI_Gather(mpi_assignments[color].data(), sites_per_node, MPI_INT, &recv_sites, DIM*DIM/2, MPI_INT, MASTER, MPI_COMM_WORLD);
+        //cout << 1;
         MPI_Gather(&send_data, N*sites_per_node, MPI_DOUBLE, &recv_data, recv_data_size, MPI_DOUBLE, MASTER, MPI_COMM_WORLD);
+        //cout << 2;
         MPI_Gather(&dS, 1, MPI_DOUBLE, &recv_actions, size_Of_Cluster, MPI_DOUBLE, MASTER, MPI_COMM_WORLD);
+        //cout << 3;
 
         if (process_Rank == MASTER) {
             for (int i = 0; i<DIM*DIM/2; i++){

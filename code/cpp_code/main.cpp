@@ -42,7 +42,8 @@ int main(int argc, char *argv[]) {
     float m02;
     char* filename;
     int dim;
-    while ((c = getopt(argc, (char **)argv, "o:m:L:")) != -1) {
+    bool progress = true;
+    while ((c = getopt(argc, (char **)argv, "qo:m:L:")) != -1) {
         switch((char)c) {
             case 'o':    
                 filename = optarg;
@@ -52,6 +53,9 @@ int main(int argc, char *argv[]) {
                 break;
             case 'L':    
                 dim = atof(optarg);
+                break;
+            case 'q':
+                progress = false;
                 break;
             default:
                 cout << "Unrecognized argument: " << (char)c << endl;
@@ -100,14 +104,25 @@ int main(int argc, char *argv[]) {
     Sweeper sweeper(m02, 0.5, dim, MPI_COMM_WORLD);
 
     auto start = high_resolution_clock::now();
-    int sweeps = 10000;
+    int measurements = 10;
     int thermalization = 1000;
     int record_rate = 100;
-    vector<measurement> meas_data = sweeper.full_sweep(sweeps, thermalization, record_rate);
+    int sweeps = record_rate * measurements + thermalization;
+
+    sweep_args args {
+        sweeps,
+        thermalization,
+        record_rate,
+        .progress = progress
+    };
+    vector<measurement> meas_data = sweeper.full_sweep(args);
     
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<seconds>(stop - start); 
-
+    
+    if (args.progress) {
+        cout << meas_data.size() << " measurements" << endl;
+    }
     avg_mag = 0;
     for (measurement m : meas_data) {
         outputfile << m.action << ", " << m.phibar[0] << endl;

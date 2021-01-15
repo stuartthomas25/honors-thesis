@@ -12,7 +12,9 @@
 #include <ostream>
 #include <map>
 #include <string>
+#include <memory>
 #include "mpi.h"
+#include "gif.h"
 
 using namespace std;
 
@@ -52,6 +54,16 @@ namespace croutines {
     };
     
 
+
+    struct sweep_args {
+        int sweeps;
+        int thermalization;
+        int record_rate;
+        ClusterAlgorithm cluster_algorithm = WOLFF; 
+        int cluster_rate = 5;
+        bool progress = true;
+    };
+
     class Sweeper {
         const int process_Rank;
         const int size_Of_Cluster;
@@ -76,15 +88,26 @@ namespace croutines {
                 MPI_Comm_size(c, &size);
                 return size;
             }
-        public:
 
+            bool gif;
+            vector<uint8_t> gif_vec;
+            GifWriter gif_writer;
+            auto static constexpr gif_filename = "lattice.gif";
+            int gif_delay = 10;
+
+        public:
             int dim;
             vector<Phi> lat;
             double action;
 
+
             double redef_mass, quarter_lam, beta;
             Sweeper();
-            Sweeper(double m02, double lam, int DIM, MPI_Comm c);
+            ~Sweeper();
+            Sweeper(double m02, double lam, int DIM, MPI_Comm c, bool makeGif);
+
+            void write_gif_frame(double rate);
+
             double full_action();
             int wrap(int c);
             void full_neighbors(int site, int neighbors[4]);
@@ -96,7 +119,7 @@ namespace croutines {
             Phi proj_vec();
             Phi random_phi();
 
-            vector<measurement> full_sweep(int sweeps, int thermalization, int record_rate, ClusterAlgorithm cluster_algorithm, int cluster_rate);
+            vector<measurement> full_sweep(const sweep_args& args);
             tuple<vector<Phi>, double> sweep(COLOR color);
             void wolff();
 
