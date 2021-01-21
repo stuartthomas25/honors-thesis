@@ -533,6 +533,13 @@ Graduate School:
     - See references [@bietenholz2018] and [@mejia-diaz2018].
         - Unfortunately, these do exactly what we were planning to do, however they do demonstrate that this research is paper-worthy.
 
+- Todo in the meantime:
+    - clean up code
+
+- Writing report:
+    - Try to start early
+    - Specifically, fix "long-term" issues in mid-year report.
+
 
 ## January 21
 
