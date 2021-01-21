@@ -85,6 +85,7 @@ linestretch: 1.5
 
         on questions.
     -  Newman [@newman1999] (Main textbook for Monte Carlo in
+
         Statistical Physics)
 -  Just some things to remember
     -  Correlation functions correlate values in statistical systems
@@ -460,6 +461,7 @@ Graduate School:
     - Ensure that Enrico's project is on the Arxiv while still doing work on my thesis in good faith.
 
 ## Wednesday, October 21
+
 - Prof. Chris will ask Prof. Orginos about static memory allocation for rank and size.
 - Code finally compiles!
 - Action looks good but magnetization is incorrect.
@@ -475,7 +477,6 @@ Graduate School:
     - Yes, in 3D it may be necessary since we won't have as many points.
     - Also is necessary for psychological help
     - Also allows adaptive sampling
-
 
 - Mid Year report due Monday
 
@@ -495,6 +496,7 @@ Graduate School:
 
 - Transition to $O(3)$ model.
 - I realized that vectors are continuous memory, almost no slowdown.
+
 ## November 11
 
 - Updates:
@@ -505,7 +507,36 @@ Graduate School:
     - Redeveloped gif debugging tool for C++
         - Shows similar lattice for both methods.
         - Can be ported to $O(3)$ model
+- Todo:
+    - For difference plot, use larger number of measurements.
+    - Still discrepancy with susceptibility error bars
+        - See if this changes with lattice size, ensemble size.
+        - Jackknife methods
+        - Export $\bar\phi$ values in python code, compare variances with independent code.
 
+    - Presentation slides by Friday
+    - Email Averett about a final draft for the mid-year report.
+    - Make changes to the mid-year report 
+
+---
+
+# Spring Semester
+
+## January 12
+
+- Some clarifying theory questions:
+    - Twist-2 operators: not trivial! mass dimension is not just mass of the field. 
+
+- __Shift project towards topology__
+    - More interesting
+    - More applications to condensed matter
+    - See references [@bietenholz2018] and [@mejia-diaz2018].
+        - Unfortunately, these do exactly what we were planning to do, however they do demonstrate that this research is paper-worthy.
+
+
+## January 21
+
+- How to determine gradient flow in $O(3)$ model?
 
 # References
 

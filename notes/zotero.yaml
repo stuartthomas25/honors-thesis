@@ -19,7 +19,7 @@ references:
       given: B.
     - family: Papa
       given: A.
-  container-title: 'arXiv:0711.1803 [hep-lat]'
+  container-title: arXiv:0711.1803 [hep-lat]
   issued:
     - year: 2007
       month: 11
@@ -29,7 +29,7 @@ references:
     Numerical study of the mass spectrum in the 2D O(3) sigma model with a theta
     term
   type: article-journal
-  URL: 'http://arxiv.org/abs/0711.1803'
+  URL: http://arxiv.org/abs/0711.1803
 
 - id: aoki2015
   abstract: >-
@@ -67,7 +67,7 @@ references:
   source: arXiv.org
   title: Gradient Flow of $O(N)$ nonlinear sigma model at large $N$
   type: article-journal
-  URL: 'http://arxiv.org/abs/1412.8249'
+  URL: http://arxiv.org/abs/1412.8249
   volume: '2015'
 
 - id: balog2012
@@ -114,8 +114,56 @@ references:
   source: arXiv.org
   title: Drastic Reduction of Cutoff Effects in 2-d Lattice O(N) Models
   type: article-journal
-  URL: 'http://arxiv.org/abs/1208.6232'
+  URL: http://arxiv.org/abs/1208.6232
   volume: '2012'
+
+- id: bietenholz2018
+  abstract: >-
+    The 2d O(3) model is widely used as a toy model for ferromagnetism and for
+    Quantum Chromodynamics. With the latter it shares --- among other basic
+    aspects --- the property that the continuum functional integral splits into
+    topological sectors. Topology can also be defined in its lattice regularised
+    version, but semi-classical arguments suggest that the topological
+    susceptibility $\chi_{\rm t}$ does not scale towards a finite continuum
+    limit. Previous numerical studies confirmed that the quantity $\chi_{\rm
+    t}\, \xi^{2}$ diverges at large correlation length $\xi$. Here we
+    investigate the question whether or not this divergence persists when the
+    configurations are smoothened by the Gradient Flow (GF). The GF destroys
+    part of the topological windings; on fine lattices this strongly reduces
+    $\chi_{\rm t}$. However, even when the flow time is so long that the GF
+    impact range --- or smoothing radius --- attains $\xi/2$, we do still not
+    observe evidence of continuum scaling.
+  accessed:
+    - year: 2021
+      month: 1
+      day: 21
+  author:
+    - family: Bietenholz
+      given: Wolfgang
+    - family: Forcrand
+      given: Philippe
+      non-dropping-particle: de
+    - family: Gerber
+      given: Urs
+    - family: Mejía-Díaz
+      given: Héctor
+    - family: Sandoval
+      given: Ilya O.
+  container-title: Physical Review D
+  container-title-short: Phys. Rev. D
+  DOI: 10.1103/PhysRevD.98.114501
+  ISSN: 2470-0010, 2470-0029
+  issue: '11'
+  issued:
+    - year: 2018
+      month: 12
+      day: 5
+  page: '114501'
+  source: arXiv.org
+  title: Topological Susceptibility of the 2d O(3) Model under Gradient Flow
+  type: article-journal
+  URL: http://arxiv.org/abs/1808.08129
+  volume: '98'
 
 - id: horgan2014
   author:
@@ -156,12 +204,61 @@ references:
     Percolation and cluster distribution. I. Cluster multiple labeling technique
     and critical concentration algorithm
   type: article-journal
-  URL: 'https://link.aps.org/doi/10.1103/PhysRevB.14.3438'
+  URL: https://link.aps.org/doi/10.1103/PhysRevB.14.3438
   volume: '14'
 
 - id: IntroductionQCDStandard
   title: Introduction to QCD and the Standard Model
   type: book
+
+- id: ioffe2003
+  abstract: >-
+    The paper presents a short review of our knowledge today on vacuum
+    condensates in quantum chromodynamics (QCD). The condensates are deﬁned as
+    vacuum averages of the operators which arise due to nonperturbative eﬀects.
+    The important role of condensates in determining physical properties of
+    hadrons and of their low-energy interactions in QCD is underlined. The
+    special value of the quark condensate, connected to the existence of baryon
+    masses, is mentioned. Vacuum condensates induced by external ﬁelds are
+    discussed. QCD at low energy is checked on the basis of the data on hadronic
+    τ decay. In theoretical analysis, the terms of perturbation theory (PT) up
+    to α3s are accounted for; in the operator product expansion (OPE), those up
+    to dimension 8. The total probability of the decay τ → hadrons (with zero
+    strangeness) and of the τ -decay structure functions are best described at
+    αs(m2τ ) = 0.330 ± 0.025. It is shown that the Borel sum rules for τ -decay
+    structure functions along the rays in the q2-complex plane are in agreement
+    with experiment, having an accuracy of ∼2% at the values of the Borel
+    parameter |M 2| > 0.8 GeV2. The magnitudes of dimension 6 and 8 condensates
+    were found, and the limitations on gluon condensates were obtained. The sum
+    rules for the charmed-quark vector-current polarization operator were
+    analyzed in three loops (i.e., in order α2s). The value of the charmed-quark
+    mass (in an M S regularization scheme) was found to be mc(m2c) = 1.275 ±
+    0.015 GeV, and the value of gluon condensate was estimated as 0|(αs/π)G2|0 =
+    0.009 ± 0.007 GeV4. The general conclusion is that the QCD described by PT +
+    OPE is in good agreement with experiment at Q2 1 GeV2. c 2003 MAIK
+    “Nauka/Interperiodica”.
+  accessed:
+    - year: 2020
+      month: 11
+      day: 16
+  author:
+    - family: Ioffe
+      given: B. L.
+  container-title: Physics of Atomic Nuclei
+  container-title-short: Phys. Atom. Nuclei
+  DOI: 10.1134/1.1540654
+  ISSN: 1063-7788, 1562-692X
+  issue: '1'
+  issued:
+    - year: 2003
+      month: 1
+  language: en
+  page: 30-43
+  source: DOI.org (Crossref)
+  title: Condensates in quantum chromodynamics
+  type: article-journal
+  URL: http://link.springer.com/10.1134/1.1540654
+  volume: '66'
 
 - id: kleinert2001
   author:
@@ -216,7 +313,7 @@ references:
   container-title: Physical Review D
   container-title-short: Phys. Rev. D
   DOI: 10.1103/PhysRevD.58.076003
-  ISSN: '0556-2821, 1089-4918'
+  ISSN: 0556-2821, 1089-4918
   issue: '7'
   issued:
     - year: 1998
@@ -228,7 +325,7 @@ references:
     Monte Carlo Simulation Calculation of Critical Coupling Constant for
     Continuum $\phi^4_2$
   type: article-journal
-  URL: 'http://arxiv.org/abs/hep-lat/9712008'
+  URL: http://arxiv.org/abs/hep-lat/9712008
   volume: '58'
 
 - id: makino2015
@@ -257,7 +354,7 @@ references:
   source: DOI.org (Crossref)
   title: Large-N limit of the gradient flow in the 2D O(N) nonlinear sigma model
   type: article-journal
-  URL: 'https://academic.oup.com/ptep/article-lookup/doi/10.1093/ptep/ptv044'
+  URL: https://academic.oup.com/ptep/article-lookup/doi/10.1093/ptep/ptv044
   volume: '2015'
 
 - id: makino2015a
@@ -299,8 +396,56 @@ references:
     Renormalizability of the gradient flow in the 2D $O(N)$ non-linear sigma
     model
   type: article-journal
-  URL: 'http://arxiv.org/abs/1410.7538'
+  URL: http://arxiv.org/abs/1410.7538
   volume: '2015'
+
+- id: mejia-diaz2018
+  abstract: >-
+    We study the impact of the Gradient Flow on the topology in various models
+    of lattice field theory. The topological susceptibility $\chi_{\rm t}$ is
+    measured directly, and by the slab method, which is based on the topological
+    content of sub-volumes ("slabs") and estimates $\chi_{\rm t}$ even when the
+    system remains trapped in a fixed topological sector. The results obtained
+    by both methods are essentially consistent, but the impact of the Gradient
+    Flow on the characteristic quantity of the slab method seems to be different
+    in 2-flavour QCD and in the 2d O(3) model. In the latter model, we further
+    address the question whether or not the Gradient Flow leads to a finite
+    continuum limit of the topological susceptibility (rescaled by the
+    correlation length squared, $\xi^{2}$). This ongoing study is based on
+    direct measurements of $\chi_{\rm t}$ in $L \times L$ lattices, at $L/\xi
+    \simeq 6$.
+  accessed:
+    - year: 2021
+      month: 1
+      day: 21
+  author:
+    - family: Mejía-Díaz
+      given: Héctor
+    - family: Bietenholz
+      given: Wolfgang
+    - family: Cichy
+      given: Krzysztof
+    - family: Forcrand
+      given: Philippe
+      non-dropping-particle: de
+    - family: Dromard
+      given: Arthur
+    - family: Gerber
+      given: Urs
+    - family: Sandoval
+      given: Ilya O.
+  container-title: EPJ Web of Conferences
+  container-title-short: EPJ Web Conf.
+  DOI: 10.1051/epjconf/201817511024
+  ISSN: 2100-014X
+  issued:
+    - year: 2018
+  page: '11024'
+  source: arXiv.org
+  title: Topological Susceptibility under Gradient Flow
+  type: article-journal
+  URL: http://arxiv.org/abs/1712.01395
+  volume: '175'
 
 - id: michael1986
   accessed:
@@ -324,7 +469,7 @@ references:
   source: DOI.org (Crossref)
   title: Fast heat-bath algorithm for the Ising model
   type: article-journal
-  URL: 'https://link.aps.org/doi/10.1103/PhysRevB.33.7861'
+  URL: https://link.aps.org/doi/10.1103/PhysRevB.33.7861
   volume: '33'
 
 - id: monahan2015
@@ -340,7 +485,7 @@ references:
   container-title: Physical Review D
   container-title-short: Phys. Rev. D
   DOI: 10.1103/PhysRevD.91.074513
-  ISSN: '1550-7998, 1550-2368'
+  ISSN: 1550-7998, 1550-2368
   issue: '7'
   issued:
     - year: 2015
@@ -351,7 +496,7 @@ references:
   source: DOI.org (Crossref)
   title: Locally smeared operator product expansions in scalar field theory
   type: article-journal
-  URL: 'https://link.aps.org/doi/10.1103/PhysRevD.91.074513'
+  URL: https://link.aps.org/doi/10.1103/PhysRevD.91.074513
   volume: '91'
 
 - id: monahan2016
@@ -367,7 +512,7 @@ references:
     PoS(LATTICE 2015)
   DOI: 10.22323/1.251.0052
   event: The 33rd International Symposium on Lattice Field Theory
-  event-place: 'Kobe International Conference Center, Kobe, Japan'
+  event-place: Kobe International Conference Center, Kobe, Japan
   issued:
     - year: 2016
       month: 7
@@ -375,11 +520,11 @@ references:
   language: en
   page: '052'
   publisher: Sissa Medialab
-  publisher-place: 'Kobe International Conference Center, Kobe, Japan'
+  publisher-place: Kobe International Conference Center, Kobe, Japan
   source: DOI.org (Crossref)
   title: The gradient flow in simple field theories
   type: paper-conference
-  URL: 'https://pos.sissa.it/251/052'
+  URL: https://pos.sissa.it/251/052
 
 - id: morningstar2007
   abstract: >-
@@ -403,7 +548,7 @@ references:
   author:
     - family: Morningstar
       given: Colin
-  container-title: 'arXiv:hep-lat/0702020'
+  container-title: arXiv:hep-lat/0702020
   issued:
     - year: 2007
       month: 2
@@ -411,7 +556,7 @@ references:
   source: arXiv.org
   title: The Monte Carlo method in quantum field theory
   type: article-journal
-  URL: 'http://arxiv.org/abs/hep-lat/0702020'
+  URL: http://arxiv.org/abs/hep-lat/0702020
 
 - id: newman1999
   author:
@@ -471,7 +616,7 @@ references:
       given: Michael
     - family: Schäfer
       given: Andreas
-  container-title: 'arXiv:0710.0480 [hep-lat]'
+  container-title: arXiv:0710.0480 [hep-lat]
   issued:
     - year: 2007
       month: 10
@@ -480,7 +625,7 @@ references:
   source: arXiv.org
   title: Smearing and filtering methods in lattice QCD - a quantitative comparison
   type: article-journal
-  URL: 'http://arxiv.org/abs/0710.0480'
+  URL: http://arxiv.org/abs/0710.0480
 
 - id: tong2007
   author:
@@ -517,7 +662,7 @@ references:
   page: 12 p
   title: 'Error analysis of simulation results: a sample problem'
   type: article-journal
-  URL: 'https://cds.cern.ch/record/204810'
+  URL: https://cds.cern.ch/record/204810
 
 - id: wang1989
   accessed:
@@ -530,7 +675,7 @@ references:
   container-title: 'Physica A: Statistical Mechanics and its Applications'
   container-title-short: 'Physica A: Statistical Mechanics and its Applications'
   DOI: 10.1016/0378-4371(89)90468-8
-  ISSN: 03784371
+  ISSN: '03784371'
   issue: '2'
   issued:
     - year: 1989
@@ -540,7 +685,7 @@ references:
   source: DOI.org (Crossref)
   title: Clusters in the three-dimensional Ising model with a magnetic field
   type: article-journal
-  URL: 'https://linkinghub.elsevier.com/retrieve/pii/0378437189904688'
+  URL: https://linkinghub.elsevier.com/retrieve/pii/0378437189904688
   volume: '161'
 
 - id: wolff2007
@@ -574,6 +719,6 @@ references:
   source: arXiv.org
   title: Monte Carlo errors with less errors
   type: article-journal
-  URL: 'http://arxiv.org/abs/hep-lat/0306017'
+  URL: http://arxiv.org/abs/hep-lat/0306017
   volume: '176'
 ...

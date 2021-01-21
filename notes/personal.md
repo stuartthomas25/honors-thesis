@@ -96,3 +96,8 @@ TODO:
 - Todo: compare python and C++ techniques
 - Rewriting some of the new phi techniques
 
+## Thursday, Jan 21
+- Fix MPI Broadcasting issue
+- Fixed Big Sur compatibility issue
+- Implemented mpi debug system
+- Generalized to sigma model
