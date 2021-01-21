@@ -1,19 +1,18 @@
 export OMPI_CXX=g++-10
 #export LDFLAGS="-L/usr/local/opt/binutils/lib"
 export CPPFLAGS=-I/usr/local/opt/binutils/include
-binaries=bin/sweep
+binary=bin/sweep
+cppfiles=sweep.cpp phi.cpp main.cpp 
+hfiles=sweep.h phi.h
 
 .PHONY: clean
 .DEFAULT_GOAL: sweep
 
-sweep: main.cpp sweep.cpp sweep.h
-	mpic++ -o bin/sweep main.cpp
+sweep: $(cppfiles) $(hfiles)
+	mpic++ $(cppfiles) -o $(binary) 
 
-profile: main.cpp sweep.cpp sweep.h
-	mpic++ $(CPPFLAGS) -o bin/sweep -pg main.cpp
-
-#debug: main.cpp sweep.cpp sweep.h
-	#mpic++ -g -o bin/sweep main.cpp
+debug: main.cpp sweep.cpp sweep.h
+	mpic++ -g $(cppfiles) -o $(binary) 
 
 clean: 
-	rm -f $(binaries)
+	rm -f $(binary)

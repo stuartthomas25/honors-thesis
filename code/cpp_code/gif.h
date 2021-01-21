@@ -26,8 +26,7 @@
 // Finally, call GifEnd() to close the file handle and free memory.
 //
 
-#ifndef gif_h
-#define gif_h
+#pragma once
 
 #include <stdio.h>   // for FILE*
 #include <string.h>  // for memcpy and bzero
@@ -831,5 +830,3 @@ bool GifEnd( GifWriter* writer )
 
     return true;
 }
-
-#endif

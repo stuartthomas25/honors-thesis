@@ -7,31 +7,42 @@
 
 using namespace std;
 
-Sweeper::Sweeper (double beta, int DIM, MPI_Comm c, bool makeGif) : 
+Sweeper::Sweeper (double m02, double lam, int DIM, MPI_Comm c, bool makeGif) : 
     process_Rank(get_rank(c)), 
     size_Of_Cluster(get_size(c)), 
     sites_per_node((DIM*DIM)/2 / get_size(c)),
     DIM{DIM},
-    gif{gif},
-    beta{beta}
+    gif{gif}
+
 {
 
     
+    redef_mass = 2 + 0.5 * m02;
+    quarter_lam = 0.25 * lam;
+    beta=1; //EDIT
 
 
     // generate lattice
     array<double, N> zero_array = {};
     Phi zero_phi(zero_array);
 
+    for (int i=0; i<DIM*DIM; i++) {
+        lat.push_back(new_value(zero_phi));
+        //if (gif) {
+            //for (int j=0; j<4; j++) {
+                //gif_vec.push_back(0);
+            //}
+        //}
+    }
+
+
     int site;
+
+    action = full_action(); 
+    // generate MPI assignments
     for (int i = 0; i<DIM; i++){
         for (int j = 0; j<DIM; j++) {
             site = i*DIM + j;
-            lat.push_back(new_value(zero_phi));
-            
-            neighbor_map[site] = full_neighbors(site); 
-
-            // generate MPI assignments
             if (site / (2*sites_per_node) == process_Rank) { // Factor of 2 for checkerboard
                 if ( (i+j)%2 ) {
                     mpi_assignments[COLOR::black].push_back(site);
@@ -41,11 +52,8 @@ Sweeper::Sweeper (double beta, int DIM, MPI_Comm c, bool makeGif) :
             }
         }
     }
-
-    action = full_action(); 
-
+   
     int offset = process_Rank *  sites_per_node;
-
 
 }
 
@@ -54,11 +62,11 @@ Sweeper::~Sweeper() = default;
 double Sweeper::full_action() {
     int site, i;
     Phi forward_nphi_sum;
-    vector<int> neighbors;
+    int neighbors[4];
     double S = 0;
     // initial action
     for (int s=0; s<DIM*DIM; s++) {
-        neighbors = neighbor_map[s];
+        full_neighbors(s, neighbors);
         forward_nphi_sum  = lat[neighbors[2]] + lat[neighbors[3]];
         S += lagrangian(lat[s], forward_nphi_sum);
     }
@@ -75,21 +83,27 @@ int Sweeper::wrap( int c) {
 
 }
 
-vector<int> Sweeper::full_neighbors(int site) {
+void Sweeper::full_neighbors(int site, int neighbors[4]) {
 
     int x = site % DIM;
     int y = site / DIM;
-    vector<int> neighbors; 
-    neighbors.push_back(wrap(x+1) + DIM * y);
-    neighbors.push_back(wrap(x-1) + DIM * y);
-    neighbors.push_back(x + DIM * wrap(y+1));
-    neighbors.push_back(x + DIM * wrap(y-1));
-    return neighbors;
+    neighbors[0] = wrap(x+1) + DIM * y;
+    neighbors[1] = wrap(x-1) + DIM * y;
+    neighbors[2] = x + DIM * wrap(y+1);
+    neighbors[3] = x + DIM * wrap(y-1);
 }
 
 
 double Sweeper::lagrangian(Phi phi, Phi nphi_sum) {
-    return -1 * beta * (phi * nphi_sum);
+    return this->phi4_lagrangian(phi, nphi_sum);    
+}
+double Sweeper::phi4_lagrangian(Phi phi, Phi nphi_sum) {
+    double phi2 = phi*phi;
+    return -phi * nphi_sum + this->redef_mass * phi2 + this->quarter_lam * phi2*phi2;
+}
+
+double Sweeper::sigma_lagrangian(Phi phi, Phi nphi_sum) {
+    return -1 * this->beta * (phi * nphi_sum);
 }
 
 double Sweeper::rand_dist(double r) {
@@ -245,24 +259,23 @@ tuple<vector<Phi>, double> Sweeper::sweep(COLOR color){
     double dS, new_L, old_L, A, r;
     Phi dphi, phi, backward_nphi_sum, forward_nphi_sum;
     int i, site;
-    vector<int> neighbors;
+    int neighbors[4];
 
     array<double, N> zero_array = {};
     Phi zero_phi(zero_array);
-
 
     for (int i = 0; i<sites_per_node; i++){
         site = mpi_assignments[color] [i];
 
         phi = this->lat[site];
 
-        neighbors = neighbor_map[site];
+        this->full_neighbors(site, neighbors);
         backward_nphi_sum = lat[neighbors[0]] + lat[neighbors[1]];
         forward_nphi_sum  = lat[neighbors[2]] + lat[neighbors[3]];
 
-        dphi = new_value(phi);
-        old_L = lagrangian( phi, forward_nphi_sum);
-        new_L = lagrangian( phi+dphi, forward_nphi_sum);
+        dphi = this->new_value(phi);
+        old_L = this->lagrangian( phi, forward_nphi_sum);
+        new_L = this->lagrangian( phi+dphi, forward_nphi_sum);
         dS = (new_L - old_L) - backward_nphi_sum * dphi;
        
         //cout << old_L << " " << new_L << " " << backward_nphi_sum << endl;
@@ -297,13 +310,14 @@ double Sweeper::Padd(Phi phi_a, Phi phi_b){
     return 1 - exp(-2*(phi_a*phi_b)); // Schaich Eq. 7.17, promoted for vectors
 }
 
-unordered_set <int> Sweeper::generate_cluster(int seed, bool accept_all) {
+set <int> Sweeper::generate_cluster(int seed, bool accept_all) {
     int s, c, i;
     Phi phi_a, phi_b;
 
     double Padd_val;
     stack <tuple<int, Phi>> to_test;
-    unordered_set <int> cluster;
+    int neighbors[4];
+    set <int> cluster;
 
     phi_a = lat[seed];
     
@@ -326,8 +340,9 @@ unordered_set <int> Sweeper::generate_cluster(int seed, bool accept_all) {
             Padd_val = Padd(phi_a, phi_b);
             if (accept_all || randf() < Padd_val) {
                 cluster.insert(s);
-                for (int n : neighbor_map[s]){
-                    to_test.push( make_tuple(n, phi_b) );
+                full_neighbors(s, neighbors);
+                for (i=0; i<4; i++){
+                    to_test.push( make_tuple(neighbors[i], phi_b) );
                 }
             }
 
@@ -340,7 +355,7 @@ unordered_set <int> Sweeper::generate_cluster(int seed, bool accept_all) {
 void Sweeper::wolff() {
 
     int seed = randint(pow(DIM,2));
-    unordered_set <int>  cluster;
+    set <int>  cluster;
     int neighbors[4];
     int n, i, c;
 
@@ -350,12 +365,14 @@ void Sweeper::wolff() {
     Phi phi;
 
 
-    unordered_set<int>::iterator it;
+    set<int>::iterator it;
     for (it = cluster.begin(); it != cluster.end(); ++it) {
         c = *it;
         phi = lat[c];
         lat[c] = -phi;
-        for (int n : neighbor_map[c]) {
+        this->full_neighbors(c, neighbors);
+        for (i=0; i<4; i++) {
+            n = neighbors[i];
             dS += 2 * (lat[n] * phi);
         }
     }

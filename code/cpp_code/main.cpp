@@ -1,6 +1,5 @@
 #include <iostream>
 #include <time.h>
-#include "sweep.cpp"
 #include <chrono>
 #include <thread>
 #include "mpi.h"
@@ -10,8 +9,10 @@
 #include <unistd.h>
 #include <chrono>
 
+#include "phi.h"
+#include "sweep.h"
+
 using namespace std;
-using namespace croutines;
 using namespace std::chrono;
 
 
@@ -39,17 +40,17 @@ using namespace std::chrono;
 int main(int argc, char *argv[]) {
 
     int c;
-    float m02;
+    float beta;
     char* filename;
     int dim;
     bool progress = true;
-    while ((c = getopt(argc, (char **)argv, "qo:m:L:")) != -1) {
+    while ((c = getopt(argc, (char **)argv, "qo:b:L:")) != -1) {
         switch((char)c) {
             case 'o':    
                 filename = optarg;
                 break;
-            case 'm':    
-                m02 = atof(optarg);
+            case 'b':    
+                beta = atof(optarg);
                 break;
             case 'L':    
                 dim = atof(optarg);
@@ -100,8 +101,7 @@ int main(int argc, char *argv[]) {
     ofstream outputfile;
     outputfile.open(filename);
 
-
-    Sweeper sweeper(m02, 0.5, dim, MPI_COMM_WORLD);
+    Sweeper sweeper(beta, dim, MPI_COMM_WORLD, true);
 
     auto start = high_resolution_clock::now();
     int measurements = 10;
@@ -126,7 +126,6 @@ int main(int argc, char *argv[]) {
     avg_mag = 0;
     for (measurement m : meas_data) {
         outputfile << m.action << ", " << m.phibar[0] << endl;
-
     }
 
     outputfile.close();

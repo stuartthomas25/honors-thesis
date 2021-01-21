@@ -16,9 +16,9 @@ phibars = []
 # m02s = [-0.80, -0.76, -0.72, -0.68, -0.64];
 # m02s = np.linspace(-0.80,-0.64, 17)
 # m02s = np.linspace(-1.80, 1.00, 29)
-m02s = [-0.80,-0.76, -0.72, -0.68, -0.64]
+betas = [0.5, 0.8, 1., 1.5, 2.]
 # m02s = [-0.80]
-o_filenames = [f"outputs/data_{m02}.csv" for m02 in m02s]
+o_filenames = [f"outputs/data_{beta}.csv" for beta in betas]
 # streams = [StringIO for _ in m02s]
 processes = []
 L = 64
@@ -48,10 +48,10 @@ if "run" in sys.argv:
     quiet = "-q" in sys.argv
     if not quiet:
         term = Terminal()
-        if term.height+1<len(m02s):
+        if term.height+1<len(betas):
             raise Exception("terminal too short")
-    for i,(m02, o_filename) in enumerate(zip(m02s, o_filenames)):
-        cmd = ["mpiexec","-n", str(cores), "bin/sweep", "-m", str(m02), "-L", str(L), "-o", o_filename]
+    for i,(beta, o_filename) in enumerate(zip(betas, o_filenames)):
+        cmd = ["mpiexec","-n", str(cores), "bin/sweep", "-b", str(beta), "-L", str(L), "-o", o_filename]
         # cmd = ["./bin/sweep", "-m", str(m02), "-L", str(L), "-o", o_filename]
         processes.append( Popen(cmd, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True) )
 
@@ -98,7 +98,7 @@ elif "view" in sys.argv:
     }
     labels = [r'$\langle|\bar\phi|\rangle$', r'$\chi$', r'$U$']
 
-    for m02, o_filename in zip(m02s, o_filenames):
+    for beta, o_filename in zip(betas, o_filenames):
         actions = []
         phibars = []
         with open(o_filename, 'r') as datafile:
@@ -117,7 +117,7 @@ elif "view" in sys.argv:
     for ax, d, l in zip(axes, plot_data.values(), labels):
         if ax==axes[1]:
             print(d[2].mean, d[2].sdev)
-        ax.errorbar(m02s, [x.mean for x in d], yerr=[x.sdev for x in d], fmt='k.', capsize=3.)
+        ax.errorbar(betas, [x.mean for x in d], yerr=[x.sdev for x in d], fmt='k.', capsize=3.)
         ax.set_ylabel(l)
 
     axes[0].set_ylim((0., 1.1))
@@ -131,7 +131,7 @@ elif "evolution" in sys.argv:
     axes[0].set_ylabel(r"$\bar\phi$")
     axes[1].set_ylabel("S")
     axes[-1].set_xlabel("sweeps")
-    for m02, o_filenames in zip(m02s, o_filenames):
+    for beta, o_filenames in zip(betas, o_filenames):
         actions = []
         phibars = []
         with open(o_filenames, 'r') as datafile:
@@ -143,8 +143,8 @@ elif "evolution" in sys.argv:
         actions = np.array(actions)
         phibars = np.array(phibars)
 
-        axes[0].plot(np.abs(phibars), '-', label=f"$m_0^2$={m02}")
-        axes[1].plot(actions, label=f"$m_0^2$={m02}")
+        axes[0].plot(np.abs(phibars), '-', label=f"$\\beta^2$={beta}")
+        axes[1].plot(actions, label=f"$\\beta$={beta}")
 
     plt.legend()
     plt.show()
