@@ -101,3 +101,7 @@ TODO:
 - Fixed Big Sur compatibility issue
 - Implemented mpi debug system
 - Generalized to sigma model
+
+
+## Wednesday, Jan 27
+- 

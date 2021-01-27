@@ -70,6 +70,47 @@ references:
   URL: http://arxiv.org/abs/1412.8249
   volume: '2015'
 
+- id: azcoiti2012
+  abstract: >-
+    We investigate the critical behaviour at theta=pi of the two-dimensional
+    O(3) nonlinear sigma model with topological term on the lattice. Our method
+    is based on numerical simulations at imaginary values of theta, and on
+    scaling transformations that allow a controlled analytic continuation to
+    real values of theta. Our results are compatible with a second order phase
+    transition, with the critical exponent of the SU(2)_1
+    Wess-Zumino-Novikov-Witten model, for sufficiently small values of the
+    coupling.
+  accessed:
+    - year: 2021
+      month: 1
+      day: 21
+  author:
+    - family: Azcoiti
+      given: Vicente
+    - family: Di Carlo
+      given: Giuseppe
+    - family: Follana
+      given: Eduardo
+    - family: Giordano
+      given: Matteo
+  container-title: Physical Review D
+  container-title-short: Phys. Rev. D
+  DOI: 10.1103/PhysRevD.86.096009
+  ISSN: 1550-7998, 1550-2368
+  issue: '9'
+  issued:
+    - year: 2012
+      month: 11
+      day: 27
+  page: '096009'
+  source: arXiv.org
+  title: >-
+    Critical behaviour of the O(3) nonlinear sigma model with topological term
+    at theta=pi from numerical simulations
+  type: article-journal
+  URL: http://arxiv.org/abs/1207.4905
+  volume: '86'
+
 - id: balog2012
   abstract: >-
     We investigate the cutoff effects in 2-d lattice O(N) models for a variety
@@ -164,6 +205,41 @@ references:
   type: article-journal
   URL: http://arxiv.org/abs/1808.08129
   volume: '98'
+
+- id: deldebbio2005
+  abstract: >-
+    We compute the topological susceptibility for the SU(3) Yang--Mills theory
+    by employing the expression of the topological charge density operator
+    suggested by Neuberger's fermions. In the continuum limit we find r_0^4 chi
+    = 0.059(3), which corresponds to chi=(191 +/- 5 MeV)^4 if F_K is used to set
+    the scale. Our result supports the Witten--Veneziano explanation for the
+    large mass of the eta'.
+  accessed:
+    - year: 2021
+      month: 1
+      day: 21
+  author:
+    - family: Del Debbio
+      given: Luigi
+    - family: Giusti
+      given: Leonardo
+    - family: Pica
+      given: Claudio
+  container-title: Physical Review Letters
+  container-title-short: Phys. Rev. Lett.
+  DOI: 10.1103/PhysRevLett.94.032003
+  ISSN: 0031-9007, 1079-7114
+  issue: '3'
+  issued:
+    - year: 2005
+      month: 1
+      day: 26
+  page: '032003'
+  source: arXiv.org
+  title: Topological susceptibility in the SU(3) gauge theory
+  type: article-journal
+  URL: http://arxiv.org/abs/hep-th/0407052
+  volume: '94'
 
 - id: horgan2014
   author:

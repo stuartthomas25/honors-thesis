@@ -543,7 +543,33 @@ Graduate School:
 
 ## January 21
 
+
+- New direction, since papers cover what we did:
+    - Look at instantons?
+- __Topology__
+    - What is Q?
+        - Global operator
+        - $\chi$: topological suscpetibility
+
+    - Wedge operator ($\wedge$).
+        - Does it act in real space or spin space?
+        - Must do further research.
+
+
+- **General research question**: How do I go about figuring out mathematical expressions.
+    - Keep Googling phrases! 
+        - try the arxiv!
+    - Find other papers with the same expression.
+    - Compare different definitions from different papers.
+    - Ask someone.
+
 - How to determine gradient flow in $O(3)$ model?
+    - Runge-Kutta: check out Numerical Recipe
+    - Try $O(4)$ approx. 
+
+- Todo:
+    - First order: gradient flow and topological charge
+    - Second order: susceptibilty
 
 # References
 
