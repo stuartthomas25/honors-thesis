@@ -11,12 +11,12 @@ import pickle
 from datetime import timedelta
 
 SEED = True
-Ls = [32]
+Ls = [64]
 lam = 0.5
-m02s = [-0.80,-0.72, -0.64]
+m02s = [-0.80,-0.76, -0.72, -0.68, -0.64]
 # sweeps = 10**5
 cluster_method = WOLFF
-thermalization = 10**4
+thermalization = 10**3
 record_rate = 100
 cluster_rate = 5
 
@@ -26,6 +26,21 @@ sweeps = thermalization + record_rate * measurements
 if RANK==0:
     print(f"{sweeps} sweeps")
 
+def jackknife(f, phi, tau=0.5):
+    cumsum = 0
+    average = f(phi)
+    for i in range(phi.size):
+        cumsum += ( f(np.delete(phi,i)) - average )**2
+    return np.sqrt(2 * tau * cumsum)
+
+def magnetization(phi):
+    return np.mean(np.abs(phi))
+
+def binder_cumulant(phi):
+    return 1 - np.mean(phi**4) / (3 * np.mean(phi**2)**2)
+
+def susceptibility(phi):
+    return np.mean(phi**2) - np.mean(np.abs(phi))**2
 
 
 
@@ -120,45 +135,25 @@ def view():
         bincounts = np.bincount(reshuffled)
         return 1 - bincounts[0] / np.amax(bincounts)
 
-    fig, axes = plt.subplots(5,1, figsize=(16,10))
+    fig, axes = plt.subplots(4,1, figsize=(16,10))
     for i,L in enumerate(Ls):
-        for ax, quantity in zip(axes[:-1], quantities):
+        for ax, f in zip(axes[:-1], [magnetization, susceptibility, binder_cumulant]):
             some_recorders = recorders[i::len(Ls)]
+            quantity = f.__name__
 
+            means = []
+            stds = []
+            for r in some_recorders:
+                phi = r.values['phi']
+                means.append(f(phi))
+                stds.append(jackknife(f, phi))
 
-            # test_r = some_recorders[-1]
-            # phis = np.array(test_r.values['phi'])
-
-            # gvs = test_r.gvars
-            # phi4 = gvs['phi4']
-            # phi2 = gvs['phi2']
-            # plt.figure()
-            # plt.plot(phis**2, label='$\phi^2$')
-            # plt.plot(phis**4, label='$\phi^4$')
-            # plt.legend()
-            # plt.show()
-
-            # print( 1 + phi2.sdev**2 / phi2.mean**2)
-            # print( phi4.mean / phi2.mean**2)
-            # print(gvar.evalcov([phi4, phi2**2]))
-            # print(np.sqrt(gvar.evalcov([phi4, phi2**2])))
-
-            # phi2_ = gvar.gvar(phi2.mean, phi2.sdev)
-            # phi4_ = gvar.gvar(phi4.mean, phi4.sdev)
-
-            # print(phi4, phi2**2)
-            # print(phi4/ phi2**2)
-            # print(phi4/ phi2**2)
-            # print(phi4_/ phi2_**2)
-            # print(1 - gvs['phi4'] / ( 3 * gvs['phi2'] ** 2))
-            # quit()
-
-            means = np.array([r.derived_values[quantity] for r in some_recorders])
+            # means = np.array([r.derived_values[quantity] for r in some_recorders])
             # stds  = np.array([r.errors[quantity] for r in some_recorders])
-            stds  = np.array([r.derived_errors[quantity] for r in some_recorders])
+            # stds  = np.array([r.derived_errors[quantity] for r in some_recorders])
 
             ax.errorbar(m02s, means, yerr=stds, fmt='o', label=f"$N={L}$", capsize=5,zorder=i)
-            ax.legend()
+            # ax.legend()
             if quantity=="binder_cumulant":
                 ax.axhline(2/3, c='r')
                 ax.axhline(0, c='k')
@@ -170,21 +165,14 @@ def view():
 
 
 
-        bimod_axis = axes[-2]
+        bimod_axis = axes[-1]
         bimod_axis.plot(m02s, [bimodality(r.values['phi']) for r in some_recorders], 'o', label=f"$N={L}$")
         bimod_axis.set_ylabel("B")
 
-
-      #   time_ax = axes[-1]
-        # some_tds = tds[i::len(Ls)]
-        # time_ax.plot(m02s, some_tds, 'o', label=f"$N={L}$")
-        # time_ax.set_ylabel("Execution time (m)")
-        # time_ax.set_yscale("log")
-        # time_ax.grid(b=True, which='both')
-        # time_ax.set_ylim(10**3, 10**6)
-
     execution_time_str = f"{sum(tds)//60:.0f}h{sum(tds)%60:.0f}m"
-    axes[0].set_title(f"{measurements} measurements every {record_rate} sweeps, {thermalization} thermalization, Jackknife errors, (execution time: {execution_time_str})")
+    # axes[0].set_title(f"{measurements} measurements every {record_rate} sweeps, {thermalization} thermalization, Jackknife errors, (execution time: {execution_time_str})")
+    print(f"{measurements} measurements every {record_rate} sweeps, {thermalization} thermalization, Jackknife errors, (execution time: {execution_time_str})")
+    axes[-1].set_xlabel(r"$m_0^2$")
 
     plt.show()
 

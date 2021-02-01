@@ -22,12 +22,17 @@ from libcpp.stack cimport stack
 from libcpp.vector cimport vector
 from libcpp.set cimport set
 # from libcpp.algorithm cimport find
+from Sweeper cimport Sweeper
 
 import sys
 
 # The current distribution of Cython does not include a wrapper for "std::find"
 cdef extern from "<algorithm>" namespace "std" nogil: 
     Iter find[Iter, T](Iter first, Iter last, const T& value) except +
+
+
+def test():
+    sweeper = new Sweeper(10, -0.68, 0.5)
 
 cdef seed(int seed):
     '''Python wrapper to seed C rand()'''

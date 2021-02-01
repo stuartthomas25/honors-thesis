@@ -104,4 +104,22 @@ TODO:
 
 
 ## Wednesday, Jan 27
-- 
+- Fixed an overflow error in MPI
+- Fixed an error where the "forward_neighbors" actually were on either side of the main site.
+- Began implementing the GF, but this seems unwieldly.
+
+
+## Thursday, Jan 28
+- Implement a visualization method for $O(2)$ and $O(3)$.
+- Fixed and issue with the action: summing the neighbor sites before taking the dot product.
+- Plotted the internal energy compared to Berg & L\"uscher; looks good but slightly off in strong coupling regime.
+
+## Monday, Feb 1
+- Create Lattice2D class to hold lattice information (replacement for `vector<Phi>` ) and override addition operators.
+- Implement $O(4)$ Runge-Kutta to calculate gradient flow. I do this in a way to limit memory usage.
+- Code compiles :)
+- Getting better at lldb, this should be used all the time.
+- Place `full_action` in `Lattice2D` class.
+    - This requires `lagrangian` to be static function
+    - Changing `L`, `beta` and `neighbor_map` (also moved to `Lattice2D`) to static members.
+

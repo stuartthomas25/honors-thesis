@@ -1,5 +1,5 @@
 from mpi4py import MPI
-# from matplotlib import pyplot as plt
+from matplotlib import pyplot as plt
 import imageio
 from functools import wraps
 from math import sqrt

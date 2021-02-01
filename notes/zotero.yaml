@@ -158,6 +158,24 @@ references:
   URL: http://arxiv.org/abs/1208.6232
   volume: '2012'
 
+- id: berg1981
+  author:
+    - family: Berg
+      given: B
+    - family: Lüscher
+      given: Martin
+  container-title: Nuclear Physics B
+  issue: '2'
+  issued:
+    - year: 1981
+  page: 412–424
+  publisher: Elsevier
+  title: >-
+    Definition and statistical distributions of a topological number in the
+    lattice $O(3)$ $\sigma$-model
+  type: article-journal
+  volume: '190'
+
 - id: bietenholz2018
   abstract: >-
     The 2d O(3) model is widely used as a toy model for ferromagnetism and for

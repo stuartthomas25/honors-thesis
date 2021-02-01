@@ -14,7 +14,7 @@ import os
 SEED = True
 Ls = [int(sys.argv[1])]
 lam = 0.5
-m02s = [-0.80,-0.72, -0.64]
+m02s = [-0.80]#,-0.72, -0.64]
 taus = [0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0]
 
 # sweeps = 10**5
@@ -134,8 +134,12 @@ def view():
     L = Ls[0]
 
     for i,m02 in enumerate(m02s):
+
+        some_recorders = recorders[i*len(taus):(i+1)*len(taus)]
+        for r in some_recorders:
+            print(r.values['phi'][0])
+
         for ax, quantity in zip(axes, quantities):
-            some_recorders = recorders[i*len(taus):(i+1)*len(taus)]
 
             # test_r = some_recorders[-1]
             # phis = np.array(test_r.values['phi'])
@@ -163,6 +167,7 @@ def view():
             # print(phi4_/ phi2_**2)
             # print(1 - gvs['phi4'] / ( 3 * gvs['phi2'] ** 2))
             # quit()
+
 
             means = np.array([r.derived_values[quantity] for r in some_recorders])
             stds  = np.array([r.derived_errors[quantity] for r in some_recorders])

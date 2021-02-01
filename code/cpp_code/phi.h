@@ -15,6 +15,10 @@ class Phi {
         Phi(array<double, N> phi);
         void init_as_zero();
         double norm_sq() const;
+        Phi& operator+=(const Phi& other);
+        Phi& operator*=(const double & a);
+        Phi& operator/=(const double & a);
+
         Phi operator+ (const Phi & phi) const;
         Phi operator- (const Phi & phi) const;
         Phi operator- () const;
@@ -26,6 +30,8 @@ class Phi {
         bool operator== (const Phi & phi) const;
         void print();
 };
+
+Phi operator*(double a, const Phi& b);
   
 
 #endif

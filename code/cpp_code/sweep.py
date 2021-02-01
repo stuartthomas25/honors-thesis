@@ -16,23 +16,23 @@ phibars = []
 # m02s = [-0.80, -0.76, -0.72, -0.68, -0.64];
 # m02s = np.linspace(-0.80,-0.64, 17)
 # m02s = np.linspace(-1.80, 1.00, 29)
-betas = [0.5, 0.8, 1., 1.5, 2.]
+betas = [1.0, 1.2, 1.4, 1.6, 1.8, 2.0]
 # m02s = [-0.80]
 o_filenames = [f"outputs/data_{beta}.csv" for beta in betas]
 # streams = [StringIO for _ in m02s]
 processes = []
-L = 64
+L = 128
 
 refresh_rate = 0.1
 
 # some functions
 
 
-def jackknife(f, phi, tau=0.5):
+def jackknife(f, phi, S, beta, tau=0.5):
     cumsum = 0
-    average = f(phi)
+    average = f(phi,S,beta)
     for i in range(phi.size):
-        cumsum += ( f(np.delete(phi,i)) - average )**2
+        cumsum += ( f(np.delete(phi,i), np.delete(S,i),beta) - average )**2
     return np.sqrt(2 * tau * cumsum)
 
 def magnetization(phi):
@@ -44,6 +44,12 @@ def binder_cumulant(phi):
 def susceptibility(phi):
     return np.mean(phi**2) - np.mean(np.abs(phi))**2
 
+def action(phi,S,beta):
+    return np.mean(S)/(beta*L**2)
+
+def internal_energy(phi,S,beta):
+    return np.mean(S)/(0.5*beta*L**2)
+
 if "run" in sys.argv:
     quiet = "-q" in sys.argv
     if not quiet:
@@ -52,6 +58,7 @@ if "run" in sys.argv:
             raise Exception("terminal too short")
     for i,(beta, o_filename) in enumerate(zip(betas, o_filenames)):
         cmd = ["mpiexec","-n", str(cores), "bin/sweep", "-b", str(beta), "-L", str(L), "-o", o_filename]
+        if quiet: cmd.append('-q')
         # cmd = ["./bin/sweep", "-m", str(m02), "-L", str(L), "-o", o_filename]
         processes.append( Popen(cmd, stdout=PIPE, stderr=PIPE, bufsize=1, universal_newlines=True) )
 
@@ -64,9 +71,8 @@ if "run" in sys.argv:
     finished = [False for _ in processes]
     while not all(finished):
         for i,p in enumerate(processes):
-
             line = p.stdout.readline()[:-1]
-            if line != "":
+            if "Working" in line:
                 if not started[i]:
                     started[i] = True
                 if not quiet:
@@ -74,29 +80,27 @@ if "run" in sys.argv:
                     with term.location(0,terminal_line):
                         print( f" {i}> " + line)
             else:
+                line = p.stdout.readline()[:-1]
                 if started[i]:
                     finished[i] = True
-
-
+                if not quiet:
+                    terminal_line = term.height-len(processes)-1+i
+                    with term.location(0,terminal_line):
+                        print( f" {i}| " + line)
 
 
 
 elif "view" in sys.argv:
-    fig, axes = plt.subplots(3,1,figsize=(16,10), sharex=True)
+    fig, axes = plt.subplots(1,1,figsize=(16,10), sharex=True, squeeze=False)
+    axes = [ax for row in axes for ax in row]
 
-    axes[0].set_ylabel(r"$\langle|\bar\phi|\rangle$")
-    axes[1].set_ylabel(r"$\chi$")
-    axes[2].set_ylabel(r"$U$")
-    # axes[3].set_ylabel("S")
-    axes[-1].set_xlabel("$m_0^2$")
+    axes[0].set_ylabel(r"$E$")
+    axes[0].set_xlabel(r"$\beta$")
 
     plot_data = {
-            'magnetization' : [],
-            'susceptibility': [],
-            'binder_cumulant': [],
-            # 'action' : []
+            'internal_energy' : []
     }
-    labels = [r'$\langle|\bar\phi|\rangle$', r'$\chi$', r'$U$']
+    labels = ["$S$"]
 
     for beta, o_filename in zip(betas, o_filenames):
         actions = []
@@ -109,20 +113,32 @@ elif "view" in sys.argv:
         actions = np.array(actions)
         phibars = np.array(phibars)
 
-        for f in [magnetization, susceptibility, binder_cumulant]:
-            plot_data[f.__name__].append( gvar(f(phibars), jackknife(f, phibars)) )
+
+        for f in [internal_energy]:
+            plot_data[f.__name__].append( gvar(f(phibars, actions, beta), jackknife(f, phibars, actions, beta)) )
 
         # plot_data['action'].append( gvar(0.,0.) )
 
     for ax, d, l in zip(axes, plot_data.values(), labels):
-        if ax==axes[1]:
-            print(d[2].mean, d[2].sdev)
         ax.errorbar(betas, [x.mean for x in d], yerr=[x.sdev for x in d], fmt='k.', capsize=3.)
         ax.set_ylabel(l)
 
-    axes[0].set_ylim((0., 1.1))
-    axes[2].axhline(2/3,ls=':')
-    axes[2].set_ylim((-0.1, None))
+
+
+    # Theoretical values
+    beta_weak = np.arange(0.001,1.7, 0.1)
+    beta_strong = np.arange(1.2, 3.4, 0.1)
+
+    y = np.cosh(beta_weak)/np.sinh(beta_weak) - 1/beta_weak
+    Eweak = 4 - 4*y - 8 * y**3 - 48/5 * y**5
+
+    Estrong = 2/beta_strong + 1/(4*beta_strong**2) + 0.156/beta_strong**3
+
+
+    axes[0].plot(beta_weak, Eweak)
+    axes[0].plot(beta_strong, Estrong)
+
+    # axes[0].set_ylim((0., 4.))
     plt.show()
 
 elif "evolution" in sys.argv:

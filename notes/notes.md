@@ -571,6 +571,35 @@ Graduate School:
     - First order: gradient flow and topological charge
     - Second order: susceptibilty
 
+
+# January 27
+- Parallel Runge-Kutta method
+    - Prof. Chris will ask Prof. Orginos
+    - Go ahead and implement serial algorithm, then check if adaptive step size changes efficiency significantly.
+    - Implement second-order Runge-Kutta and compare efficiency/accuracy.
+    - Matrix options: look at parallelism across the method.
+
+- What statistics to use
+    - Maybe use the term "observable"
+    - Magnetization may be important, as with action and susceptibility
+    - Topological density
+    - For topological charge see [@berg1981]
+
+
+- Todo:
+    1. Rung-Kutta gradient flow
+    2. Adaptive step size
+    3. Check internal energy from [@berg1981]
+    4. Then, consider topological charge/suscpetibility (Fig 2, [@berg1981])
+
+#  February 1
+- Reproduction of @[berg1981]:
+
+![Internal Energy](plots/internal_energy.png)
+
+- Gradient flow:
+    - Action increases with flow time
+    - May be due to normalization.
 # References
 
 

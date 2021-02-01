@@ -10,12 +10,12 @@
 #include <math.h>
 #include <iomanip>
 #include <ostream>
-#include <unordered_map>
 #include <memory>
 
 #include "constants.h"
 #include "mpi.h"
 #include "phi.h"
+#include "lattice.h"
 
 using namespace std;
 
@@ -41,7 +41,6 @@ class Sweeper {
     const int process_Rank;
     const int size_Of_Cluster;
     const int sites_per_node;
-    const int DIM;
 
     enum COLOR {
         black,
@@ -68,20 +67,20 @@ class Sweeper {
         vector<int> full_neighbors(int site);
 
     public:
-        int dim;
-        vector<Phi> lat;
+        const int DIM;
+        Lattice2D lat;
         double action;
 
 
-        double beta;
+        static double beta;
         Sweeper();
         ~Sweeper();
-        Sweeper(double beta, int DIM, MPI_Comm c, bool makeGif=false);
+        Sweeper(double beta, int DIM, MPI_Comm c, bool makeGif);
 
         double full_action();
+        void assert_action(double tol=0.001);
         int wrap(int c);
-        unordered_map<int,vector<int>> neighbor_map;
-        double lagrangian(Phi phi, Phi nphi_sum);
+        static double lagrangian(Phi phi, Phi nphi_sum);
         double rand_dist(double r);
         Phi new_value(Phi old_phi);
         Phi proj_vec();
@@ -96,6 +95,8 @@ class Sweeper {
 
         double Padd(Phi phi_a, Phi phi_b);
         unordered_set<int> generate_cluster(int seed, bool accept_all);
+
+        void flow(double t); 
 
 };
 

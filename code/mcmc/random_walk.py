@@ -144,21 +144,29 @@ class RandomWalk(object):
 
         for i in range(sweeps):
             self.checkerboard()
-            if i % cluster_rate ==0 and RANK==0 and cluster is not None:
-                self.lat.data, self.lat.action = cluster(self.lat)
+            if RANK==0:
+                if i % cluster_rate ==0 and cluster is not None:
+                    self.lat.data, self.lat.action = cluster(self.lat)
 
+                for j,r in enumerate(recorders):
+                    if i % r.rate == 0 and i >= r.thermalization:
+                        r.record( hooks[j](self.lat) )
 
-            for j,r in enumerate(recorders):
-                if i % r.rate == 0 and i >= r.thermalization:
-                    r.record( hooks[j](self.lat) )
+                # for j,r in enumerate(recorders):
+                    # if i % r.rate == 0 and i >= r.thermalization:
+                        # evolved_lat = hooks[j](self.lat)
+                        # print("S", np.sum(evolved_lat.data) / evolved_lat.size)
+                        # r.record(evolved_lat)
+                        # print("V", r.values['phi'][-1])
+                        # hooks[j](self.lat).show()
 
-
-            if RANK==0 and progress and i % progressbar_rate == 0:
-                p = int(i/sweeps*progressbar_size)
-                print('['+progress_char*p+'-'*(progressbar_size-p)+']', end='\r', flush=True)
+                if progress and i % progressbar_rate == 0:
+                    p = int(i/sweeps*progressbar_size)
+                    print('['+progress_char*p+'-'*(progressbar_size-p)+']', end='\r', flush=True)
 
         if progress and RANK==0:
             print('['+progress_char*progressbar_size+']',flush=True)
+
 
         for r in recorders:
             r.execution_time = time() - start

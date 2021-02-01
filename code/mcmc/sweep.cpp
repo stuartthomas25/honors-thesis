@@ -24,6 +24,7 @@ namespace croutines {
         for (int i=0; i<N; i++) {
             new_phi[i] = phi[i] + aPhi[i];
         }
+        return new_phi;
     }
 
     Phi Phi::operator- (const Phi & aPhi) const {
@@ -34,6 +35,7 @@ namespace croutines {
         for (int i=0; i<N; i++) {
             new_phi[i] = -phi[i];
         }
+        return new_phi;
     }
     double Phi::operator* (const Phi & aPhi) const{
         //dot product
@@ -53,12 +55,17 @@ namespace croutines {
 
     }
     void Phi::print(){
-        cout << "[";
+    }
+
+    ostream& operator<<(ostream& os, const Phi & aPhi) 
+    { 
+        os << "(";
         for (int i=0; i<N; i++) {
-            cout << phi[i];
-            if (i<N-1) { cout<<", "; }
+            os << aPhi[i];
+            if (i<N-1) { os<<", "; }
         }
-        cout << "]\n";
+        os << ")";
+        return os; 
     }
     
     double Phi::operator[] (int i) const {
@@ -78,21 +85,59 @@ namespace croutines {
     }
 
 
-
-    Sweeper::Sweeper () {}
-
-    Sweeper::Sweeper (vector<Phi> lattice, double m02, double lam) {
-        this->lat = lattice;
-        this->dim = (int) sqrt(lattice.size());
+    Sweeper::Sweeper (double m02, double lam, MPI_Comm c) : process_Rank(get_rank(c)), size_Of_Cluster(get_size(c)), sites_per_node((DIM*DIM)/2 / get_size(c)) {
+        
         this->redef_mass = 2 + 0.5 * m02;
         this->quarter_lam = 0.25 * lam;
         this->beta=1; //EDIT
+
+        // generate lattice
+        array<double, N> zero_array = {};
+        Phi zero_phi(zero_array);
+
+        for (int i=0; i<DIM*DIM; i++) {
+            lat[i] = new_value(zero_phi);
+        }
+
+
+
+        // generate MPI assignments
+        vector<int> black_sites;
+        vector<int> white_sites;
+        int site, i;
+        Phi forward_nphi_sum;
+
+        int neighbors[4];
+        action = 0;
+        // initial action
+        for (int s=0; s<DIM*DIM; s++) {
+            full_neighbors(s, neighbors);
+            forward_nphi_sum  = lat[neighbors[2]] + lat[neighbors[3]];
+            action += lagrangian(lat[s], forward_nphi_sum);
+        }
+        
+        for (i = 0; i<DIM; i++){
+            for (int j = 0; j<DIM; j++) {
+                site = i*DIM + j;
+                if ( (i+j)%2 ) {
+                    black_sites.push_back(site);
+                } else {
+                    white_sites.push_back(site);
+                }   
+            }
+        }
+       
+        int offset = process_Rank *  sites_per_node;
+        for (i = 0; i < sites_per_node; i++) {
+            mpi_assignments[0][i] = white_sites[offset + i];
+            mpi_assignments[1][i] = black_sites[offset + i];
+        }
     }
 
     int Sweeper::wrap( int c) {
-        int mod = c % dim;
+        int mod = c % DIM;
         if (mod < 0) {
-            mod += dim;
+            mod += DIM;
         }
         return mod;
 
@@ -100,13 +145,12 @@ namespace croutines {
 
     void Sweeper::full_neighbors(int site, int neighbors[4]) {
 
-        int dim = this->dim;
-        int x = site % dim;
-        int y = site / dim;
-        neighbors[0] = wrap(x+1) + dim * y;
-        neighbors[1] = wrap(x-1) + dim * y;
-        neighbors[2] = x + dim * wrap(y+1);
-        neighbors[3] = x + dim * wrap(y-1);
+        int x = site % DIM;
+        int y = site / DIM;
+        neighbors[0] = wrap(x+1) + DIM * y;
+        neighbors[1] = wrap(x-1) + DIM * y;
+        neighbors[2] = x + DIM * wrap(y+1);
+        neighbors[3] = x + DIM * wrap(y-1);
     }
 
 
@@ -127,6 +171,7 @@ namespace croutines {
     }
 
 /*    Phi Sweeper::new_value(Phi old_phi) {*/
+
 
         //Phi dphi;
         //double sum_of_squares = 0;
@@ -157,6 +202,7 @@ namespace croutines {
         return Phi();
     }
 
+
     vector<measurement> Sweeper::full_sweep(int sweeps,
                                     int thermalization,
                                     int record_rate,
@@ -167,37 +213,31 @@ namespace croutines {
 
         if (cluster_algorithm != WOLFF) { throw invalid_argument("Currently, Wolff is the only allowed algorithm"); }
 
+        int process_Rank, size_Of_Cluster;
+        int i_sweep, color;
 
         progress_bar progress{cout, 70u, "Working"};
 
-        vector<int> sites;
         vector<measurement> measurements;
 
-        for (int i=0; i<lat.size(); i++) {
-            sites.push_back(i);
-        }
-        
-        vector<Phi*> dphis;
+        vector<Phi> dphis;
         double dS;
-        double action = 0;
         Phi phibar;
+        int s;
 
-        for (int i=0; i<sweeps; i++) {
-            progress.write(i/sweeps);
-            tie(dphis, dS) = this->sweep(sites);
+        for (int i=0; i<2*sweeps; i++) {
+            color = i%2;
+            i_sweep = i/2;
+            progress.write((double)i_sweep /sweeps);
+            broadcast_lattice();
+            tie(dphis, dS) = sweep(color);
+            cout << "dphi: " << dphis[0] << endl;
+            collect_changes(dphis, dS, color);
 
-            for (int s : sites) {
-                lat[s] = lat[s] + (*dphis[s]);
-            }
-            action += dS;
-            if (i%cluster_rate==0) {
-                tie(lat, dS) = this->wolff();
-                action += dS;
-            }
-            if (i%record_rate==0 && i>=thermalization) {
+            if (i_sweep%record_rate==0 && i_sweep>=thermalization) {
                 phibar.init_as_zero();
-                for (int s : sites) {
-                    phibar = phibar + lat[s];
+                for (Phi l : lat) {
+                    phibar = phibar + l;
                 }
                 measurement aMeasurement = {phibar, action};
                 measurements.push_back(aMeasurement);
@@ -205,29 +245,27 @@ namespace croutines {
             }
 
         }
-        cout << "\n\n";
-
         return measurements;
 
     }
 
 
+    tuple<vector<Phi>, double> Sweeper::sweep(int color){
 
-
-
-
-    tuple<vector<Phi*>, double> Sweeper::sweep(vector<int>& sites){
-
-        vector<Phi*> dphis;
+        vector<Phi> dphis;
 
         double tot_dS = 0;
         double dS, new_L, old_L, A, r;
         Phi dphi, phi, backward_nphi_sum, forward_nphi_sum;
-        int i;
+        int i, site;
         int neighbors[4];
 
-        for (int site : sites){
-                
+        array<double, N> zero_array = {};
+        Phi zero_phi(zero_array);
+
+        for (int i = 0; i<sites_per_node; i++){
+            site = mpi_assignments[color][i];
+
             phi = this->lat[site];
 
             this->full_neighbors(site, neighbors);
@@ -238,19 +276,24 @@ namespace croutines {
             old_L = this->lagrangian( phi, forward_nphi_sum);
             new_L = this->lagrangian( phi+dphi, forward_nphi_sum);
             dS = (new_L - old_L) - backward_nphi_sum * dphi;
-            
+           
+            cout << "dS: " << dS << endl;
+            cout << dphi << endl;
+            //cout << old_L << " " << new_L << " " << backward_nphi_sum << endl;
             A = exp(-dS);
             r = randf();
 
-            if (dS < 0 || r <= A) {
-                dphis.push_back(&dphi);
+            //if (dS < 0 || r <= A) { 
+            if (dS < 0 ) { 
+                cout << "accepted\n";
+                dphis.push_back(dphi);
                 tot_dS += dS;
             } else {
-                dphis.push_back(NULL);
+                cout << "rejected\n";
+                dphis.push_back(zero_phi);
             }
 
         }
-
         return make_tuple(dphis, tot_dS);
 
     }
@@ -304,7 +347,7 @@ namespace croutines {
         return cluster;
     }
 
-    tuple<vector<Phi>, double> Sweeper::wolff() {
+    tuple<array<Phi, DIM*DIM>, double> Sweeper::wolff() {
 
         int seed = randint(pow(this->dim,2));
         set <int>  cluster;
@@ -331,6 +374,60 @@ namespace croutines {
         return make_tuple(lat, dS);
     }
 
+    void Sweeper::broadcast_lattice() {
+        const int raw_data_len = DIM*DIM*N;
+        double raw_data[raw_data_len];
+        if (process_Rank == MASTER) {
+            for (int i = 0; i < raw_data_len; i++) {
+                raw_data[i] = lat[i/N][i%N];
+            };
+        }
+
+
+        MPI_Bcast(&raw_data, raw_data_len, MPI_DOUBLE, MASTER, MPI_COMM_WORLD);
+        MPI_Bcast(&action, 1, MPI_INT, MASTER, MPI_COMM_WORLD);
+
+
+        if (process_Rank != MASTER) {
+            for (int i = 0; i < raw_data_len; i++) {
+                lat[i/N] [i%N] = raw_data[i];
+            };
+        }
+
+    }
+
+    void Sweeper::collect_changes(vector<Phi> dphis, double dS, int color){
+        const int recv_data_size = N*DIM*DIM/2;
+        double send_data[N*sites_per_node];
+
+        for (int i = 0; i<sites_per_node; i++) {
+            for (int j = 0; j<N; j++) {
+                cout << i << " " << j << " " << dphis[i] << endl;
+                cout << endl;
+                send_data[i*N+j] = dphis[i][j] ;
+            }; 
+        };
+        
+        int recv_sites[DIM*DIM/2];
+        double recv_data[recv_data_size];
+        double recv_actions[size_Of_Cluster];
+
+        MPI_Gather(&(mpi_assignments[color]), sites_per_node, MPI_INT, &recv_sites, DIM*DIM/2, MPI_INT, MASTER, MPI_COMM_WORLD);
+        MPI_Gather(&send_data, N*sites_per_node, MPI_DOUBLE, &recv_data, recv_data_size, MPI_DOUBLE, MASTER, MPI_COMM_WORLD);
+        MPI_Gather(&action, 1, MPI_DOUBLE, &recv_actions, size_Of_Cluster, MPI_DOUBLE, MASTER, MPI_COMM_WORLD);
+
+        if (process_Rank == MASTER) {
+            for (int i = 0; i<DIM*DIM/2; i++){
+                for (int j = 0; j<N; j++) {
+                    lat[recv_sites[i]][j] += recv_data[i*N + j];
+                }
+            }
+
+            for (int i = 0; i<size_Of_Cluster; i++) {
+                action += recv_actions[i];
+            }
+        }
+    }
 
     Phi sign(Phi x){ // temporary, should be eventually replaced with proj_vec
         Phi phi_sign;

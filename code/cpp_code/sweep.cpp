@@ -4,21 +4,23 @@
 #include <algorithm>
 #include "gif.h"
 #include "progress.cpp"
+#include <assert.h>
+
+#define VERIFY_ACTION 0
 
 using namespace std;
+
+typedef int site;
+
+double Sweeper::beta;
 
 Sweeper::Sweeper (double beta, int DIM, MPI_Comm c, bool makeGif) : 
     process_Rank(get_rank(c)), 
     size_Of_Cluster(get_size(c)), 
     sites_per_node((DIM*DIM)/2 / get_size(c)),
     DIM{DIM},
-    gif{gif},
-    beta{beta}
+    gif{makeGif}
 {
-
-    
-
-
     // generate lattice
     array<double, N> zero_array = {};
     Phi zero_phi(zero_array);
@@ -27,9 +29,9 @@ Sweeper::Sweeper (double beta, int DIM, MPI_Comm c, bool makeGif) :
     for (int i = 0; i<DIM; i++){
         for (int j = 0; j<DIM; j++) {
             site = i*DIM + j;
-            lat.push_back(new_value(zero_phi));
+            lat[site] = new_value(zero_phi);
             
-            neighbor_map[site] = full_neighbors(site); 
+            lat.neighbor_map[site] = full_neighbors(site); 
 
             // generate MPI assignments
             if (site / (2*sites_per_node) == process_Rank) { // Factor of 2 for checkerboard
@@ -46,10 +48,15 @@ Sweeper::Sweeper (double beta, int DIM, MPI_Comm c, bool makeGif) :
 
     int offset = process_Rank *  sites_per_node;
 
-
 }
 
 Sweeper::~Sweeper() = default;
+
+void print(std::vector <Phi> const &a) {
+   for(int i=0; i < a.size(); i++)
+   std::cout << a.at(i) << ' ';
+   cout << endl;
+}
 
 double Sweeper::full_action() {
     int site, i;
@@ -58,8 +65,9 @@ double Sweeper::full_action() {
     double S = 0;
     // initial action
     for (int s=0; s<DIM*DIM; s++) {
-        neighbors = neighbor_map[s];
+        neighbors = lat.neighbor_map[s];
         forward_nphi_sum  = lat[neighbors[2]] + lat[neighbors[3]];
+
         S += lagrangian(lat[s], forward_nphi_sum);
     }
     return S;
@@ -80,16 +88,16 @@ vector<int> Sweeper::full_neighbors(int site) {
     int x = site % DIM;
     int y = site / DIM;
     vector<int> neighbors; 
-    neighbors.push_back(wrap(x+1) + DIM * y);
     neighbors.push_back(wrap(x-1) + DIM * y);
-    neighbors.push_back(x + DIM * wrap(y+1));
     neighbors.push_back(x + DIM * wrap(y-1));
+    neighbors.push_back(wrap(x+1) + DIM * y);
+    neighbors.push_back(x + DIM * wrap(y+1));
     return neighbors;
 }
 
 
 double Sweeper::lagrangian(Phi phi, Phi nphi_sum) {
-    return -1 * beta * (phi * nphi_sum);
+    return beta * (D - phi * nphi_sum); // note that the sum over dimension has already been made
 }
 
 double Sweeper::rand_dist(double r) {
@@ -114,9 +122,10 @@ double Sweeper::rand_dist(double r) {
 /*}*/
 
 Phi Sweeper::new_value(Phi old_phi) {
-    Phi dphi;
-    dphi[0] = rand_dist(randf());
-    return dphi;
+    //Phi dphi;
+    //dphi[0] = rand_dist(randf());
+    //return dphi;
+    return random_phi();
 }
 
 Phi Sweeper::proj_vec () {
@@ -127,74 +136,72 @@ Phi Sweeper::proj_vec () {
 }
 
 Phi Sweeper::random_phi() {
-    bool phi4 = true;
-    if (phi4) {
-        Phi ret_phi({3 * randf() - 1.5});
-        return ret_phi;
-    } else {
-        Phi new_phi;
-        for (int i=0; i<N; i++) {
-            new_phi[i] = 2 * randf() - 1;
+    Phi new_phi;
+    for (int i=0; i<N; i++) {
+        new_phi[i] = 2 * randf() - 1;
+        if (abs(new_phi[i]) > 1e+10) {
+            cout << "overflow" << endl;
+            exit(1);
+
         }
-        return new_phi * (1/sqrt(new_phi.norm_sq()));
-    }  
+    }
+    return new_phi * (1/sqrt(new_phi.norm_sq()));
 
 }
 
-void write_gif_frame(Sweeper* sweeper, GifWriter* gif_writer, int delay, double rate=3) {
-    int val;
+void write_gif_frame(Lattice2D& lat, GifWriter* gif_writer, int delay, double rate=3) {
     Phi aPhi;
-    array<uint8_t, 4> pixel = {0,0,0,0};
-    auto DIM = sweeper->dim;
-    vector<uint8_t> vec(4*DIM*DIM, 0);
+    auto DIM = lat.L;
+    vector<uint8_t> vec(4*DIM*DIM);
 
     for (int i=0; i<DIM*DIM; i++) {
-        aPhi = sweeper->lat[i];
-        val = 255 * (1 - exp(-rate * aPhi[0])) / (1 + exp(-rate * aPhi[0]));
-        if (val >= 0) {
-            vec[4*i] = static_cast<uint8_t>(val);
-        } else {
-            vec[4*i+1] = static_cast<uint8_t>(-val);
+        aPhi = lat[i];
+        for (int j=0; j<N; j++) {
+            vec[4*i + j] = static_cast<uint8_t>((aPhi[j]+1)*128);
         }
-
-        vec[4*i + 3] = 0; 
-        
+        vec[4*i + 3] = 255;
+        //cout << vec[0] <<" "<< vec[1] <<" "<< vec[2] <<" "<< vec[3] <<" "<< endl;
     }
     GifWriteFrame(gif_writer, vec.data(), DIM, DIM, delay);
 }
 
+void Sweeper::assert_action(double tol) {
+    double fa;
+    if (VERIFY_ACTION) {
+        fa = full_action();
+        if (abs(fa-action)>tol) {
+            cout << "ASSERT ACTION FAILED (" << action << " != " << fa << ")\n";
+            exit(1);
+        } else {
+            cout << "assert action passed (" << action << " == " << fa << ")\n";
+
+        }
+    }
+}
 
 vector<measurement> Sweeper::full_sweep(const sweep_args& args = sweep_args()) {
    
-    if (args.cluster_algorithm != WOLFF) { throw invalid_argument("Currently, Wolff is the only allowed algorithm"); }
+    if (args.cluster_algorithm != WOLFF) throw invalid_argument("Currently, Wolff is the only allowed algorithm");
 
     shared_ptr<progress_bar> progress;
-    if (args.progress) {
-        progress = make_shared<progress_bar>(cout, 70u, "Working");
-    } else {
-        progress = nullptr; 
-    }
+    progress = args.progress ? make_shared<progress_bar>(cout, 70u, "Working") :  nullptr; 
 
     vector<measurement> measurements;
-
-    vector<Phi> dphis;
+    Lattice2D dphis;
     double dS;
     Phi phibar;
     int s;
 
     GifWriter gif_writer;
-    if (gif) {
-        GifBegin(&gif_writer, gif_filename, DIM, DIM, gif_delay);
-    }
+    if (gif) GifBegin(&gif_writer, gif_filename, DIM, DIM, gif_delay);
 
     vector<uint8_t> white_vec(DIM*DIM*4,255);
 
     double norm_factor = 1 / (double) (DIM*DIM);
-    if (gif) write_gif_frame(this, &gif_writer, gif_delay);
+    if (gif) write_gif_frame(lat, &gif_writer, gif_delay);
     COLOR colors[2] = {COLOR::white, COLOR::black};
     for (int i=0; i<args.sweeps; i++) {
         for (const auto &color : colors) {
-
             if (progress != nullptr) {
                 progress->write((double)i/args.sweeps);
 
@@ -202,36 +209,37 @@ vector<measurement> Sweeper::full_sweep(const sweep_args& args = sweep_args()) {
             broadcast_lattice();
 
             //cout << "Met: " << action << " vs " << full_action() << endl;
-            tie(dphis, dS) = sweep(color);
+            auto [dphis, dS] = sweep(color);
             collect_changes(dphis, dS, color);
+            //assert_action();
         }
-        if (gif) write_gif_frame(this, &gif_writer, gif_delay);
         //cout << "Met: " << action << " vs " << full_action() << endl;
 
-        if (i==args.thermalization && gif){
-            GifWriteFrame(&gif_writer, white_vec.data(), DIM, DIM, gif_delay);
-        }
+        //if (i==args.thermalization && gif)
+            //GifWriteFrame(&gif_writer, white_vec.data(), DIM, DIM, gif_delay); // add one white frame after thermalization
 
         if (i%args.record_rate==0 && i>=args.thermalization) {
             phibar.init_as_zero();
-            for (Phi l : lat) {
-                phibar = phibar + l;
+            for (const Phi& phi : lat) {
+                phibar = phibar + phi;
             }
             measurement aMeasurement = {phibar*norm_factor, action};
             measurements.push_back(aMeasurement);
+            if (gif) write_gif_frame(lat, &gif_writer, gif_delay);
             
         }
 
         if (i%args.cluster_rate==0) {
             //cout << "Wolff: " << action << " vs " << full_action() << endl;
-            wolff();
-            if (gif) write_gif_frame(this, &gif_writer, gif_delay);
+            wolff(); 
+            //assert_action();
+            //if (gif) write_gif_frame(this, &gif_writer, gif_delay);
             //cout << "Wolff: " << action << " vs " << full_action() << endl;
             
         }
 
     }
-    GifEnd(&gif_writer);
+    if (gif) GifEnd(&gif_writer);
     return measurements;
 
 }
@@ -239,31 +247,36 @@ vector<measurement> Sweeper::full_sweep(const sweep_args& args = sweep_args()) {
 
 tuple<vector<Phi>, double> Sweeper::sweep(COLOR color){
 
-    vector<Phi> dphis;
+    vector<Phi> dphis(sites_per_node);
 
     double tot_dS = 0;
     double dS, new_L, old_L, A, r;
-    Phi dphi, phi, backward_nphi_sum, forward_nphi_sum;
+    Phi newphi, dphi, phi, backward_nphi_sum, forward_nphi_sum;
     int i, site;
     vector<int> neighbors;
 
     array<double, N> zero_array = {};
     Phi zero_phi(zero_array);
 
-
     for (int i = 0; i<sites_per_node; i++){
         site = mpi_assignments[color] [i];
 
-        phi = this->lat[site];
+        phi = lat[site];
 
-        neighbors = neighbor_map[site];
+        neighbors = lat.neighbor_map[site];
         backward_nphi_sum = lat[neighbors[0]] + lat[neighbors[1]];
         forward_nphi_sum  = lat[neighbors[2]] + lat[neighbors[3]];
 
-        dphi = new_value(phi);
+        newphi = new_value(phi);
+        if (abs(newphi[0])>1e+10){
+            exit(1);
+        }
+
         old_L = lagrangian( phi, forward_nphi_sum);
-        new_L = lagrangian( phi+dphi, forward_nphi_sum);
-        dS = (new_L - old_L) - backward_nphi_sum * dphi;
+        new_L = lagrangian( newphi, forward_nphi_sum);
+
+        dphi = newphi - phi;
+        dS = (new_L - old_L) - beta * backward_nphi_sum * dphi;
        
         //cout << old_L << " " << new_L << " " << backward_nphi_sum << endl;
         A = exp(-dS);
@@ -271,14 +284,12 @@ tuple<vector<Phi>, double> Sweeper::sweep(COLOR color){
 
         if (dS < 0 || r <= A) { 
         //if (dS < 0 ) { 
-            dphis.push_back(dphi);
+            dphis[i] = dphi;
             tot_dS += dS;
         } else {
-            dphis.push_back(zero_phi);
+            dphis[i] = zero_phi;
         }
-
     }
-
     return make_tuple(dphis, tot_dS);
 
 }
@@ -315,8 +326,6 @@ unordered_set <int> Sweeper::generate_cluster(int seed, bool accept_all) {
         tie(s, phi_a) = to_test.top();
         to_test.pop();
 
-
-        
         if (cluster.find(s)!=cluster.end()) { 
             continue; 
         }
@@ -326,7 +335,7 @@ unordered_set <int> Sweeper::generate_cluster(int seed, bool accept_all) {
             Padd_val = Padd(phi_a, phi_b);
             if (accept_all || randf() < Padd_val) {
                 cluster.insert(s);
-                for (int n : neighbor_map[s]){
+                for (const int n : lat.neighbor_map[s]){
                     to_test.push( make_tuple(n, phi_b) );
                 }
             }
@@ -336,7 +345,6 @@ unordered_set <int> Sweeper::generate_cluster(int seed, bool accept_all) {
     return cluster;
 }
 
-//tuple<vector<Phi>, double> Sweeper::wolff() {
 void Sweeper::wolff() {
 
     int seed = randint(pow(DIM,2));
@@ -355,8 +363,8 @@ void Sweeper::wolff() {
         c = *it;
         phi = lat[c];
         lat[c] = -phi;
-        for (int n : neighbor_map[c]) {
-            dS += 2 * (lat[n] * phi);
+        for (const int n : lat.neighbor_map[c]) {
+            dS += 2 * beta * (lat[n] * phi);
         }
     }
 
@@ -392,7 +400,7 @@ void Sweeper::collect_changes(vector<Phi> dphis, double dS, COLOR color){
     const int recv_data_size = N*DIM*DIM/2;
     double send_data[N*sites_per_node];
 
-    for (int i = 0; i<sites_per_node; i++) {
+    for (int i=0; i<sites_per_node; i++) {
         for (int j = 0; j<N; j++) {
             send_data[i*N+j] = dphis[i][j] ;
         }; 
@@ -429,4 +437,93 @@ double sign(double x){
     return (x>0) - (x<0);
 }
 
+
+// GF
+//
+//
+
+void deriv(Lattice2D& f, double t, const Lattice2D& yn, double h, const Lattice2D* k = nullptr) {
+
+    Phi neighbor_sum; 
+    Phi dte;
+    Phi e;
+    double Pij;
+    double laplacianj;
+    int L = yn.L;
+
+    for (site s=0; s<L*L; s++) {
+        neighbor_sum.init_as_zero();
+
+        if (k) {
+            e = yn[s] + (*k)[s];
+            for (site n : f.neighbor_map[s])
+                neighbor_sum += yn[n] + (*k)[n];
+        } else {
+            e = yn[s];
+            for (site n : f.neighbor_map[s])
+                neighbor_sum += yn[n];
+        }
+
+        for (int i=0; i<N; i++) {
+            dte[i] = 0;
+            for (int j=0; j<N; j++) {
+                Pij = (i==j) - e[i] * e[j];
+                laplacianj = neighbor_sum[j] - 2*D*e[j];
+                dte[i] += Pij * laplacianj;
+            }
+        }
+
+        f[s] = h*dte;
+    }
+}
+
+void Sweeper::flow(double t) {
+    double h = 1; // aka dt
+    double h_2 = h/2;
+    double t_ = 0;
+    Lattice2D flowed_lat(lat);
+    Lattice2D k1, k2, k3, k4;
+
+    const auto gif_filename = "flow.gif";
+    const int gif_delay = 10;
+    GifWriter gif_writer;
+    GifBegin(&gif_writer, gif_filename, DIM, DIM, gif_delay);
+
+    while (t_<t) {
+        // Runge Kutta (see http://www.foo.be/docs-free/Numerical_Recipe_In_C/c16-1.pdf)
+        // Slight changes for efficency:
+        //   - deriv(t, y, h, k) := h * f(t, y + k);
+        //   - k1 => k1/2; k2 => k2/2
+        
+        deriv(k1, t_,     flowed_lat, h_2);
+        deriv(k2, t_+h_2, flowed_lat, h_2, &k1);
+        deriv(k3, t_+h_2, flowed_lat, h,   &k2);
+        deriv(k4, t_+h,   flowed_lat, h,   &k3);
+
+        k1 /= 3;
+        k2 /= (3/2);
+        k3 /= 3;
+        k4 /= 6;
+        //cout << k1[0] << " " << k2[0] << " " << k3[0] << " " << k4[0] << endl;
+
+        flowed_lat += k1;
+        flowed_lat += k2;
+        flowed_lat += k3;
+        flowed_lat += k4;
+
+        // Normalize phi
+        for (Phi& phi : flowed_lat) {
+            phi /= sqrt(phi.norm_sq());
+        }
+
+        t_ += h;
+
+        cout << flowed_lat.full_action(Sweeper::lagrangian) << endl;
+
+        write_gif_frame(flowed_lat, &gif_writer, gif_delay);
+    }
+
+    GifEnd(&gif_writer);
+
+}
 

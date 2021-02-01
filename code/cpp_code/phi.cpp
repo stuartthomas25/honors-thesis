@@ -2,8 +2,6 @@
 
 using namespace std;
 
-
-
 Phi::Phi() {}; 
 
 Phi::Phi(array<double, N> phi){
@@ -25,6 +23,26 @@ double Phi::norm_sq() const {
 
 }
 
+Phi& Phi::operator+=(const Phi& other) {
+    for (int i=0; i<N; i++) {
+        phi[i] += other[i];
+    }
+    return *this;
+}
+
+Phi& Phi::operator*=(const double & a) {
+    for (int i=0; i<N; i++) {
+        phi[i] *= a;
+    }
+    return *this;
+}
+
+Phi& Phi::operator/=(const double & a) {
+    for (int i=0; i<N; i++) {
+        phi[i] /= a;
+    }
+    return *this;
+}
 
 Phi Phi::operator+ (const Phi & aPhi) const {
     Phi new_phi;
@@ -89,6 +107,11 @@ bool Phi::operator== (const Phi & aPhi) const {
         }
     }
     return true;
+}
+
+Phi operator*(double a, const Phi& b)
+{
+    return b*a;
 }
 
 

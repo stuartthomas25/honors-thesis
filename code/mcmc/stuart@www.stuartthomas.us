@@ -11,11 +11,10 @@
 #include <iomanip>
 #include <ostream>
 #include <string>
-#include "mpi.h"
 
 using namespace std;
 
-#define N 2
+#define N 1
 #define PROG_CHAR "#"
 
 namespace croutines {
