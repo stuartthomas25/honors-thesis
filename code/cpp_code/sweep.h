@@ -75,7 +75,7 @@ class Sweeper {
         static double beta;
         Sweeper();
         ~Sweeper();
-        Sweeper(double beta, int DIM, MPI_Comm c, bool makeGif);
+        Sweeper(int DIM, MPI_Comm c, bool makeGif);
 
         double full_action();
         void assert_action(double tol=0.001);

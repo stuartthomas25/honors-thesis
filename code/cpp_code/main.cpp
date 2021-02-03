@@ -11,7 +11,6 @@
 
 #include "phi.h"
 #include "sweep.h"
-#include "lattice.cpp"
 
 using namespace std;
 using namespace std::chrono;
@@ -94,8 +93,8 @@ int main(int argc, char *argv[]) {
 
     auto start = high_resolution_clock::now();
     int measurements = 100;
-    int thermalization = 1000;
-    int record_rate = 100;
+    int thermalization = 2000;
+    int record_rate = 200;
     int sweeps = record_rate * measurements + thermalization;
 
     sweep_args args {

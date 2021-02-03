@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
     ofstream outputfile;
     outputfile.open(filename);
 
-    Sweeper sweeper(beta, dim, MPI_COMM_WORLD, gif);
+    Sweeper sweeper(dim, MPI_COMM_WORLD, gif);
 
     sweeper.flow(10);
 

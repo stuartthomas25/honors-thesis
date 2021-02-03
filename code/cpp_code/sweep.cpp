@@ -5,6 +5,7 @@
 #include "gif.h"
 #include "progress.cpp"
 #include <assert.h>
+#include <stdlib.h>
 
 #define VERIFY_ACTION 0
 
@@ -14,7 +15,107 @@ typedef int site;
 
 double Sweeper::beta;
 
-Sweeper::Sweeper (double beta, int DIM, MPI_Comm c, bool makeGif) : 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sweeper::Sweeper (int DIM, MPI_Comm c, bool makeGif) : 
     process_Rank(get_rank(c)), 
     size_Of_Cluster(get_size(c)), 
     sites_per_node((DIM*DIM)/2 / get_size(c)),
@@ -464,21 +565,28 @@ void deriv(Lattice2D& f, double t, const Lattice2D& yn, double h, const Lattice2
                 neighbor_sum += yn[n];
         }
 
+        //if (s==0) cout << "Site: " << e << endl;
+
         for (int i=0; i<N; i++) {
             dte[i] = 0;
             for (int j=0; j<N; j++) {
                 Pij = (i==j) - e[i] * e[j];
                 laplacianj = neighbor_sum[j] - 2*D*e[j];
+                //if (s==0 && i==0 && j==0) cout << "Laplacian:    " << laplacianj << endl;
+                //if (s==0 && i==0 && j==0) cout << "Pij:          " << Pij << endl;
+                //if (s==0 && i==0 && j==0) cout << "Neighbor sum: " << neighbor_sum << endl;
                 dte[i] += Pij * laplacianj;
             }
         }
+        //if (s==0) cout << "deriv " << dte << endl;
+        //if (s==0) cout << "deriv " << h*dte << endl;
 
         f[s] = h*dte;
     }
 }
 
 void Sweeper::flow(double t) {
-    double h = 1; // aka dt
+    double h = 0.01; // aka dt
     double h_2 = h/2;
     double t_ = 0;
     Lattice2D flowed_lat(lat);
@@ -488,6 +596,8 @@ void Sweeper::flow(double t) {
     const int gif_delay = 10;
     GifWriter gif_writer;
     GifBegin(&gif_writer, gif_filename, DIM, DIM, gif_delay);
+
+    int counter = 0;
 
     while (t_<t) {
         // Runge Kutta (see http://www.foo.be/docs-free/Numerical_Recipe_In_C/c16-1.pdf)
@@ -504,13 +614,28 @@ void Sweeper::flow(double t) {
         k2 /= (3/2);
         k3 /= 3;
         k4 /= 6;
-        //cout << k1[0] << " " << k2[0] << " " << k3[0] << " " << k4[0] << endl;
 
         flowed_lat += k1;
         flowed_lat += k2;
         flowed_lat += k3;
         flowed_lat += k4;
 
+        //cout << flowed_lat[0] << endl;
+        //for (auto n : flowed_lat.neighbor_map[0]) {
+            //cout << flowed_lat[n] << "\t";
+        //}
+        //cout << endl;
+        cout << t_ << " " << flowed_lat.full_action(Sweeper::lagrangian) << endl;
+        //cout << endl;
+
+        //deriv(k1, t_,     flowed_lat, h);
+
+        //cout << flowed_lat[0] << endl;
+        //cout << k1[0] << endl;
+        //flowed_lat += k1;
+        //cout << flowed_lat[0] << endl;
+        //cout << endl;
+        
         // Normalize phi
         for (Phi& phi : flowed_lat) {
             phi /= sqrt(phi.norm_sq());
@@ -518,12 +643,12 @@ void Sweeper::flow(double t) {
 
         t_ += h;
 
-        cout << flowed_lat.full_action(Sweeper::lagrangian) << endl;
-
-        write_gif_frame(flowed_lat, &gif_writer, gif_delay);
+        if (counter % 10 == 0) write_gif_frame(flowed_lat, &gif_writer, gif_delay);
+        counter++;
     }
 
     GifEnd(&gif_writer);
+    system("gifsicle --colors 256 --resize 512x512 flow.gif -o bigger.gif");
 
 }
 

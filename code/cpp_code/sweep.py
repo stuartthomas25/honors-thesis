@@ -16,12 +16,12 @@ phibars = []
 # m02s = [-0.80, -0.76, -0.72, -0.68, -0.64];
 # m02s = np.linspace(-0.80,-0.64, 17)
 # m02s = np.linspace(-1.80, 1.00, 29)
-betas = [1.0, 1.2, 1.4, 1.6, 1.8, 2.0]
+betas = [0.6, 0.8, 1.0,1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0]
 # m02s = [-0.80]
 o_filenames = [f"outputs/data_{beta}.csv" for beta in betas]
 # streams = [StringIO for _ in m02s]
 processes = []
-L = 128
+L = 100
 
 refresh_rate = 0.1
 
@@ -94,13 +94,13 @@ elif "view" in sys.argv:
     fig, axes = plt.subplots(1,1,figsize=(16,10), sharex=True, squeeze=False)
     axes = [ax for row in axes for ax in row]
 
-    axes[0].set_ylabel(r"$E$")
     axes[0].set_xlabel(r"$\beta$")
+    axes[0].set_ylim((0,4.0))
 
     plot_data = {
             'internal_energy' : []
     }
-    labels = ["$S$"]
+    labels = ["$E$"]
 
     for beta, o_filename in zip(betas, o_filenames):
         actions = []
