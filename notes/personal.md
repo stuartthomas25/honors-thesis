@@ -123,3 +123,6 @@ TODO:
     - This requires `lagrangian` to be static function
     - Changing `L`, `beta` and `neighbor_map` (also moved to `Lattice2D`) to static members.
 
+
+         
+

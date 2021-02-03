@@ -422,6 +422,41 @@ references:
   URL: http://arxiv.org/abs/hep-lat/9712008
   volume: '58'
 
+- id: luscher2010
+  abstract: >-
+    Theoretical and numerical studies of the Wilson flow in lattice QCD suggest
+    that the gauge field obtained at flow time t>0 is a smooth renormalized
+    field. The expectation values of local gauge-invariant expressions in this
+    field are thus well-defined physical quantities that probe the theory at
+    length scales on the order of sqrt(t). Moreover, by transforming the QCD
+    functional integral to an integral over the gauge field at a specified flow
+    time, the emergence of the topological (instanton) sectors in the continuum
+    limit becomes transparent and is seen to be caused by a dynamical effect
+    that rapidly separates the sectors when the lattice spacing is reduced from
+    0.1 fm to smaller values.
+  accessed:
+    - year: 2021
+      month: 2
+      day: 1
+  author:
+    - family: Lüscher
+      given: Martin
+  container-title: Journal of High Energy Physics
+  container-title-short: J. High Energ. Phys.
+  DOI: 10.1007/JHEP08(2010)071
+  ISSN: 1029-8479
+  issue: '8'
+  issued:
+    - year: 2010
+      month: 8
+  language: en
+  page: '71'
+  source: arXiv.org
+  title: Properties and uses of the Wilson flow in lattice QCD
+  type: article-journal
+  URL: http://arxiv.org/abs/1006.4518
+  volume: '2010'
+
 - id: makino2015
   accessed:
     - year: 2020
@@ -651,6 +686,36 @@ references:
   title: The Monte Carlo method in quantum field theory
   type: article-journal
   URL: http://arxiv.org/abs/hep-lat/0702020
+
+- id: munthe-kaas1999
+  abstract: >-
+    This paper presents a family of Runge{Kutta type integration schemes of
+    arbitrarily high order for di erential equations evolving on manifolds. We
+    prove that any classical Runge{Kutta method can be turned into an invariant
+    method of the same order on a general homogeneous manifold, and present a
+    family of algorithms that are relatively simple to implement.
+  accessed:
+    - year: 2021
+      month: 2
+      day: 1
+  author:
+    - family: Munthe-Kaas
+      given: Hans
+  container-title: Applied Numerical Mathematics
+  container-title-short: Applied Numerical Mathematics
+  DOI: 10.1016/S0168-9274(98)00030-0
+  ISSN: '01689274'
+  issue: '1'
+  issued:
+    - year: 1999
+      month: 1
+  language: en
+  page: 115-127
+  source: DOI.org (Crossref)
+  title: High order Runge-Kutta methods on manifolds
+  type: article-journal
+  URL: https://linkinghub.elsevier.com/retrieve/pii/S0168927498000300
+  volume: '29'
 
 - id: newman1999
   author:

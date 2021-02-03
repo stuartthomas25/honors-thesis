@@ -593,13 +593,43 @@ Graduate School:
     4. Then, consider topological charge/suscpetibility (Fig 2, [@berg1981])
 
 #  February 1
-- Reproduction of @[berg1981]:
+- Reproduction of [@berg1981]:
 
-![Internal Energy](plots/internal_energy.png)
+![Internal Energy](internal_energy)
 
 - Gradient flow:
     - Action increases with flow time
     - May be due to normalization.
+
+- Orginos: Runge-Kutta parallel python code.
+    May be a shortcut to calculate the gradient flow :[@luscher2010]:
+        - Used with $SU(3)$ but not $O(3)$.
+        - Could be mapped but the mathematics are very difficult (see general technique in [@munthe-kaas1999]).
+        - Note that Bietenholz does not use L\"uscher's method.
+
+- Internal Energy:
+    - Run 100x100 and compare with specific $\beta$ values from Table 1 [@berg1981].
+    - Try some more $\beta$ values, including 2 that are smaller than $1$.
+    - Small fixes: start y-axis at 0, change $S$ to $E$.
+    - Try decreasing record rate (maybe its the autocorrelation value)?
+
+    __Scan past what you're supposed to read__.
+
+
+# February 3
+- New internal energy plot:
+    - $100\times 100$
+    - 100 measurements 200 sweeps apart, 2000 sweep thermalization. Wolff cluster every 5 sweeps.
+
+![Internal Energy, revised plot](internal_energy2)
+    - Mostly the same.
+
+- Gradient flow:
+    - after decreasing $dt$ step size, action now makes sense:
+
+![Action in flow time](flow_action)
+<!--./bin/flow -b 1.0 -L 128 -o /dev/null  86.58s user 0.90s system 98% cpu 1:29.18 total-->
+
+
+
 # References
-
-
