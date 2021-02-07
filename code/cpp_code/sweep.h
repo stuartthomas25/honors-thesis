@@ -24,9 +24,8 @@ enum ClusterAlgorithm { WOLFF, SWENDSEN_WANG };
 struct measurement {
     Phi phibar;
     double action;
+    double chi_m;
 };
-
-
 
 struct sweep_args {
     int sweeps;

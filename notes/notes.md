@@ -587,7 +587,7 @@ Graduate School:
 
 
 - Todo:
-    1. Rung-Kutta gradient flow
+    1. Runge-Kutta gradient flow
     2. Adaptive step size
     3. Check internal energy from [@berg1981]
     4. Then, consider topological charge/suscpetibility (Fig 2, [@berg1981])
@@ -623,13 +623,24 @@ Graduate School:
 
 ![Internal Energy, revised plot](internal_energy2)
     - Mostly the same.
+    - Todo:
+        - Try plotting magnetic susceptibility? and compare with Table 1 [@berg1981].
+        - Measure autocorrelation time (for $E$ and/or $\chi_m$). This should go up in strong coupling.
 
 - Gradient flow:
     - after decreasing $dt$ step size, action now makes sense:
+    - Implement adaptive step size if it becomes a problem.
+    - Todo:
+        - Begin to study other observables ($E$, $\chi_m$)
+
+- Afterwards: work on topological susceptibility
+
+- No meeting on Monday
+
+
 
 ![Action in flow time](flow_action)
 <!--./bin/flow -b 1.0 -L 128 -o /dev/null  86.58s user 0.90s system 98% cpu 1:29.18 total-->
-
 
 
 # References

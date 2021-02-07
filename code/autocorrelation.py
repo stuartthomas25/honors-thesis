@@ -74,7 +74,7 @@ def view():
         phi_sq = np.mean(data**2, axis=(1,2))
 
         print(recorder.mean('magnetization'))
-        #UWerr(phi_sq, name=f"$\\langle \\phi^2 \\rangle$: $L={L}$, $\\lambda={lam}$, $m_0^2={m02s[i]}$, {sweeps} sweeps, {thermalization} sweep thermalization, recording every {record_rate} sweeps", plot=True, whole_plot=True)
+        UWerr(phi_sq, name=f"$\\langle \\phi^2 \\rangle$: $L={L}$, $\\lambda={lam}$, $m_0^2={m02s[i]}$, {sweeps} sweeps, {thermalization} sweep thermalization, recording every {record_rate} sweeps", plot=True, whole_plot=True)
 
         fig, axes = plt.subplots(4, 1, figsize=(16,16))
         sweep_x = np.arange(recorder.record_count)

@@ -15,106 +15,6 @@ typedef int site;
 
 double Sweeper::beta;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Sweeper::Sweeper (int DIM, MPI_Comm c, bool makeGif) : 
     process_Rank(get_rank(c)), 
     size_Of_Cluster(get_size(c)), 
@@ -291,6 +191,8 @@ vector<measurement> Sweeper::full_sweep(const sweep_args& args = sweep_args()) {
     Lattice2D dphis;
     double dS;
     Phi phibar;
+    double chi_m;
+
     int s;
 
     GifWriter gif_writer;
@@ -321,10 +223,14 @@ vector<measurement> Sweeper::full_sweep(const sweep_args& args = sweep_args()) {
 
         if (i%args.record_rate==0 && i>=args.thermalization) {
             phibar.init_as_zero();
+            chi_m = 0;
             for (const Phi& phi : lat) {
-                phibar = phibar + phi;
+                phibar += phi;
+                for (const Phi& phi2 : lat) {
+                    chi_m += phi2*phi;
+                }
             }
-            measurement aMeasurement = {phibar*norm_factor, action};
+            measurement aMeasurement = {phibar*norm_factor, action, chi_m};
             measurements.push_back(aMeasurement);
             if (gif) write_gif_frame(lat, &gif_writer, gif_delay);
             
@@ -648,7 +554,7 @@ void Sweeper::flow(double t) {
     }
 
     GifEnd(&gif_writer);
-    system("gifsicle --colors 256 --resize 512x512 flow.gif -o bigger.gif");
+    system("gifsicle --colors 256 --resize 512x512 flow.gif -o flow.gif");
 
 }
 

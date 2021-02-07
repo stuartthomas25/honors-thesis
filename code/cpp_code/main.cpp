@@ -16,8 +16,6 @@ using namespace std;
 using namespace std::chrono;
 
 
-
-
 int main(int argc, char *argv[]) {
 
     int c;
@@ -93,7 +91,7 @@ int main(int argc, char *argv[]) {
 
     auto start = high_resolution_clock::now();
     int measurements = 100;
-    int thermalization = 2000;
+    int thermalization = 1000;
     int record_rate = 200;
     int sweeps = record_rate * measurements + thermalization;
 
@@ -113,10 +111,9 @@ int main(int argc, char *argv[]) {
     }
     avg_mag = 0;
     for (measurement m : meas_data) {
-        outputfile << m.action;
-        for (int i=0; i<N; i++) {
-            outputfile << ", " << m.phibar[i];
-        }
+        outputfile << m.action << ", ";
+        //outputfile << m.phibar << ", ";
+        outputfile << m.chi_m;
         outputfile << endl;
     }
 
