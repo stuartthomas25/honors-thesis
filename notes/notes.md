@@ -638,9 +638,14 @@ Graduate School:
 - No meeting on Monday
 
 
-
 ![Action in flow time](flow_action)
 <!--./bin/flow -b 1.0 -L 128 -o /dev/null  86.58s user 0.90s system 98% cpu 1:29.18 total-->
+
+# February 10
+
+- UF Acceptance!
+- New computer, runs simulations faster.
+- 
 
 
 # References
