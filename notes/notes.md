@@ -645,7 +645,17 @@ Graduate School:
 
 - UF Acceptance!
 - New computer, runs simulations faster.
-- 
+ 
+- New result with $\chi_m$ shows discrepancy at phase transition:
+    - Try removing Wolff algorithm
+    - Perhaps magnetic susceptibility is related to Wolff cluster size? (see @newman1999 , p. 102) 
+        - See @hasenbusch1995
+    - Check out change in lattice size
+    - Interesting point: the internal energy differs at a different region from the magnetic susceptibilty.
+
+- Gradient Flow
+    - Normalize $\chi_m$ in terms of $L^4$.
+    - Run in strong correlation regime.
 
 
 # References
