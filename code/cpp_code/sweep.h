@@ -22,7 +22,7 @@ using namespace std;
 enum ClusterAlgorithm { WOLFF, SWENDSEN_WANG };
 
 struct measurement {
-    Phi phibar;
+    //Phi phibar;
     double action;
     double chi_m;
 };
@@ -92,8 +92,8 @@ class Sweeper {
         void broadcast_lattice();
         void collect_changes(vector<Phi> dphis, double dS, COLOR color);
 
-        double Padd(Phi phi_a, Phi phi_b);
-        unordered_set<int> generate_cluster(int seed, bool accept_all);
+        double Padd(Phi dphi, Phi phi_b);
+        unordered_set<int> generate_cluster(int seed, Phi r, bool accept_all);
 
         void flow(double t); 
 

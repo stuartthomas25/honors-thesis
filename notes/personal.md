@@ -124,5 +124,11 @@ TODO:
     - Changing `L`, `beta` and `neighbor_map` (also moved to `Lattice2D`) to static members.
 
 
+## Saturday, Feb 13
+- Fixed discrepancy in susceptibility and internal energy
+    - Caused by issues in Wolff algorithm:
+        - Primarily, taking $\phi\rightarrow-\phi$ instead of just flipping along $\vec{r}$.
+        - Also, incorrect formula for $dS$. This must be proportional to $\beta$.
+
          
 

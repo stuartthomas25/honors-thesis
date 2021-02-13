@@ -161,7 +161,6 @@ def UWerr(data, Stau=1.5, Nrep=None, name='NoName', quantity=0, plot=False, whol
         print("WARNING: no fluctations")
         return value, dvalue, ddvalue, tauint, dtauint, Qval
 
-
     for t in range(1, tmax+1):
         GammaFbb[t] = 0
         i0 = 0
@@ -243,7 +242,7 @@ def UWerr(data, Stau=1.5, Nrep=None, name='NoName', quantity=0, plot=False, whol
                 drho[t] = sum((rho[k+t] + rho[abs(k-t)] - 2*rho[t]*rho[k])**2)
                 drho[t] = sqrt(drho[t]/N)
 
-            fig, (rho_ax, tau_ax) = plt.subplots(2,1, figsize=(16,14))
+            fig, (rho_ax, tau_ax) = plt.subplots(2,1, figsize=(8,7))
             rho_ax.axhline(0., ls='--', c='r')
             rho_ax.axvline(Wopt, c='r')
             rho_ax.plot(np.arange(tmax+1), rho[:tmax+1])
@@ -257,7 +256,7 @@ def UWerr(data, Stau=1.5, Nrep=None, name='NoName', quantity=0, plot=False, whol
             tau_ax.plot(np.arange(tmax+1), tauintFbb[:tmax+1])
             dtau = tauintFbb[:tmax+1] * np.sqrt(np.arange(tmax+1)/N)*2
             tau_ax.fill_between(np.arange(tmax+1), tauintFbb[:tmax+1]-dtau, tauintFbb[:tmax+1]+dtau, alpha=0.3, color='g')
-            tau_ax.set_title('$\\tau_{int}$ with statistical erros of ' + name)
+            tau_ax.set_title('$\\tau_{int}$ with statistical errors of ' + name)
             tau_ax.set_ylabel(r"$\tau_{int}$")
             tau_ax.set_xlabel(r"$W$")
             tau_ax.set_ylim((0.5, None))

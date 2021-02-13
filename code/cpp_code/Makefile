@@ -1,10 +1,14 @@
-export OMPI_CXX=g++-10
+export OMPI_CXX=clang++
 #export LDFLAGS="-L/usr/local/opt/binutils/lib"
 export CPPFLAGS=-I/usr/local/opt/binutils/include
 binary=bin/sweep
-classes=sweep.cpp phi.cpp lattice.cpp
+classes=sweep.cpp phi.cpp lattice.cpp yaml/Yaml.cpp
 hfiles=sweep.h phi.h
-options=-std=c++20 -g
+ifdef debug
+	options=-std=c++17 -g
+else 
+	options=-std=c++17
+endif 
 
 
 .PHONY: clean

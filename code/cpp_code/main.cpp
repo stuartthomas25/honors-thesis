@@ -11,6 +11,7 @@
 
 #include "phi.h"
 #include "sweep.h"
+#include "yaml/Yaml.hpp"
 
 using namespace std;
 using namespace std::chrono;
@@ -19,21 +20,18 @@ using namespace std::chrono;
 int main(int argc, char *argv[]) {
 
     int c;
-    float beta;
     char* filename;
-    int dim;
+    char* in_filename;
     bool progress = true;
     bool gif = false;
-    while ((c = getopt(argc, (char **)argv, "gqo:b:L:")) != -1) {
+
+    while ((c = getopt(argc, (char **)argv, "gqi:o:")) != -1) {
         switch((char)c) {
+            case 'i':    
+                in_filename = optarg;
+                break;
             case 'o':    
                 filename = optarg;
-                break;
-            case 'b':    
-                beta = atof(optarg);
-                break;
-            case 'L':    
-                dim = atof(optarg);
                 break;
             case 'q':
                 progress = false;
@@ -47,6 +45,15 @@ int main(int argc, char *argv[]) {
 
         }
     };
+
+    Yaml::Node root;
+    Yaml::Parse(root, in_filename);
+    
+    double beta = root["beta"].As<double>();
+    int dim = root["L"].As<int>();
+    int measurements = root["measurements"].As<int>();
+    int thermalization = root["thermalization"].As<int>();
+    int record_rate = root["record_rate"].As<int>();
 
     Lattice2D::L = dim;
     Sweeper::beta = beta;
@@ -90,9 +97,6 @@ int main(int argc, char *argv[]) {
     Sweeper sweeper(dim, MPI_COMM_WORLD, gif);
 
     auto start = high_resolution_clock::now();
-    int measurements = 100;
-    int thermalization = 1000;
-    int record_rate = 200;
     int sweeps = record_rate * measurements + thermalization;
 
     sweep_args args {

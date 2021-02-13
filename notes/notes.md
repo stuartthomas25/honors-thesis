@@ -622,6 +622,7 @@ Graduate School:
     - 100 measurements 200 sweeps apart, 2000 sweep thermalization. Wolff cluster every 5 sweeps.
 
 ![Internal Energy, revised plot](internal_energy2)
+
     - Mostly the same.
     - Todo:
         - Try plotting magnetic susceptibility? and compare with Table 1 [@berg1981].
@@ -639,6 +640,7 @@ Graduate School:
 
 
 ![Action in flow time](flow_action)
+
 <!--./bin/flow -b 1.0 -L 128 -o /dev/null  86.58s user 0.90s system 98% cpu 1:29.18 total-->
 
 # February 10
@@ -656,6 +658,14 @@ Graduate School:
 - Gradient Flow
     - Normalize $\chi_m$ in terms of $L^4$.
     - Run in strong correlation regime.
+
+# February 14
+- After adjusting Wolff algorithm, plot looks better.
+    - I was taking flipping $\phi\rightarrow-\phi$ instead of just flipping along projection vector.
+    - Also, there was an issue in $\Delta S$.
+
+![Internal Energy, fixed Wolff algorithm](internal_energy3)
+    
 
 
 # References

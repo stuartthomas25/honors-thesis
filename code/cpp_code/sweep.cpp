@@ -97,9 +97,6 @@ vector<int> Sweeper::full_neighbors(int site) {
 }
 
 
-double Sweeper::lagrangian(Phi phi, Phi nphi_sum) {
-    return beta * (D - phi * nphi_sum); // note that the sum over dimension has already been made
-}
 
 double Sweeper::rand_dist(double r) {
     return 3 * r - 1.5;
@@ -222,23 +219,28 @@ vector<measurement> Sweeper::full_sweep(const sweep_args& args = sweep_args()) {
             //GifWriteFrame(&gif_writer, white_vec.data(), DIM, DIM, gif_delay); // add one white frame after thermalization
 
         if (i%args.record_rate==0 && i>=args.thermalization) {
-            phibar.init_as_zero();
+            //phibar.init_as_zero();
             chi_m = 0;
             for (const Phi& phi : lat) {
-                phibar += phi;
+                //phibar += phi;
                 for (const Phi& phi2 : lat) {
                     chi_m += phi2*phi;
                 }
             }
-            measurement aMeasurement = {phibar*norm_factor, action, chi_m};
+            //for (const Phi& phi : lat) {
+                //chi_m += phi*(lat[0]);
+            //}
+            measurement aMeasurement = {action, chi_m};
             measurements.push_back(aMeasurement);
-            if (gif) write_gif_frame(lat, &gif_writer, gif_delay);
+            //if (gif) write_gif_frame(lat, &gif_writer, gif_delay);
             
         }
 
         if (i%args.cluster_rate==0) {
             //cout << "Wolff: " << action << " vs " << full_action() << endl;
+            if (gif) write_gif_frame(lat, &gif_writer, gif_delay);
             wolff(); 
+            if (gif) write_gif_frame(lat, &gif_writer, gif_delay);
             //assert_action();
             //if (gif) write_gif_frame(this, &gif_writer, gif_delay);
             //cout << "Wolff: " << action << " vs " << full_action() << endl;
@@ -311,26 +313,40 @@ int randint(int n) {
     return rand() % n; // may want to replace this with something better later    
 }
 
-double Sweeper::Padd(Phi phi_a, Phi phi_b){
-    return 1 - exp(-2*(phi_a*phi_b)); // Schaich Eq. 7.17, promoted for vectors
+double Sweeper::lagrangian(Phi phi, Phi nphi_sum) {
+    // S[phi] = beta/2 int (dphi . dphi)
+    return beta * (D - phi * nphi_sum); // note that the sum over dimension has already been made
 }
 
-unordered_set <int> Sweeper::generate_cluster(int seed, bool accept_all) {
+double Sweeper::Padd(Phi dphi, Phi phi_b){
+
+    //double dS = 2 * beta * (phi_a * phi_b); 
+    double dS = -beta * (dphi * phi_b); 
+    return 1 - exp(-dS); // Schaich Eq. 7.17, promoted for vectors
+}
+
+unordered_set <int> Sweeper::generate_cluster(int seed, Phi r, bool accept_all) {
     int s, c, i;
-    Phi phi_a, phi_b;
+    Phi phi_a, phi_b, dphi;
+
+    double cumsum_dS = 0;
 
     double Padd_val;
-    stack <tuple<int, Phi>> to_test;
+    stack <tuple<int, double>> to_test; // (site, previous r_proj
     unordered_set <int> cluster;
 
     phi_a = lat[seed];
     
-    Phi r = random_phi();
-    double r_projection = phi_a * r;
-    double proj_sign = sign(r_projection);
-    to_test.push(make_tuple(seed, phi_a * numeric_limits<double>::max() )); // site and phi value, using infinity to ensure Padd=1 for first addition
+    double r_proj_a = phi_a * r;
+    double r_proj_b;
+    double proj_sign = sign(r_proj_a);
+
+    //to_test.push(make_tuple(seed, phi_a * numeric_limits<double>::max() )); // site and phi value, using infinity to ensure Padd=1 for first addition
+    to_test.push(make_tuple(seed, 0. )); // site and r_projection. r_projection is overridden for seed
+    bool first = true;
     while (to_test.size()>0) {
-        tie(s, phi_a) = to_test.top();
+        tie(s, r_proj_a) = to_test.top();
+        dphi = -2 * r_proj_a * r;
         to_test.pop();
 
         if (cluster.find(s)!=cluster.end()) { 
@@ -338,17 +354,25 @@ unordered_set <int> Sweeper::generate_cluster(int seed, bool accept_all) {
         }
 
         phi_b = lat[s];
-        if (sign(r * phi_b) == proj_sign) {
-            Padd_val = Padd(phi_a, phi_b);
-            if (accept_all || randf() < Padd_val) {
+        r_proj_b = phi_b * r;
+        if (sign(r_proj_b) == proj_sign) {
+            if (accept_all || first || randf() < Padd(dphi, phi_b)) {
                 cluster.insert(s);
                 for (const int n : lat.neighbor_map[s]){
-                    to_test.push( make_tuple(n, phi_b) );
+                    to_test.push( make_tuple(n, r_proj_b) );
                 }
+                //if (s == seed) {
+                    //cout << "SEED" << endl;
+                    //cumsum_dS += 2 * beta * (lat[seed] * phi_b);
+                //} else { 
+                    //cumsum_dS += 2 * beta * (phi_a * phi_b);
+                //}
             }
 
         }
+        if (first) first = !first;
     }
+    //cout << "cumsum_dS: " << cumsum_dS << endl;
     return cluster;
 }
 
@@ -359,23 +383,25 @@ void Sweeper::wolff() {
     int neighbors[4];
     int n, i, c;
 
-    cluster = this->generate_cluster(seed, false);
+    Phi r = random_phi();
+    cluster = generate_cluster(seed, r, false);
     
     double dS = 0;
-    Phi phi;
+    Phi phi, dphi;
 
 
-    unordered_set<int>::iterator it;
-    for (it = cluster.begin(); it != cluster.end(); ++it) {
-        c = *it;
+    for (const int c : cluster) {
         phi = lat[c];
-        lat[c] = -phi;
+        dphi = -2 * (phi * r) * r;
+        lat[c] = phi + dphi;
         for (const int n : lat.neighbor_map[c]) {
-            dS += 2 * beta * (lat[n] * phi);
+            dS -= beta * (lat[n] * dphi);
         }
     }
 
     action+=dS;
+    //cout << "dS: " << dS << endl;
+    assert_action();
 
 }
 
@@ -383,6 +409,7 @@ void Sweeper::broadcast_lattice() {
     if (size_Of_Cluster>1) {
         const int raw_data_len = DIM*DIM*N;
         double raw_data[raw_data_len];
+
         if (process_Rank == MASTER) {
             for (int i = 0; i < raw_data_len; i++) {
                 raw_data[i] = lat[i/N][i%N];
@@ -495,6 +522,8 @@ void Sweeper::flow(double t) {
     double h = 0.01; // aka dt
     double h_2 = h/2;
     double t_ = 0;
+    double chi_m;
+    double S;
     Lattice2D flowed_lat(lat);
     Lattice2D k1, k2, k3, k4;
 
@@ -525,27 +554,23 @@ void Sweeper::flow(double t) {
         flowed_lat += k2;
         flowed_lat += k3;
         flowed_lat += k4;
-
-        //cout << flowed_lat[0] << endl;
-        //for (auto n : flowed_lat.neighbor_map[0]) {
-            //cout << flowed_lat[n] << "\t";
-        //}
-        //cout << endl;
-        cout << t_ << " " << flowed_lat.full_action(Sweeper::lagrangian) << endl;
-        //cout << endl;
-
-        //deriv(k1, t_,     flowed_lat, h);
-
-        //cout << flowed_lat[0] << endl;
-        //cout << k1[0] << endl;
-        //flowed_lat += k1;
-        //cout << flowed_lat[0] << endl;
-        //cout << endl;
         
         // Normalize phi
         for (Phi& phi : flowed_lat) {
             phi /= sqrt(phi.norm_sq());
         }
+
+
+        chi_m = 0;
+        for (const Phi& phi : flowed_lat) {
+            //phibar += phi;
+            for (const Phi& phi2 : flowed_lat) {
+                chi_m += phi2*phi;
+            }
+        }
+        S = flowed_lat.full_action(Sweeper::lagrangian);
+        
+        cout << t_ << " " << S << " " << chi_m << endl;
 
         t_ += h;
 
