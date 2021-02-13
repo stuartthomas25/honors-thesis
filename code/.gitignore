@@ -8,3 +8,5 @@ ppython
 data/**
 data
 *.o*
+outputs
+inputs
