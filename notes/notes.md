@@ -550,8 +550,7 @@ Graduate School:
     - What is Q?
         - Global operator
         - $\chi$: topological suscpetibility
-
-    - Wedge operator ($\wedge$).
+- Wedge operator ($\wedge$).
         - Does it act in real space or spin space?
         - Must do further research.
 
@@ -659,13 +658,23 @@ Graduate School:
     - Normalize $\chi_m$ in terms of $L^4$.
     - Run in strong correlation regime.
 
-# February 14
+# February 15
 - After adjusting Wolff algorithm, plot looks better.
     - I was taking flipping $\phi\rightarrow-\phi$ instead of just flipping along projection vector.
     - Also, there was an issue in $\Delta S$.
 
 ![Internal Energy, fixed Wolff algorithm](internal_energy3)
-    
+
+Todo:
+    - Gradient flow:
+        - Run in strong correlation regime.
+    - Autocorrelation time: 
+        - Reproduce autocorrelation with internal energy and put figure in notes.
+    - Implement the local topological density.
+
+- Don't worry too much about the exact solution.
+
+# February 17
 
 
 # References
