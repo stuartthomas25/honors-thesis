@@ -11,21 +11,31 @@
 #include <iomanip>
 #include <ostream>
 #include <memory>
+#include <string>
 
 #include "constants.h"
 #include "mpi.h"
 #include "phi.h"
 #include "lattice.h"
 
+
 using namespace std;
 
 enum ClusterAlgorithm { WOLFF, SWENDSEN_WANG };
 
-struct measurement {
-    //Phi phibar;
-    double action;
-    double chi_m;
+
+class Recorder {
+    typedef double (*ObservableFunc) (Lattice2D& lat);
+    vector<double> measurements;
+    vector<ObservableFunc> observables;
+    public:
+        Recorder(vector<ObservableFunc> some_observables);
+        void reserve(size_t size);
+        int size();
+        void record(Lattice2D& lat);
+        void write(string filename);
 };
+
 
 struct sweep_args {
     int sweeps;
@@ -64,11 +74,11 @@ class Sweeper {
         auto static constexpr gif_filename = "lattice.gif";
         int gif_delay = 10;
         vector<int> full_neighbors(int site);
+        Plaquette plaquette(int site);
 
     public:
         const int DIM;
         Lattice2D lat;
-        double action;
 
 
         static double beta;
@@ -85,7 +95,7 @@ class Sweeper {
         Phi proj_vec();
         Phi random_phi();
 
-        vector<measurement> full_sweep(const sweep_args& args);
+        void full_sweep(Recorder* recorder, const sweep_args& args);
         tuple<vector<Phi>, double> sweep(COLOR color);
         void wolff();
 

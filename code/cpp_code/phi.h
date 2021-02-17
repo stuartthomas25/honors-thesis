@@ -17,12 +17,14 @@ class Phi {
         double norm_sq() const;
         Phi& operator+=(const Phi& other);
         Phi& operator*=(const double & a);
+        Phi& operator&=(const double & a);
         Phi& operator/=(const double & a);
 
         Phi operator+ (const Phi & phi) const;
         Phi operator- (const Phi & phi) const;
         Phi operator- () const;
-        double operator* (const Phi & phi) const;
+        double operator* (const Phi & phi) const; // Dot product
+        Phi operator& (const Phi & phi) const; // Cross product
         Phi operator* (const double & a) const;
         friend ostream& operator<< (ostream& os, const Phi & aPhi);
         double operator[] (int i) const;

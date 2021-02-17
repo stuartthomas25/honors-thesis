@@ -62,6 +62,17 @@ Phi Phi::operator- () const {
     }
     return new_phi;
 }
+
+Phi Phi::operator& (const Phi & other) const {
+    Phi new_phi;
+    new_phi[0] = phi[1] * other[2] - phi[2] * other[1];
+    new_phi[1] = phi[2] * other[0] - phi[0] * other[2];
+    new_phi[2] = phi[0] * other[1] - phi[1] * other[0];
+    return new_phi;
+
+
+}
+
 double Phi::operator* (const Phi & aPhi) const{
     //dot product
     double dot = 0;
@@ -77,8 +88,8 @@ Phi Phi::operator* (const double & a) const{
         new_phi[i] = phi[i] * a;
     }
     return new_phi;
-
 }
+
 void Phi::print(){
 }
 

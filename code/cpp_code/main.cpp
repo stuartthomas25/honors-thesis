@@ -12,6 +12,7 @@
 #include "phi.h"
 #include "sweep.h"
 #include "yaml/Yaml.hpp"
+#include "observables.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -81,7 +82,6 @@ int main(int argc, char *argv[]) {
         //}
     /*}*/
 
-    double action;
 
     srand(time(NULL)); rand();
 
@@ -90,14 +90,16 @@ int main(int argc, char *argv[]) {
 
     //tie(output, dS) = sweeper.sweep(data, sites);
     
-    ofstream outputfile;
-    outputfile.open(filename);
-
-
     Sweeper sweeper(dim, MPI_COMM_WORLD, gif);
 
     auto start = high_resolution_clock::now();
     int sweeps = record_rate * measurements + thermalization;
+
+    Recorder recorder({
+                observables::action, 
+                observables::Q
+            });
+    recorder.reserve(measurements);
 
     sweep_args args {
         .sweeps = sweeps,
@@ -105,23 +107,16 @@ int main(int argc, char *argv[]) {
         .record_rate = record_rate,
         .progress = progress
     };
-    vector<measurement> meas_data = sweeper.full_sweep(args);
+
+    sweeper.full_sweep(&recorder, args);
     
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<seconds>(stop - start); 
     
     if (args.progress) {
-        cout << meas_data.size() << " measurements" << endl;
+        cout << recorder.size() << " measurements" << endl;
     }
-    avg_mag = 0;
-    for (measurement m : meas_data) {
-        outputfile << m.action << ", ";
-        //outputfile << m.phibar << ", ";
-        outputfile << m.chi_m;
-        outputfile << endl;
-    }
-
-    outputfile.close();
+    recorder.write(filename);
 
     cout << '\r' << "Wrote to " << filename << " in " << duration.count() << "s   \n\n";
 

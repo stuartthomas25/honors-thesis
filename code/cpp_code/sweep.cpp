@@ -6,12 +6,46 @@
 #include "progress.cpp"
 #include <assert.h>
 #include <stdlib.h>
+#include <math.h>
+#include <fstream>
 
 #define VERIFY_ACTION 0
 
 using namespace std;
 
 typedef int site;
+
+Recorder::Recorder(vector<ObservableFunc> some_observables) {
+    observables = some_observables;
+}
+
+void Recorder::record(Lattice2D& lat) {
+    for (const auto& f : observables) {
+        measurements.push_back( f(lat) );
+    };
+}
+
+void Recorder::reserve(size_t size) {
+    return measurements.reserve(observables.size() * size);
+}
+
+int Recorder::size() {
+    return measurements.size() / observables.size();
+}
+
+void Recorder::write(string filename) {
+    ofstream outputfile;
+    outputfile.open(filename);
+
+    for (int i=0; i<measurements.size(); i++) {
+        if ( (i+1)%observables.size() != 0 ) {
+            outputfile << measurements[i] << ", ";
+        } else {
+            outputfile << measurements[i] << endl;
+        };
+    }
+    outputfile.close();
+}
 
 double Sweeper::beta;
 
@@ -33,6 +67,7 @@ Sweeper::Sweeper (int DIM, MPI_Comm c, bool makeGif) :
             lat[site] = new_value(zero_phi);
             
             lat.neighbor_map[site] = full_neighbors(site); 
+            lat.plaquette_map[site] = plaquette(site); 
 
             // generate MPI assignments
             if (site / (2*sites_per_node) == process_Rank) { // Factor of 2 for checkerboard
@@ -45,7 +80,7 @@ Sweeper::Sweeper (int DIM, MPI_Comm c, bool makeGif) :
         }
     }
 
-    action = full_action(); 
+    lat.action = full_action(); 
 
     int offset = process_Rank *  sites_per_node;
 
@@ -85,7 +120,6 @@ int Sweeper::wrap( int c) {
 }
 
 vector<int> Sweeper::full_neighbors(int site) {
-
     int x = site % DIM;
     int y = site / DIM;
     vector<int> neighbors; 
@@ -96,6 +130,15 @@ vector<int> Sweeper::full_neighbors(int site) {
     return neighbors;
 }
 
+Plaquette Sweeper::plaquette(int site) {
+    int x = site % DIM;
+    int y = site / DIM;
+    return make_tuple(  x + DIM * y,
+                        wrap(x+1) + DIM * y,
+                        x + DIM * wrap(y+1),
+                        wrap(x+1) + DIM * wrap(y+1)
+                     );
+}
 
 
 double Sweeper::rand_dist(double r) {
@@ -167,24 +210,24 @@ void Sweeper::assert_action(double tol) {
     double fa;
     if (VERIFY_ACTION) {
         fa = full_action();
-        if (abs(fa-action)>tol) {
-            cout << "ASSERT ACTION FAILED (" << action << " != " << fa << ")\n";
+        if (abs(fa-lat.action)>tol) {
+            cout << "ASSERT ACTION FAILED (" << lat.action << " != " << fa << ")\n";
             exit(1);
         } else {
-            cout << "assert action passed (" << action << " == " << fa << ")\n";
+            cout << "assert action passed (" << lat.action << " == " << fa << ")\n";
 
         }
     }
 }
 
-vector<measurement> Sweeper::full_sweep(const sweep_args& args = sweep_args()) {
+
+void Sweeper::full_sweep(Recorder* recorder, const sweep_args& args = sweep_args()) {
    
     if (args.cluster_algorithm != WOLFF) throw invalid_argument("Currently, Wolff is the only allowed algorithm");
 
     shared_ptr<progress_bar> progress;
     progress = args.progress ? make_shared<progress_bar>(cout, 70u, "Working") :  nullptr; 
 
-    vector<measurement> measurements;
     Lattice2D dphis;
     double dS;
     Phi phibar;
@@ -219,19 +262,7 @@ vector<measurement> Sweeper::full_sweep(const sweep_args& args = sweep_args()) {
             //GifWriteFrame(&gif_writer, white_vec.data(), DIM, DIM, gif_delay); // add one white frame after thermalization
 
         if (i%args.record_rate==0 && i>=args.thermalization) {
-            //phibar.init_as_zero();
-            chi_m = 0;
-            for (const Phi& phi : lat) {
-                //phibar += phi;
-                for (const Phi& phi2 : lat) {
-                    chi_m += phi2*phi;
-                }
-            }
-            //for (const Phi& phi : lat) {
-                //chi_m += phi*(lat[0]);
-            //}
-            measurement aMeasurement = {action, chi_m};
-            measurements.push_back(aMeasurement);
+            recorder->record(lat);
             //if (gif) write_gif_frame(lat, &gif_writer, gif_delay);
             
         }
@@ -249,7 +280,6 @@ vector<measurement> Sweeper::full_sweep(const sweep_args& args = sweep_args()) {
 
     }
     if (gif) GifEnd(&gif_writer);
-    return measurements;
 
 }
 
@@ -399,7 +429,7 @@ void Sweeper::wolff() {
         }
     }
 
-    action+=dS;
+    lat.action+=dS;
     //cout << "dS: " << dS << endl;
     assert_action();
 
@@ -418,7 +448,7 @@ void Sweeper::broadcast_lattice() {
 
 
         MPI_Bcast(&raw_data, raw_data_len, MPI_DOUBLE, MASTER, MPI_COMM_WORLD);
-        MPI_Bcast(&action, 1, MPI_INT, MASTER, MPI_COMM_WORLD);
+        MPI_Bcast(&lat.action, 1, MPI_INT, MASTER, MPI_COMM_WORLD);
 
 
         if (process_Rank != MASTER) {
@@ -456,7 +486,7 @@ void Sweeper::collect_changes(vector<Phi> dphis, double dS, COLOR color){
         }
 
         for (int i = 0; i<size_Of_Cluster; i++) {
-            action += recv_actions[i];
+            lat.action += recv_actions[i];
         }
     }
 }

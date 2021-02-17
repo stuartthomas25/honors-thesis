@@ -6,6 +6,8 @@
 #include <vector>
 #include <unordered_map>
 
+typedef tuple<int,int,int,int> Plaquette;
+
 using namespace std;
 
 class Lattice2D {
@@ -14,6 +16,8 @@ class Lattice2D {
     public:
         static int L;
         static unordered_map<int,vector<int>> neighbor_map;
+        static unordered_map<int,Plaquette> plaquette_map;
+        double action;
 
         vector<Phi> vec() const;
 
@@ -38,5 +42,6 @@ class Lattice2D {
         const_iterator cend() const;
 
         double full_action(double lagrangian(Phi, Phi));
+
 };
 #endif

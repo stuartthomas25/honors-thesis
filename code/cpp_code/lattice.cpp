@@ -5,6 +5,7 @@
 
 int Lattice2D::L;
 unordered_map<int,vector<int>> Lattice2D::neighbor_map;
+unordered_map<int, Plaquette> Lattice2D::plaquette_map;
 
 Lattice2D::Lattice2D() {
     data.resize(L*L);
