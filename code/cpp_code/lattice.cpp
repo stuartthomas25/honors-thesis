@@ -13,6 +13,7 @@ Lattice2D::Lattice2D() {
     
 Lattice2D::Lattice2D(const Lattice2D& other) {
     data = other.vec();
+    action = other.action;
 }
 
 vector<Phi> Lattice2D::vec() const { return data; }

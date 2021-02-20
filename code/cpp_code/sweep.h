@@ -22,6 +22,7 @@
 using namespace std;
 
 enum ClusterAlgorithm { WOLFF, SWENDSEN_WANG };
+typedef int site;
 
 
 class Recorder {
@@ -32,7 +33,7 @@ class Recorder {
         Recorder(vector<ObservableFunc> some_observables);
         void reserve(size_t size);
         int size();
-        void record(Lattice2D& lat);
+        void record(Lattice2D& lat, double x);
         void write(string filename);
 };
 
@@ -42,6 +43,7 @@ struct sweep_args {
     int thermalization;
     int record_rate;
     ClusterAlgorithm cluster_algorithm = WOLFF; 
+    vector<double> ts;
     int cluster_rate = 5;
     bool progress = true;
 };
@@ -56,7 +58,7 @@ class Sweeper {
         white
     };
     
-    unordered_map<COLOR, vector<int>> mpi_assignments;
+    unordered_map<COLOR, vector<site>*> mpi_assignments;
 
     private:
         static int get_rank(MPI_Comm c) {
@@ -73,8 +75,11 @@ class Sweeper {
         bool gif;
         auto static constexpr gif_filename = "lattice.gif";
         int gif_delay = 10;
-        vector<int> full_neighbors(int site);
-        Plaquette plaquette(int site);
+        vector<site> full_neighbors(site aSite);
+        Plaquette plaquette(site aSite);
+        vector<Phi> dphis;
+        Lattice2D flowed_lat;
+        Lattice2D k1, k2, k3, k4;
 
     public:
         const int DIM;
@@ -84,11 +89,11 @@ class Sweeper {
         static double beta;
         Sweeper();
         ~Sweeper();
-        Sweeper(int DIM, MPI_Comm c, bool makeGif);
+        Sweeper(int DIM, MPI_Comm c);
 
         double full_action();
         void assert_action(double tol=0.001);
-        int wrap(int c);
+        int wrap(site c);
         static double lagrangian(Phi phi, Phi nphi_sum);
         double rand_dist(double r);
         Phi new_value(Phi old_phi);
@@ -96,16 +101,16 @@ class Sweeper {
         Phi random_phi();
 
         void full_sweep(Recorder* recorder, const sweep_args& args);
-        tuple<vector<Phi>, double> sweep(COLOR color);
+        double sweep(COLOR color);
         void wolff();
 
         void broadcast_lattice();
-        void collect_changes(vector<Phi> dphis, double dS, COLOR color);
+        void collect_changes(double dS, COLOR color);
 
         double Padd(Phi dphi, Phi phi_b);
         unordered_set<int> generate_cluster(int seed, Phi r, bool accept_all);
 
-        void flow(double t); 
+        void flow(vector<double> ts, Recorder* recorder=nullptr); 
 
 };
 

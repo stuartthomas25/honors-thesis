@@ -10,27 +10,28 @@
 #include <fstream>
 
 #define VERIFY_ACTION 0
+//#define GIF 0
 
 using namespace std;
 
-typedef int site;
 
 Recorder::Recorder(vector<ObservableFunc> some_observables) {
     observables = some_observables;
 }
 
-void Recorder::record(Lattice2D& lat) {
+void Recorder::record(Lattice2D& lat, double x=0) {
+    measurements.push_back( x );
     for (const auto& f : observables) {
         measurements.push_back( f(lat) );
     };
 }
 
 void Recorder::reserve(size_t size) {
-    return measurements.reserve(observables.size() * size);
+    return measurements.reserve((observables.size()+1) * size);
 }
 
 int Recorder::size() {
-    return measurements.size() / observables.size();
+    return measurements.size() / (observables.size() + 1);
 }
 
 void Recorder::write(string filename) {
@@ -38,7 +39,7 @@ void Recorder::write(string filename) {
     outputfile.open(filename);
 
     for (int i=0; i<measurements.size(); i++) {
-        if ( (i+1)%observables.size() != 0 ) {
+        if ( (i+1)%(observables.size()+1) != 0 ) {
             outputfile << measurements[i] << ", ";
         } else {
             outputfile << measurements[i] << endl;
@@ -49,32 +50,36 @@ void Recorder::write(string filename) {
 
 double Sweeper::beta;
 
-Sweeper::Sweeper (int DIM, MPI_Comm c, bool makeGif) : 
+Sweeper::Sweeper (int DIM, MPI_Comm c) : 
     process_Rank(get_rank(c)), 
     size_Of_Cluster(get_size(c)), 
     sites_per_node((DIM*DIM)/2 / get_size(c)),
-    DIM{DIM},
-    gif{makeGif}
+    DIM{DIM}
 {
     // generate lattice
     array<double, N> zero_array = {};
     Phi zero_phi(zero_array);
 
-    int site;
+    dphis.resize(sites_per_node);
+
+    mpi_assignments[COLOR::black] = new vector<site>;
+    mpi_assignments[COLOR::white] = new vector<site>;
+
+    site s;
     for (int i = 0; i<DIM; i++){
         for (int j = 0; j<DIM; j++) {
-            site = i*DIM + j;
-            lat[site] = new_value(zero_phi);
+            s = i*DIM + j;
+            lat[s] = new_value(zero_phi);
             
-            lat.neighbor_map[site] = full_neighbors(site); 
-            lat.plaquette_map[site] = plaquette(site); 
+            lat.neighbor_map[s] = full_neighbors(s); 
+            lat.plaquette_map[s] = plaquette(s); 
 
             // generate MPI assignments
-            if (site / (2*sites_per_node) == process_Rank) { // Factor of 2 for checkerboard
+            if (s / (2*sites_per_node) == process_Rank) { // Factor of 2 for checkerboard
                 if ( (i+j)%2 ) {
-                    mpi_assignments[COLOR::black].push_back(site);
+                    mpi_assignments[COLOR::black]->push_back(s);
                 } else {
-                    mpi_assignments[COLOR::white].push_back(site);
+                    mpi_assignments[COLOR::white]->push_back(s);
                 }   
             }
         }
@@ -86,7 +91,11 @@ Sweeper::Sweeper (int DIM, MPI_Comm c, bool makeGif) :
 
 }
 
-Sweeper::~Sweeper() = default;
+Sweeper::~Sweeper() {
+    delete mpi_assignments[COLOR::black];
+    delete mpi_assignments[COLOR::white];
+
+}
 
 void print(std::vector <Phi> const &a) {
    for(int i=0; i < a.size(); i++)
@@ -95,9 +104,10 @@ void print(std::vector <Phi> const &a) {
 }
 
 double Sweeper::full_action() {
-    int site, i;
+    site s;
+    int i;
     Phi forward_nphi_sum;
-    vector<int> neighbors;
+    vector<site> neighbors;
     double S = 0;
     // initial action
     for (int s=0; s<DIM*DIM; s++) {
@@ -119,10 +129,10 @@ int Sweeper::wrap( int c) {
 
 }
 
-vector<int> Sweeper::full_neighbors(int site) {
-    int x = site % DIM;
-    int y = site / DIM;
-    vector<int> neighbors; 
+vector<site> Sweeper::full_neighbors(site aSite) {
+    int x = aSite % DIM;
+    int y = aSite / DIM;
+    vector<site> neighbors; 
     neighbors.push_back(wrap(x-1) + DIM * y);
     neighbors.push_back(x + DIM * wrap(y-1));
     neighbors.push_back(wrap(x+1) + DIM * y);
@@ -130,13 +140,13 @@ vector<int> Sweeper::full_neighbors(int site) {
     return neighbors;
 }
 
-Plaquette Sweeper::plaquette(int site) {
-    int x = site % DIM;
-    int y = site / DIM;
+Plaquette Sweeper::plaquette(site aSite) {
+    int x = aSite % DIM;
+    int y = aSite / DIM;
     return make_tuple(  x + DIM * y,
                         wrap(x+1) + DIM * y,
-                        x + DIM * wrap(y+1),
-                        wrap(x+1) + DIM * wrap(y+1)
+                        wrap(x+1) + DIM * wrap(y+1),
+                        x + DIM * wrap(y+1)
                      );
 }
 
@@ -228,20 +238,21 @@ void Sweeper::full_sweep(Recorder* recorder, const sweep_args& args = sweep_args
     shared_ptr<progress_bar> progress;
     progress = args.progress ? make_shared<progress_bar>(cout, 70u, "Working") :  nullptr; 
 
-    Lattice2D dphis;
     double dS;
     Phi phibar;
     double chi_m;
 
     int s;
 
-    GifWriter gif_writer;
-    if (gif) GifBegin(&gif_writer, gif_filename, DIM, DIM, gif_delay);
 
     vector<uint8_t> white_vec(DIM*DIM*4,255);
 
     double norm_factor = 1 / (double) (DIM*DIM);
-    if (gif) write_gif_frame(lat, &gif_writer, gif_delay);
+    #ifdef GIF
+        GifWriter gif_writer;
+        GifBegin(&gif_writer, gif_filename, DIM, DIM, gif_delay);
+        write_gif_frame(lat, &gif_writer, gif_delay);
+    #endif
     COLOR colors[2] = {COLOR::white, COLOR::black};
     for (int i=0; i<args.sweeps; i++) {
         for (const auto &color : colors) {
@@ -252,8 +263,8 @@ void Sweeper::full_sweep(Recorder* recorder, const sweep_args& args = sweep_args
             broadcast_lattice();
 
             //cout << "Met: " << action << " vs " << full_action() << endl;
-            auto [dphis, dS] = sweep(color);
-            collect_changes(dphis, dS, color);
+            dS = sweep(color);
+            collect_changes(dS, color);
             //assert_action();
         }
         //cout << "Met: " << action << " vs " << full_action() << endl;
@@ -262,16 +273,19 @@ void Sweeper::full_sweep(Recorder* recorder, const sweep_args& args = sweep_args
             //GifWriteFrame(&gif_writer, white_vec.data(), DIM, DIM, gif_delay); // add one white frame after thermalization
 
         if (i%args.record_rate==0 && i>=args.thermalization) {
-            recorder->record(lat);
+            flow(args.ts, recorder);
             //if (gif) write_gif_frame(lat, &gif_writer, gif_delay);
-            
         }
 
         if (i%args.cluster_rate==0) {
             //cout << "Wolff: " << action << " vs " << full_action() << endl;
-            if (gif) write_gif_frame(lat, &gif_writer, gif_delay);
+            #ifdef GIF
+                write_gif_frame(lat, &gif_writer, gif_delay);
+            #endif
             wolff(); 
-            if (gif) write_gif_frame(lat, &gif_writer, gif_delay);
+            #ifdef GIF
+                write_gif_frame(lat, &gif_writer, gif_delay);
+            #endif
             //assert_action();
             //if (gif) write_gif_frame(this, &gif_writer, gif_delay);
             //cout << "Wolff: " << action << " vs " << full_action() << endl;
@@ -279,37 +293,36 @@ void Sweeper::full_sweep(Recorder* recorder, const sweep_args& args = sweep_args
         }
 
     }
-    if (gif) GifEnd(&gif_writer);
+    #ifdef GIF
+        GifEnd(&gif_writer);
+    #endif
 
 }
 
 
-tuple<vector<Phi>, double> Sweeper::sweep(COLOR color){
+double Sweeper::sweep(COLOR color){
 
-    vector<Phi> dphis(sites_per_node);
 
     double tot_dS = 0;
     double dS, new_L, old_L, A, r;
     Phi newphi, dphi, phi, backward_nphi_sum, forward_nphi_sum;
-    int i, site;
-    vector<int> neighbors;
+    int i; 
+    site s;
+    vector<site> neighbors;
 
     array<double, N> zero_array = {};
     Phi zero_phi(zero_array);
 
     for (int i = 0; i<sites_per_node; i++){
-        site = mpi_assignments[color] [i];
+        s = mpi_assignments[color]->at(i);
 
-        phi = lat[site];
+        phi = lat[s];
 
-        neighbors = lat.neighbor_map[site];
+        neighbors = lat.neighbor_map[s];
         backward_nphi_sum = lat[neighbors[0]] + lat[neighbors[1]];
         forward_nphi_sum  = lat[neighbors[2]] + lat[neighbors[3]];
 
         newphi = new_value(phi);
-        if (abs(newphi[0])>1e+10){
-            exit(1);
-        }
 
         old_L = lagrangian( phi, forward_nphi_sum);
         new_L = lagrangian( newphi, forward_nphi_sum);
@@ -322,15 +335,13 @@ tuple<vector<Phi>, double> Sweeper::sweep(COLOR color){
         r = randf();
 
         if (dS < 0 || r <= A) { 
-        //if (dS < 0 ) { 
             dphis[i] = dphi;
             tot_dS += dS;
         } else {
             dphis[i] = zero_phi;
         }
     }
-    return make_tuple(dphis, tot_dS);
-
+    return tot_dS;
 }
 
 
@@ -460,7 +471,7 @@ void Sweeper::broadcast_lattice() {
 
 }
 
-void Sweeper::collect_changes(vector<Phi> dphis, double dS, COLOR color){
+void Sweeper::collect_changes(double dS, COLOR color){
     const int recv_data_size = N*DIM*DIM/2;
     double send_data[N*sites_per_node];
 
@@ -474,7 +485,7 @@ void Sweeper::collect_changes(vector<Phi> dphis, double dS, COLOR color){
     double recv_data[recv_data_size];
     double recv_actions[size_Of_Cluster];
 
-    MPI_Gather(mpi_assignments[color].data(), sites_per_node, MPI_INT, &recv_sites, sites_per_node, MPI_INT, MASTER, MPI_COMM_WORLD);
+    MPI_Gather(mpi_assignments[color]->data(), sites_per_node, MPI_INT, &recv_sites, sites_per_node, MPI_INT, MASTER, MPI_COMM_WORLD);
     MPI_Gather(&send_data, N*sites_per_node, MPI_DOUBLE, &recv_data, N*sites_per_node, MPI_DOUBLE, MASTER, MPI_COMM_WORLD);
     MPI_Gather(&dS, 1, MPI_DOUBLE, &recv_actions, 1, MPI_DOUBLE, MASTER, MPI_COMM_WORLD);
 
@@ -548,23 +559,31 @@ void deriv(Lattice2D& f, double t, const Lattice2D& yn, double h, const Lattice2
     }
 }
 
-void Sweeper::flow(double t) {
+void Sweeper::flow(vector<double> ts, Recorder* recorder) {
+    // ts must be in ascending order
     double h = 0.01; // aka dt
     double h_2 = h/2;
     double t_ = 0;
     double chi_m;
     double S;
-    Lattice2D flowed_lat(lat);
-    Lattice2D k1, k2, k3, k4;
+
+    auto measurement_iter = ts.begin();
+    double measurement_t = *measurement_iter;
+
+    flowed_lat = lat;
 
     const auto gif_filename = "flow.gif";
     const int gif_delay = 10;
-    GifWriter gif_writer;
-    GifBegin(&gif_writer, gif_filename, DIM, DIM, gif_delay);
+    #ifdef GIF
+        GifWriter gif_writer;
+        GifBegin(&gif_writer, gif_filename, DIM, DIM, gif_delay);
+    #endif
 
-    int counter = 0;
+    #ifdef GIF
+        int counter = 0;
+    #endif
 
-    while (t_<t) {
+    while (true) {
         // Runge Kutta (see http://www.foo.be/docs-free/Numerical_Recipe_In_C/c16-1.pdf)
         // Slight changes for efficency:
         //   - deriv(t, y, h, k) := h * f(t, y + k);
@@ -590,26 +609,25 @@ void Sweeper::flow(double t) {
             phi /= sqrt(phi.norm_sq());
         }
 
+        flowed_lat.action = flowed_lat.full_action(Sweeper::lagrangian);
 
-        chi_m = 0;
-        for (const Phi& phi : flowed_lat) {
-            //phibar += phi;
-            for (const Phi& phi2 : flowed_lat) {
-                chi_m += phi2*phi;
-            }
+        if (t_ == measurement_t) {
+            recorder->record(flowed_lat, measurement_t);
+            measurement_iter++;
+            if (measurement_iter == ts.end()) break; 
+            measurement_t = *(measurement_iter);
         }
-        S = flowed_lat.full_action(Sweeper::lagrangian);
-        
-        cout << t_ << " " << S << " " << chi_m << endl;
 
         t_ += h;
-
-        if (counter % 10 == 0) write_gif_frame(flowed_lat, &gif_writer, gif_delay);
-        counter++;
+        #ifdef GIF
+            if (counter % 10 == 0) write_gif_frame(flowed_lat, &gif_writer, gif_delay);
+            counter++;
+        #endif
     }
 
-    GifEnd(&gif_writer);
-    system("gifsicle --colors 256 --resize 512x512 flow.gif -o flow.gif");
-
+    #ifdef GIF
+        GifEnd(&gif_writer);
+        system("gifsicle --colors 256 --resize 512x512 flow.gif -o flow.gif");
+    #endif
 }
 

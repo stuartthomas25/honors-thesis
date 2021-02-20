@@ -24,9 +24,8 @@ int main(int argc, char *argv[]) {
     char* filename;
     char* in_filename;
     bool progress = true;
-    bool gif = false;
 
-    while ((c = getopt(argc, (char **)argv, "gqi:o:")) != -1) {
+    while ((c = getopt(argc, (char **)argv, "qi:o:")) != -1) {
         switch((char)c) {
             case 'i':    
                 in_filename = optarg;
@@ -36,9 +35,6 @@ int main(int argc, char *argv[]) {
                 break;
             case 'q':
                 progress = false;
-                break;
-            case 'g':
-                gif = true;
                 break;
             default:
                 cout << "Unrecognized argument: " << (char)c << endl;
@@ -90,7 +86,7 @@ int main(int argc, char *argv[]) {
 
     //tie(output, dS) = sweeper.sweep(data, sites);
     
-    Sweeper sweeper(dim, MPI_COMM_WORLD, gif);
+    Sweeper sweeper(dim, MPI_COMM_WORLD);
 
     auto start = high_resolution_clock::now();
     int sweeps = record_rate * measurements + thermalization;
@@ -105,6 +101,7 @@ int main(int argc, char *argv[]) {
         .sweeps = sweeps,
         .thermalization = thermalization,
         .record_rate = record_rate,
+        .ts = {0, 1, 5, 10},
         .progress = progress
     };
 
