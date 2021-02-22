@@ -132,3 +132,13 @@ TODO:
 
          
 
+# February 20
+- Make `mpi_assignments` contain pointers, not the full vector.
+- make `dphis` and instance variable so its not copied every time
+    - This should be a huge performance boost. This was a big oversight.
+- Introduced `flow` into `full_sweep`.
+    - Flow takes vector of times and recorder. Recorder measures when time is in times.
+    - added `ts` to `sweep\_args`.
+
+- replace all `unordered_maps` with `vectors`. Tbh, unordered maps did not make any sense.
+

@@ -676,5 +676,17 @@ Todo:
 
 # February 17
 
+- _Note that a large $\beta$ indicates weak coupling_
+
+Todo:
+- Check that $\beta$ is correct (see above point).
+- Take real ensemble statics on topological charge to check if $\langle Q \rangle = 0$ and measure error.
+    - Run this along the same lines as Bietenholz.
+- Figure out difference in topological susceptibilities.
+- Something weird with autocorrelation, maybe measure every 5 sweeps? This is because the time units are not real.
+    - Also run without cluster update.
+
+<!--# February 22-->
+
 
 # References
