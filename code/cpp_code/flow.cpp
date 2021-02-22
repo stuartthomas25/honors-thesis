@@ -12,6 +12,7 @@
 #include "phi.h"
 #include "sweep.h"
 #include "yaml/Yaml.hpp"
+#include "observables.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -102,7 +103,21 @@ int main(int argc, char *argv[]) {
 
     Sweeper sweeper(dim, MPI_COMM_WORLD, gif);
 
-    sweeper.flow(t);
+    sweep_args args {
+        .sweeps = 1000,
+        .thermalization = 1000,
+        .record_rate = 1,
+        .progress = false
+    };
+
+    Recorder recorder({
+                observables::action, 
+                observables::Q
+            });
+
+    sweeper.full_sweep(nullptr, args);
+    sweeper.flow(t, &recorder);
+    recorder.write(filename);
 
     outputfile.close();
     MPI_Finalize();

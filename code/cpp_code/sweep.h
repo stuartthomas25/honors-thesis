@@ -21,20 +21,26 @@
 
 using namespace std;
 
-enum ClusterAlgorithm { WOLFF, SWENDSEN_WANG };
+enum ClusterAlgorithm { NONE, WOLFF};
 typedef int site;
 
+class BaseObservable {
+    public:
+        virtual double operator()(Lattice2D& lat) const = 0;
+        virtual const string name() const = 0;
+        virtual ~BaseObservable() = default;
+};
 
 class Recorder {
-    typedef double (*ObservableFunc) (Lattice2D& lat);
     vector<double> measurements;
-    vector<ObservableFunc> observables;
+    vector<BaseObservable*> observables;
     public:
-        Recorder(vector<ObservableFunc> some_observables);
+        Recorder(vector<BaseObservable*> some_observables);
         void reserve(size_t size);
         int size();
         void record(Lattice2D& lat, double x);
         void write(string filename);
+        ~Recorder();
 };
 
 
@@ -58,7 +64,7 @@ class Sweeper {
         white
     };
     
-    unordered_map<COLOR, vector<site>*> mpi_assignments;
+    vector<vector<site>*> mpi_assignments;
 
     private:
         static int get_rank(MPI_Comm c) {
@@ -79,6 +85,8 @@ class Sweeper {
         Plaquette plaquette(site aSite);
         vector<Phi> dphis;
         Lattice2D flowed_lat;
+        Lattice2D prev_flowed_lat;
+        Lattice2D flowed_lat_2;
         Lattice2D k1, k2, k3, k4;
 
     public:
@@ -86,7 +94,6 @@ class Sweeper {
         Lattice2D lat;
 
 
-        static double beta;
         Sweeper();
         ~Sweeper();
         Sweeper(int DIM, MPI_Comm c);
@@ -94,7 +101,6 @@ class Sweeper {
         double full_action();
         void assert_action(double tol=0.001);
         int wrap(site c);
-        static double lagrangian(Phi phi, Phi nphi_sum);
         double rand_dist(double r);
         Phi new_value(Phi old_phi);
         Phi proj_vec();
@@ -110,7 +116,8 @@ class Sweeper {
         double Padd(Phi dphi, Phi phi_b);
         unordered_set<int> generate_cluster(int seed, Phi r, bool accept_all);
 
-        void flow(vector<double> ts, Recorder* recorder=nullptr); 
+        void runge_kutta(double t_, double h, Lattice2D& l, bool recycle_k1=false);
+        void flow(vector<double> ts, Recorder* recorder=nullptr, double max_error=0.1); 
 
 };
 

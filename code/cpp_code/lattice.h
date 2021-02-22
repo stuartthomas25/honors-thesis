@@ -4,7 +4,6 @@
 
 #include "phi.h"
 #include <vector>
-#include <unordered_map>
 
 typedef tuple<int,int,int,int> Plaquette;
 
@@ -15,17 +14,21 @@ class Lattice2D {
     datatype data;
     public:
         static int L;
-        static unordered_map<int,vector<int>> neighbor_map;
-        static unordered_map<int,Plaquette> plaquette_map;
+        static double beta;
+        static vector<vector<int>> neighbor_map;
+        static vector<Plaquette> plaquette_map;
         double action;
 
         vector<Phi> vec() const;
+        size_t size() const;
 
         Lattice2D();
         Lattice2D(const Lattice2D& other);
 
         Phi operator[] (int i) const;
         Phi& operator[] (int i);
+        Phi at(int i) const;
+
         Lattice2D& operator+=(const Lattice2D& other);
         Lattice2D& operator*=(const double & factor);
         Lattice2D& operator/=(const double & factor);
@@ -41,7 +44,8 @@ class Lattice2D {
         iterator end();
         const_iterator cend() const;
 
-        double full_action(double lagrangian(Phi, Phi));
+        static double lagrangian(Phi phi, Phi nphi_sum);
+        double full_action();
 
 };
 #endif

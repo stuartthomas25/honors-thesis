@@ -9,20 +9,21 @@
 #include <math.h>
 #include <fstream>
 
-#define VERIFY_ACTION 0
-//#define GIF 0
+//#define VERIFY_ACTION
+//#define GIF
+//#define ACTIONFLOW
+#define ADAPTIVESTEP
 
 using namespace std;
 
-
-Recorder::Recorder(vector<ObservableFunc> some_observables) {
+Recorder::Recorder(vector<BaseObservable*> some_observables) {
     observables = some_observables;
 }
 
 void Recorder::record(Lattice2D& lat, double x=0) {
     measurements.push_back( x );
-    for (const auto& f : observables) {
-        measurements.push_back( f(lat) );
+    for (const BaseObservable* f : observables) {
+        measurements.push_back( (*f)(lat) );
     };
 }
 
@@ -37,10 +38,16 @@ int Recorder::size() {
 void Recorder::write(string filename) {
     ofstream outputfile;
     outputfile.open(filename);
+    outputfile << "tau";
+    for (const auto* obs : observables) {
+        outputfile << "," << obs->name();
+    }
+    outputfile << endl;
+    
 
     for (int i=0; i<measurements.size(); i++) {
         if ( (i+1)%(observables.size()+1) != 0 ) {
-            outputfile << measurements[i] << ", ";
+            outputfile << measurements[i] << ",";
         } else {
             outputfile << measurements[i] << endl;
         };
@@ -48,7 +55,13 @@ void Recorder::write(string filename) {
     outputfile.close();
 }
 
-double Sweeper::beta;
+Recorder::~Recorder() {
+    for (const BaseObservable* f : observables) {
+        delete f;
+    };
+
+}
+
 
 Sweeper::Sweeper (int DIM, MPI_Comm c) : 
     process_Rank(get_rank(c)), 
@@ -62,8 +75,8 @@ Sweeper::Sweeper (int DIM, MPI_Comm c) :
 
     dphis.resize(sites_per_node);
 
-    mpi_assignments[COLOR::black] = new vector<site>;
-    mpi_assignments[COLOR::white] = new vector<site>;
+    mpi_assignments.push_back(new vector<site>);
+    mpi_assignments.push_back(new vector<site>);
 
     site s;
     for (int i = 0; i<DIM; i++){
@@ -71,8 +84,8 @@ Sweeper::Sweeper (int DIM, MPI_Comm c) :
             s = i*DIM + j;
             lat[s] = new_value(zero_phi);
             
-            lat.neighbor_map[s] = full_neighbors(s); 
-            lat.plaquette_map[s] = plaquette(s); 
+            lat.neighbor_map.push_back(full_neighbors(s)); 
+            lat.plaquette_map.push_back(plaquette(s)); 
 
             // generate MPI assignments
             if (s / (2*sites_per_node) == process_Rank) { // Factor of 2 for checkerboard
@@ -114,7 +127,7 @@ double Sweeper::full_action() {
         neighbors = lat.neighbor_map[s];
         forward_nphi_sum  = lat[neighbors[2]] + lat[neighbors[3]];
 
-        S += lagrangian(lat[s], forward_nphi_sum);
+        S += lat.lagrangian(lat[s], forward_nphi_sum);
     }
     return S;
 
@@ -217,23 +230,20 @@ void write_gif_frame(Lattice2D& lat, GifWriter* gif_writer, int delay, double ra
 }
 
 void Sweeper::assert_action(double tol) {
-    double fa;
-    if (VERIFY_ACTION) {
-        fa = full_action();
-        if (abs(fa-lat.action)>tol) {
-            cout << "ASSERT ACTION FAILED (" << lat.action << " != " << fa << ")\n";
-            exit(1);
-        } else {
-            cout << "assert action passed (" << lat.action << " == " << fa << ")\n";
+    double fa = full_action();
+    if (abs(fa-lat.action)>tol) {
+        cout << "ASSERT ACTION FAILED (" << lat.action << " != " << fa << ")\n";
+        exit(1);
+    } else {
+        cout << "assert action passed (" << lat.action << " == " << fa << ")\n";
 
-        }
     }
 }
 
 
 void Sweeper::full_sweep(Recorder* recorder, const sweep_args& args = sweep_args()) {
    
-    if (args.cluster_algorithm != WOLFF) throw invalid_argument("Currently, Wolff is the only allowed algorithm");
+    //if (args.cluster_algorithm != WOLFF) throw invalid_argument("Currently, Wolff is the only allowed algorithm");
 
     shared_ptr<progress_bar> progress;
     progress = args.progress ? make_shared<progress_bar>(cout, 70u, "Working") :  nullptr; 
@@ -265,7 +275,6 @@ void Sweeper::full_sweep(Recorder* recorder, const sweep_args& args = sweep_args
             //cout << "Met: " << action << " vs " << full_action() << endl;
             dS = sweep(color);
             collect_changes(dS, color);
-            //assert_action();
         }
         //cout << "Met: " << action << " vs " << full_action() << endl;
 
@@ -273,11 +282,14 @@ void Sweeper::full_sweep(Recorder* recorder, const sweep_args& args = sweep_args
             //GifWriteFrame(&gif_writer, white_vec.data(), DIM, DIM, gif_delay); // add one white frame after thermalization
 
         if (i%args.record_rate==0 && i>=args.thermalization) {
-            flow(args.ts, recorder);
+            flow(args.ts, recorder, 0.001);
+            #ifdef GIF
+                write_gif_frame(lat, &gif_writer, gif_delay);
+            #endif
             //if (gif) write_gif_frame(lat, &gif_writer, gif_delay);
         }
 
-        if (i%args.cluster_rate==0) {
+        if (i%args.cluster_rate==0 && args.cluster_algorithm == WOLFF) {
             //cout << "Wolff: " << action << " vs " << full_action() << endl;
             #ifdef GIF
                 write_gif_frame(lat, &gif_writer, gif_delay);
@@ -286,7 +298,6 @@ void Sweeper::full_sweep(Recorder* recorder, const sweep_args& args = sweep_args
             #ifdef GIF
                 write_gif_frame(lat, &gif_writer, gif_delay);
             #endif
-            //assert_action();
             //if (gif) write_gif_frame(this, &gif_writer, gif_delay);
             //cout << "Wolff: " << action << " vs " << full_action() << endl;
             
@@ -324,11 +335,11 @@ double Sweeper::sweep(COLOR color){
 
         newphi = new_value(phi);
 
-        old_L = lagrangian( phi, forward_nphi_sum);
-        new_L = lagrangian( newphi, forward_nphi_sum);
+        old_L = lat.lagrangian( phi, forward_nphi_sum);
+        new_L = lat.lagrangian( newphi, forward_nphi_sum);
 
         dphi = newphi - phi;
-        dS = (new_L - old_L) - beta * backward_nphi_sum * dphi;
+        dS = (new_L - old_L) - lat.beta * backward_nphi_sum * dphi;
        
         //cout << old_L << " " << new_L << " " << backward_nphi_sum << endl;
         A = exp(-dS);
@@ -354,15 +365,10 @@ int randint(int n) {
     return rand() % n; // may want to replace this with something better later    
 }
 
-double Sweeper::lagrangian(Phi phi, Phi nphi_sum) {
-    // S[phi] = beta/2 int (dphi . dphi)
-    return beta * (D - phi * nphi_sum); // note that the sum over dimension has already been made
-}
 
 double Sweeper::Padd(Phi dphi, Phi phi_b){
 
-    //double dS = 2 * beta * (phi_a * phi_b); 
-    double dS = -beta * (dphi * phi_b); 
+    double dS = -lat.beta * (dphi * phi_b); 
     return 1 - exp(-dS); // Schaich Eq. 7.17, promoted for vectors
 }
 
@@ -436,13 +442,15 @@ void Sweeper::wolff() {
         dphi = -2 * (phi * r) * r;
         lat[c] = phi + dphi;
         for (const int n : lat.neighbor_map[c]) {
-            dS -= beta * (lat[n] * dphi);
+            dS -= lat.beta * (lat[n] * dphi);
         }
     }
 
     lat.action+=dS;
     //cout << "dS: " << dS << endl;
+#ifdef VERIFY_ACTION
     assert_action();
+#endif
 
 }
 
@@ -517,7 +525,7 @@ double sign(double x){
 //
 //
 
-void deriv(Lattice2D& f, double t, const Lattice2D& yn, double h, const Lattice2D* k = nullptr) {
+inline void deriv(Lattice2D& f, double t, const Lattice2D& yn, double h, const Lattice2D* k = nullptr) {
 
     Phi neighbor_sum; 
     Phi dte;
@@ -530,9 +538,9 @@ void deriv(Lattice2D& f, double t, const Lattice2D& yn, double h, const Lattice2
         neighbor_sum.init_as_zero();
 
         if (k) {
-            e = yn[s] + (*k)[s];
+            e = yn[s] + k->at(s);
             for (site n : f.neighbor_map[s])
-                neighbor_sum += yn[n] + (*k)[n];
+                neighbor_sum += yn[n] + k->at(n);
         } else {
             e = yn[s];
             for (site n : f.neighbor_map[s])
@@ -559,13 +567,46 @@ void deriv(Lattice2D& f, double t, const Lattice2D& yn, double h, const Lattice2
     }
 }
 
-void Sweeper::flow(vector<double> ts, Recorder* recorder) {
+void Sweeper::runge_kutta(double t_, double h, Lattice2D& l, bool recycle_k1) {
+
+        // Runge Kutta (see http://www.foo.be/docs-free/Numerical_Recipe_In_C/c16-1.pdf)
+        // Slight changes for efficency:
+        //   - deriv(t, y, h, k) := h * f(t, y + k);
+        //   - k1 => k1/2; k2 => k2/2
+        
+        if (t_>0) {
+            if (recycle_k1) {
+                k1 /= 2;
+            } else {
+                deriv(k1, t_,     l, h/2);
+            }
+            deriv(k2, t_+h/2, l, h/2, &k1);
+            deriv(k3, t_+h/2, l, h,   &k2);
+            deriv(k4, t_+h,   l, h,   &k3);
+
+            k1 /= 3;
+            k4 /= 6;
+
+            l += k1;
+            l += k2;
+            l += k3;
+            l += k4;
+            
+            // Normalize phi
+            for (Phi& phi : l) {
+                phi /= sqrt(phi.norm_sq());
+            }
+        }
+}
+
+void Sweeper::flow(vector<double> ts, Recorder* recorder, double max_error) {
     // ts must be in ascending order
     double h = 0.01; // aka dt
-    double h_2 = h/2;
     double t_ = 0;
     double chi_m;
     double S;
+
+    double error;
 
     auto measurement_iter = ts.begin();
     double measurement_t = *measurement_iter;
@@ -574,55 +615,76 @@ void Sweeper::flow(vector<double> ts, Recorder* recorder) {
 
     const auto gif_filename = "flow.gif";
     const int gif_delay = 10;
-    #ifdef GIF
+#ifdef GIF
         GifWriter gif_writer;
         GifBegin(&gif_writer, gif_filename, DIM, DIM, gif_delay);
-    #endif
+#endif
 
-    #ifdef GIF
+#ifdef GIF
         int counter = 0;
-    #endif
+#endif
+
+    bool rerun=false;
 
     while (true) {
-        // Runge Kutta (see http://www.foo.be/docs-free/Numerical_Recipe_In_C/c16-1.pdf)
-        // Slight changes for efficency:
-        //   - deriv(t, y, h, k) := h * f(t, y + k);
-        //   - k1 => k1/2; k2 => k2/2
-        
-        deriv(k1, t_,     flowed_lat, h_2);
-        deriv(k2, t_+h_2, flowed_lat, h_2, &k1);
-        deriv(k3, t_+h_2, flowed_lat, h,   &k2);
-        deriv(k4, t_+h,   flowed_lat, h,   &k3);
 
-        k1 /= 3;
-        k2 /= (3/2);
-        k3 /= 3;
-        k4 /= 6;
-
-        flowed_lat += k1;
-        flowed_lat += k2;
-        flowed_lat += k3;
-        flowed_lat += k4;
-        
-        // Normalize phi
-        for (Phi& phi : flowed_lat) {
-            phi /= sqrt(phi.norm_sq());
-        }
-
-        flowed_lat.action = flowed_lat.full_action(Sweeper::lagrangian);
-
-        if (t_ == measurement_t) {
+        if (t_ + h > measurement_t) {
+            runge_kutta(t_, measurement_t-t_, flowed_lat);
             recorder->record(flowed_lat, measurement_t);
+            //cout << "took measurement at " << t_ << endl;
+            t_ = measurement_t;
+
             measurement_iter++;
             if (measurement_iter == ts.end()) break; 
             measurement_t = *(measurement_iter);
-        }
 
-        t_ += h;
-        #ifdef GIF
+        } else {
+#ifdef ADAPTIVESTEP
+            if (!rerun){
+                prev_flowed_lat = flowed_lat;
+                flowed_lat_2 = flowed_lat;
+                runge_kutta(t_, h, flowed_lat);
+            } else {
+                flowed_lat = flowed_lat_2;
+            }
+
+            runge_kutta(t_, h/2, flowed_lat_2, true);
+            runge_kutta(t_+h/2, h/2, flowed_lat_2);
+            
+            error = 0;
+            for (site i=0; i<flowed_lat.size(); i++) {
+                error += (flowed_lat[i] - flowed_lat_2[i]).norm_sq();
+            }
+
+            error = sqrt(error/flowed_lat.size())/15;
+            //cout << "t_: "<<t_<< "\terror: " << error << "\th: " << h << endl;
+            if (error>max_error) {
+                //cout << "RERUN" << endl;
+                rerun=true;
+                h /= 2;
+            } else if (error<max_error/2) {
+                rerun=false;
+                h *=2;
+                t_ += h;
+            } else {
+                rerun=false;
+                t_ += h;
+            }
+
+#else
+            runge_kutta(t_, h, flowed_lat);
+            t_ += h;
+#endif
+        }
+#ifdef ACTIONFLOW
+        flowed_lat.action = flowed_lat.full_action();
+#endif
+
+
+#ifdef GIF
             if (counter % 10 == 0) write_gif_frame(flowed_lat, &gif_writer, gif_delay);
             counter++;
-        #endif
+#endif
     }
 
     #ifdef GIF

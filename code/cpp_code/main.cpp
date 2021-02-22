@@ -10,8 +10,9 @@
 #include <chrono>
 
 #include "phi.h"
-#include "sweep.h"
 #include "yaml/Yaml.hpp"
+#include "sweep.h"
+
 #include "observables.h"
 
 using namespace std;
@@ -52,8 +53,16 @@ int main(int argc, char *argv[]) {
     int thermalization = root["thermalization"].As<int>();
     int record_rate = root["record_rate"].As<int>();
 
+    vector<double> taus;
+    auto iter =  root["taus"].Begin();
+    while (iter != root["taus"].End()) {
+        taus.push_back((*iter).second.As<double>());
+        iter++;
+    }
+
+
     Lattice2D::L = dim;
-    Sweeper::beta = beta;
+    Lattice2D::beta = beta;
     int process_Rank, size_Of_Cluster;
 
     MPI_Init(NULL, NULL); 
@@ -91,18 +100,24 @@ int main(int argc, char *argv[]) {
     auto start = high_resolution_clock::now();
     int sweeps = record_rate * measurements + thermalization;
 
-    Recorder recorder({
-                observables::action, 
-                observables::Q
-            });
+    vector<BaseObservable*> observables{
+        new observables::beta(),
+        new observables::L(),
+        //new observables::chi_m(),
+        new observables::action(), 
+        new observables::Q()
+    };
+
+    Recorder recorder(observables);
     recorder.reserve(measurements);
 
     sweep_args args {
         .sweeps = sweeps,
         .thermalization = thermalization,
         .record_rate = record_rate,
-        .ts = {0, 1, 5, 10},
-        .progress = progress
+        .ts = taus,
+        .progress = progress,
+        .cluster_algorithm = ClusterAlgorithm::NONE
     };
 
     sweeper.full_sweep(&recorder, args);

@@ -22,8 +22,7 @@ actions = []
 phibars = []
 # betas = [0.6, 0.8, 1.0,1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0]
 orig_betas = [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0]
-betas = [1.0, 0.5, 2.5, 1.55, 1.65, 1.75]
-betas = betas+orig_betas
+betas = [0.5, 1.0, 1.5, 2.0]
 # betas = [1.4, 1.5, 1.6, 2.0]
 def o_filename(beta): return f"outputs/data_{beta}.csv"
 def i_filename(beta): return f"inputs/params_{beta}.yml"
@@ -33,7 +32,8 @@ L = 100
 
 measurements = 100
 thermalization = 1000
-record_rate = 100
+record_rate = 50
+print(f"{measurements} measurements every {record_rate} sweeps, {thermalization} sweep thermalization.")
 
 refresh_rate = 0.1
 
@@ -211,13 +211,13 @@ def view():
 
     # axes[0].set_ylim((0., 4.))
     plt.show()
-def read_data(beta):
-    fname = o_filename(beta)
-    with open(o_filename, 'r') as datafile:
-        csv_data = csv.reader(datafile)
-        for lines in csv_data:
-            data.append([float(l) for l in lines])
-    return np.array(data).T
+# def read_data(beta):
+    # fname = o_filename(beta)
+    # with open(fname, 'r') as datafile:
+        # csv_data = csv.reader(datafile)
+        # for lines in csv_data:
+            # data.append([float(l) for l in lines])
+    # return np.array(data).T
 
 @click.command()
 @click.option('-b', '--beta', required=True, type=float)
@@ -225,7 +225,6 @@ def read_data(beta):
 def autocorrelation(beta):
     data = parse_file(beta)
     internal_energy =   data[0]/(0.5*beta*L**2)
-    chi_m = data[1]/L**2
 
     name = f"Internal Energy: $L={L}$, $\\beta={beta}$"
     UWerr(internal_energy, name=name, plot=True, whole_plot=True)

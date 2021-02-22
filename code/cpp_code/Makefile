@@ -5,7 +5,7 @@ binary=bin/sweep
 classes=sweep.cpp phi.cpp lattice.cpp yaml/Yaml.cpp
 hfiles=sweep.h phi.h
 ifdef debug
-	options=-std=c++17 -g
+	options=-std=c++17 -g -fprofile-instr-generate
 else 
 	options=-std=c++17
 endif 
