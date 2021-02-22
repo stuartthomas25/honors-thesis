@@ -1,4 +1,6 @@
 outputs/**
 **SYM**
 profiling**
+profile
+bin/**
 

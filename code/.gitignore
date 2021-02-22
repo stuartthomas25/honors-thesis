@@ -11,3 +11,4 @@ data
 outputs
 inputs
 **.gif
+.ipython_checkpoints/**
