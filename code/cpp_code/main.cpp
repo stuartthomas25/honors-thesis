@@ -10,7 +10,7 @@
 #include <chrono>
 
 #include "phi.h"
-#include "yaml/Yaml.hpp"
+#include "Yaml.hpp"
 #include "sweep.h"
 
 #include "observables.h"
@@ -74,20 +74,6 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-
-
-
-
-   /* vector<Phi> data;*/
-    //for (int i=0; i<pow(DIM, 2); i++) {
-        //if (process_Rank == 0) {
-            //data.push_back( Phi({ rand_dist(randf()) }) );
-        //} else {
-            //data.push_back(Phi({0}));
-        //}
-    /*}*/
-
-
     srand(time(NULL)); rand();
 
     vector<Phi> output;
@@ -111,13 +97,13 @@ int main(int argc, char *argv[]) {
     Recorder recorder(observables);
     recorder.reserve(measurements);
 
-    sweep_args args {
+    const sweep_args args {
         .sweeps = sweeps,
         .thermalization = thermalization,
         .record_rate = record_rate,
         .ts = taus,
         .progress = progress,
-        .cluster_algorithm = ClusterAlgorithm::NONE
+        .cluster_algorithm = ClusterAlgorithm::WOLFF
     };
 
     sweeper.full_sweep(&recorder, args);
@@ -131,31 +117,6 @@ int main(int argc, char *argv[]) {
     recorder.write(filename);
 
     cout << '\r' << "Wrote to " << filename << " in " << duration.count() << "s   \n\n";
-
-
-   /* for (int i=0; i<4; i++) {*/
-        /*for (int j=0; j<4; j++) {*/
-            /*cout << sweeper.lat[i+DIM*j] << "  ";*/
-        /*}*/
-        /*cout << endl;*/
-    /*}*/
-    //cout << meas_data.size() << endl;
-    //for (measurement md : meas_data) {
-        //cout << md.action << " ";
-    //}
-    //cout << endl;
-
-    //cout << dS << endl;
-    //for(int i=0; i<dim; i++) {
-        //for(int j=0; j<dim; j++) {
-            //Phi phi = output[i*dim + j];
-            //if (phi[0] < 0) {
-                //cout << "-";
-            //}else{
-                //cout << "*";
-            //}
-        //}
-        //cout << endl;
     MPI_Finalize();
     return 0;
 };

@@ -44,7 +44,7 @@ class Lattice2D {
         iterator end();
         const_iterator cend() const;
 
-        static double lagrangian(Phi phi, Phi nphi_sum);
+        static double lagrangian(const Phi phi, const Phi nphi_sum);
         double full_action();
 
 };

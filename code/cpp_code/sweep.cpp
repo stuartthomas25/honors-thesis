@@ -16,11 +16,11 @@
 
 using namespace std;
 
-Recorder::Recorder(vector<BaseObservable*> some_observables) {
+Recorder::Recorder(const vector<BaseObservable*> some_observables) {
     observables = some_observables;
 }
 
-void Recorder::record(Lattice2D& lat, double x=0) {
+void Recorder::record(const Lattice2D& lat, double x=0) {
     measurements.push_back( x );
     for (const BaseObservable* f : observables) {
         measurements.push_back( (*f)(lat) );
@@ -35,7 +35,7 @@ int Recorder::size() {
     return measurements.size() / (observables.size() + 1);
 }
 
-void Recorder::write(string filename) {
+void Recorder::write(const string filename) {
     ofstream outputfile;
     outputfile.open(filename);
     outputfile << "tau";
@@ -282,7 +282,7 @@ void Sweeper::full_sweep(Recorder* recorder, const sweep_args& args = sweep_args
             //GifWriteFrame(&gif_writer, white_vec.data(), DIM, DIM, gif_delay); // add one white frame after thermalization
 
         if (i%args.record_rate==0 && i>=args.thermalization) {
-            flow(args.ts, recorder, 0.001);
+            flow(args.ts, recorder);
             #ifdef GIF
                 write_gif_frame(lat, &gif_writer, gif_delay);
             #endif
@@ -599,7 +599,7 @@ void Sweeper::runge_kutta(double t_, double h, Lattice2D& l, bool recycle_k1) {
         }
 }
 
-void Sweeper::flow(vector<double> ts, Recorder* recorder, double max_error) {
+void Sweeper::flow(vector<double> ts, Recorder* recorder) {
     // ts must be in ascending order
     double h = 0.01; // aka dt
     double t_ = 0;
@@ -656,13 +656,13 @@ void Sweeper::flow(vector<double> ts, Recorder* recorder, double max_error) {
                 error += (flowed_lat[i] - flowed_lat_2[i]).norm_sq();
             }
 
-            error = sqrt(error/flowed_lat.size())/15;
-            //cout << "t_: "<<t_<< "\terror: " << error << "\th: " << h << endl;
-            if (error>max_error) {
+            error = sqrt(error)/15;
+            //cout << "t_: "<<t_<< "\terror: " << error << "\th: " << h << "\tmax_error: "<<MAXERROR<<endl;
+            if (error>MAXERROR) {
                 //cout << "RERUN" << endl;
                 rerun=true;
                 h /= 2;
-            } else if (error<max_error/2) {
+            } else if (error<MAXERROR/2) {
                 rerun=false;
                 h *=2;
                 t_ += h;

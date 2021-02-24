@@ -26,7 +26,7 @@ typedef int site;
 
 class BaseObservable {
     public:
-        virtual double operator()(Lattice2D& lat) const = 0;
+        virtual double operator()(const Lattice2D& lat) const = 0;
         virtual const string name() const = 0;
         virtual ~BaseObservable() = default;
 };
@@ -35,11 +35,11 @@ class Recorder {
     vector<double> measurements;
     vector<BaseObservable*> observables;
     public:
-        Recorder(vector<BaseObservable*> some_observables);
+        Recorder(const vector<BaseObservable*> some_observables);
         void reserve(size_t size);
         int size();
-        void record(Lattice2D& lat, double x);
-        void write(string filename);
+        void record(const Lattice2D& lat, double x);
+        void write(const string filename);
         ~Recorder();
 };
 
@@ -77,10 +77,9 @@ class Sweeper {
             MPI_Comm_size(c, &size);
             return size;
         }
-
-        bool gif;
+    
         auto static constexpr gif_filename = "lattice.gif";
-        int gif_delay = 10;
+        const int gif_delay = 10;
         vector<site> full_neighbors(site aSite);
         Plaquette plaquette(site aSite);
         vector<Phi> dphis;
@@ -117,7 +116,7 @@ class Sweeper {
         unordered_set<int> generate_cluster(int seed, Phi r, bool accept_all);
 
         void runge_kutta(double t_, double h, Lattice2D& l, bool recycle_k1=false);
-        void flow(vector<double> ts, Recorder* recorder=nullptr, double max_error=0.1); 
+        void flow(vector<double> ts, Recorder* recorder=nullptr); 
 
 };
 

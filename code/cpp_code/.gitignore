@@ -3,4 +3,5 @@ outputs/**
 profiling**
 profile
 bin/**
+**.s
 

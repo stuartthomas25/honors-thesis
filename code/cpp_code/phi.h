@@ -30,7 +30,6 @@ class Phi {
         double operator[] (int i) const;
         double& operator[] (int i);
         bool operator== (const Phi & phi) const;
-        void print();
 };
 
 Phi operator*(double a, const Phi& b);

@@ -9,9 +9,10 @@ Phi::Phi(array<double, N> phi){
 };
 
 void Phi::init_as_zero(){
-    for (int i=0; i<N; i++) {
-        phi[i] = 0;
-    }
+    phi = {0,0,0};
+    //for (int i=0; i<N; i++) {
+        //phi[i] = 0;
+    //}
 }
 
 double Phi::norm_sq() const {
@@ -45,10 +46,11 @@ Phi& Phi::operator/=(const double & a) {
 }
 
 Phi Phi::operator+ (const Phi & aPhi) const {
-    Phi new_phi;
-    for (int i=0; i<N; i++) {
-        new_phi[i] = phi[i] + aPhi[i];
-    }
+    Phi new_phi(phi);
+    //for (int i=0; i<N; i++) {
+        //new_phi[i] = phi[i] + aPhi[i];
+    //}
+    new_phi += aPhi;
     return new_phi;
 }
 
@@ -83,14 +85,9 @@ double Phi::operator* (const Phi & aPhi) const{
 }
 
 Phi Phi::operator* (const double & a) const{
-    Phi new_phi;
-    for (int i=0; i<N; i++) {
-        new_phi[i] = phi[i] * a;
-    }
+    Phi new_phi(phi);
+    new_phi *= a;
     return new_phi;
-}
-
-void Phi::print(){
 }
 
 ostream& operator<<(ostream& os, const Phi & aPhi) 

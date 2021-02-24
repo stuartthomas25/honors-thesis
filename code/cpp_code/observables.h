@@ -7,7 +7,7 @@ namespace observables {
 
     class action : public BaseObservable {
         public:
-            double operator()(Lattice2D& lat) const {
+            double operator()(const Lattice2D& lat) const {
                 return lat.action;
             };
             const string name() const { return "S"; };
@@ -15,7 +15,7 @@ namespace observables {
 
     class beta : public BaseObservable {
         public:
-            double operator()(Lattice2D& lat) const {
+            double operator()(const Lattice2D& lat) const {
                 return lat.beta;
             };
             const string name() const { return "beta"; };
@@ -23,7 +23,7 @@ namespace observables {
 
     class L : public BaseObservable {
         public:
-            double operator()(Lattice2D& lat) const {
+            double operator()(const Lattice2D& lat) const {
                 return lat.L;
             };
             const string name() const { return "L"; };
@@ -31,11 +31,12 @@ namespace observables {
 
     class chi_m : public BaseObservable {
         public:
-            double operator()(Lattice2D& lat) const {
+            double operator()(const Lattice2D& lat) const {
                 double val = 0;
-                Phi phi0 = lat[0];
-                for (const Phi& phi : lat) {
-                    val += phi*phi0;
+                const Phi phi0 = lat[0];
+                //for (const Phi& phi : as_const(lat)) {
+                for (auto it = lat.cbegin(); it!=lat.cend(); ++it) {
+                    val += (*it)*phi0;
                 }
                 return val;
             };
@@ -61,7 +62,7 @@ namespace observables {
                 return 2*angle(real_part, imag_part);
             }
 
-            double q(int x, Lattice2D& lat, bool reversed=false) const {
+            double q(int x, const Lattice2D& lat, bool reversed=false) const {
                 int x1, x2, x3, x4;
                 tie(x1, x2, x3, x4) = lat.plaquette_map[x]; 
                 Phi s1 = lat[x1], s2 = lat[x2], s3 = lat[x3], s4 = lat[x4];
@@ -72,7 +73,7 @@ namespace observables {
                 }
             }
         public:
-            double operator()(Lattice2D& lat) const{
+            double operator()(const Lattice2D& lat) const{
                 double Q = 0;
                 for (int i=0; i<lat.L*lat.L; i++) {
                     Q += q(i, lat);
