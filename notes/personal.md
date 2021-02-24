@@ -142,3 +142,6 @@ TODO:
 
 - replace all `unordered_maps` with `vectors`. Tbh, unordered maps did not make any sense.
 
+# February 23
+- Make all lookups constant!
+- Actually, this may not help

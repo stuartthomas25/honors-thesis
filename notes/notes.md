@@ -686,7 +686,34 @@ Todo:
 - Something weird with autocorrelation, maybe measure every 5 sweeps? This is because the time units are not real.
     - Also run without cluster update.
 
-<!--# February 22-->
+# February 22
 
+- Honors Committee
+    - Prof. Chris
+    - Enrico
+    - Perhaps Stathopoulos from Computer Science
+    - Contact Prof. Averett about this.
+    - Deadline is this Friday
+
+- Honors deadline is coming up!
+    - Have an outline in March.
+
+- Yale Acceptance
+    - Yale feels like an old-school physics department
+    - Both have a lot of resources.
+
+- TODO:
+    - Recreate Fig. 4 up to 54, plotted in terms of $t_0$. (Check table 1)
+    - Read Bietenholz conclusions for ideas of extensions
+        - Look at $\theta$ term numerically.
+
+            - Two methods for fixing the "sign problem": 
+            - Reweighting, or we can use the Tyalor expansion method.
+            - Use the Taylor expansion method.
+    - In the context of Lattice field theory, $Q$ is the main topological quantity.
+    - Spend some time learning topological quantities.
+    - Two timescales: April 23rd and later for paper   
+        - Since I *could* write this up, I have some time to do some reading.
+    - Email Stathopoulos
 
 # References
