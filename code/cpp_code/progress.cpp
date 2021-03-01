@@ -6,19 +6,18 @@ class progress_bar
 {
     static const auto overhead = sizeof " [100%]";
 
-    ostream& os;
+    ostream os;
     const size_t bar_width;
     string message;
     const string full_bar;
 
  public:
-    progress_bar(ostream& os, size_t line_width,
+    progress_bar(ostream& stream, size_t line_width,
                  string message_, const char symbol = '.')
-        : os{os},
-          bar_width{line_width - overhead},
+    :     bar_width{line_width - overhead},
           message{move(message_)},
-
-          full_bar{string(bar_width, symbol) + string(bar_width, ' ')}
+          full_bar{string(bar_width, symbol) + string(bar_width, ' ')},
+          os{stream.rdbuf()}
     {
         if (message.size()+1 >= bar_width || message.find('\n') != message.npos) {
             os << message << '\n';

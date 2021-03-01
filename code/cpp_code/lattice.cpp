@@ -2,6 +2,9 @@
 
 #include <iostream>
 #include "lattice.h"
+#include <algorithm>
+
+using namespace std;
 
 int Lattice2D::L;
 double Lattice2D::beta;

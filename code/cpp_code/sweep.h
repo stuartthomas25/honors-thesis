@@ -45,13 +45,14 @@ class Recorder {
 
 
 struct sweep_args {
+
     int sweeps;
     int thermalization;
     int record_rate;
-    ClusterAlgorithm cluster_algorithm = WOLFF; 
+    ClusterAlgorithm cluster_algorithm; 
     vector<double> ts;
-    int cluster_rate = 5;
-    bool progress = true;
+    int cluster_rate;
+    bool progress;
 };
 
 class Sweeper {

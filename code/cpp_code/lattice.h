@@ -4,6 +4,7 @@
 
 #include "phi.h"
 #include <vector>
+#include <tuple>
 
 typedef tuple<int,int,int,int> Plaquette;
 

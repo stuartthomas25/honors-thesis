@@ -99,9 +99,7 @@ Sweeper::Sweeper (int DIM, MPI_Comm c) :
     }
 
     lat.action = full_action(); 
-
     int offset = process_Rank *  sites_per_node;
-
 }
 
 Sweeper::~Sweeper() {

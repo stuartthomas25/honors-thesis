@@ -2,4 +2,4 @@
 #define MASTER 0
 #define PROG_CHAR "#"
 #define D 2
-#define MAXERROR 0.01
+#define MAXERROR 0.005

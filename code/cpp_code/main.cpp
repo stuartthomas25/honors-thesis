@@ -52,6 +52,7 @@ int main(int argc, char *argv[]) {
     int measurements = root["measurements"].As<int>();
     int thermalization = root["thermalization"].As<int>();
     int record_rate = root["record_rate"].As<int>();
+    int cluster_rate = 5;
 
     vector<double> taus;
     auto iter =  root["taus"].Begin();
@@ -97,13 +98,14 @@ int main(int argc, char *argv[]) {
     Recorder recorder(observables);
     recorder.reserve(measurements);
 
-    const sweep_args args {
-        .sweeps = sweeps,
-        .thermalization = thermalization,
-        .record_rate = record_rate,
-        .ts = taus,
-        .progress = progress,
-        .cluster_algorithm = ClusterAlgorithm::WOLFF
+    const sweep_args args = {
+        sweeps,
+        thermalization,
+        record_rate,
+        ClusterAlgorithm::WOLFF,
+        taus,
+        cluster_rate,
+        progress
     };
 
     sweeper.full_sweep(&recorder, args);
