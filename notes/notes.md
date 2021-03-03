@@ -11,12 +11,12 @@ nocite : |
 linestretch: 1.5
 ...
 
-## Monday, June 15
+# Monday, June 15
 -  Preliminary meeting
 -  We will begin with $\phi^4$ term due to lower energy bound.
 -  Beginning with code in Python, switch to C/C++ if necessary.
 
-## Tuesday, June 16
+# Tuesday, June 16
 -  Preliminary concepts to understand:
     -  scalar field theory on lattice
     -  Markov chains and Monte Carlo
@@ -52,7 +52,7 @@ linestretch: 1.5
     -  Motivation: the nonlinear sigma model works for QCD given the
         asymtotic freedom. We may also want to explore topology.
 
-## Wednesday, June 17
+# Wednesday, June 17
 -  Code tips:
     -  Try Swendsen-Wang algorithm in addition to Wolff
     -  Print out time taken
@@ -74,7 +74,7 @@ linestretch: 1.5
     -  Transition from Broken Phase, look at $\mu_0^2$ term.
     -  Profile code for possible optimizations.
 
-## Monday, June 22
+# Monday, June 22
 -  Coding
     -  Add plots to `.gitignore`.
     -  Try parallelizing code, using either multigrid or checkerboard
@@ -95,7 +95,7 @@ linestretch: 1.5
         measured in terms of the lattice constant, these sometimes tend
         to infinity.
 
-## Wednesday, June 24
+# Wednesday, June 24
 -  Code
     -  Parallelize
     -  Transition to numpy
@@ -103,14 +103,14 @@ linestretch: 1.5
     -  renormalize and regularlize: what do they mean?
     -  Look at LePage
 
-## Tuesday, June 30
+# Tuesday, June 30
 -  Code
     -  Try `mpi4py`.
     -  Move to 3D (this may decrease parallel overhead)
 -  Reading
     -  Continue Reading Collins, others.
 
-## Thursday, July 2
+# Thursday, July 2
 -  Coding
     -  Continue implementing MPI
     -  Parallelization may be more apparent in 3D
@@ -121,7 +121,7 @@ linestretch: 1.5
     -  Charge (See Tong, Noether’s Theorem)
 -  Next week back: start gradient flow on linear $\phi^4$ model
 
-## Monday, July 13
+# Monday, July 13
 - Update from last week
     - Implemented MPI, slowdown may be due to thermal throttling?
     - Questions:
@@ -141,7 +141,7 @@ linestretch: 1.5
     - Read conference proceedings, then paper with Orginos
     - Define $\rho$ field (Eq. 2.4), implement it using the exact solution (Eq. 2.5). This will require a FFT
 
-## Wednesday, July 15
+# Wednesday, July 15
 - Code organization
     - Perhaps implement the nonlinear $\sigma$ model (at a later date) and the $\phi^4$ model as subclasses of a generic lattice class with abstract methods of action, etc.
 
@@ -159,7 +159,7 @@ linestretch: 1.5
     - nonrenormalizeable: requires infinitely many counterterms
     - super-renormalizeable: there is only one parameter that is divergent
 
-## Friday, July 17
+# Friday, July 17
 
 - Critical mass problem
     - Check multiple measures (Binder Cumulant, bimodality, etc.)
@@ -171,7 +171,7 @@ linestretch: 1.5
     - Look at Schaich's calculations
     - Note: No true phase transition in finite system since phase transitions are defined by correlation lengths going to infinity
 
-## Monday, July 20
+# Monday, July 20
 
 - Remarks on critical point graph
     - I should be averaging the measurements from run.
@@ -189,7 +189,7 @@ linestretch: 1.5
         - Paper has Mathematica notebook link, though it may be broken.
     - Double check that large lattice volumes show correct critical mass.
 
-## Wednesday, July 22
+# Wednesday, July 22
 
 - Things I did:
     - Reorganized the `recorder.py` to include measurements and means/errors.
@@ -212,7 +212,7 @@ linestretch: 1.5
     - Gradient flow
         - Each measured lattice should be evolved in flow time before recording
 
-## Friday, July 24
+# Friday, July 24
  
 - Things to do:
     - Gradient flow
@@ -228,7 +228,7 @@ linestretch: 1.5
 
 
 
-## Monday, July 27
+# Monday, July 27
 
 - Shift to utilizing the 0th node for computation.
 
@@ -241,7 +241,7 @@ linestretch: 1.5
 - To-Do:
     - Run a proper histogram for different thermalizaitons, see if 10^4 is necessary.
 
-## Wednesday, July 29
+# Wednesday, July 29
 
 - Plots look good, but are a little wide and not localized on the convergent point
     - Try a cold start
@@ -255,7 +255,7 @@ linestretch: 1.5
     - wait on gradient flow until we are more confident in Markov chain.
 
 
-## Friday, July 31
+# Friday, July 31
 
 - Calculate autocorrelation times (as a function of mass), binder cumulant
 - Check Wolff algorithm, try Swendsen Wang
@@ -266,7 +266,7 @@ linestretch: 1.5
 - Literature search: must the metropolis algorithm have randomly included sites?
     
 
-## Thursday, August 6
+# Thursday, August 6
 
 - Progress:
     - Autocorrelation: see page 6 from Schaich
@@ -276,7 +276,7 @@ linestretch: 1.5
     - Histogram issue still persists
 
 
-## Friday, August 7
+# Friday, August 7
 
 - Binder cumulant shows very different critical mass
 
@@ -291,7 +291,7 @@ linestretch: 1.5
 
 
 
-## Wednesdesday, August 12
+# Wednesdesday, August 12
 
 - There are some major problems with my averaging.
 - TODO: implement this fix
@@ -324,11 +324,11 @@ Graduate School:
     - Yale
 
 
-## Friday, August 14
+# Friday, August 14
 - First, check previous version and make sure the numbers are not the same.
 - Try saving some lattices, then calculating observables in Mathematica
 
-## Tuesday, August 25
+# Tuesday, August 25
 - Progress:
     - Fixed BC issue by fixing the order of calculations. New order:    
         1. calculate volume-average
@@ -346,7 +346,7 @@ Graduate School:
     - Create plots without connected lines
 
 
-## Thursday, August 27
+# Thursday, August 27
 
 - Problem with Binder-Cumulant: errors are too large.
     - Implement Jackknife method (see [@toussaint1989]) to measure statistics of variables.
@@ -355,7 +355,7 @@ Graduate School:
     - Or perhaps beforehand, try gradient flow.
 
 
-## Tuesday, September 1
+# Tuesday, September 1
 - Questions:
     - Do I apply it to every measurement?
         - Yes
@@ -374,7 +374,7 @@ Graduate School:
     - Add the action as an observable.
 
 
-## Friday, September 4
+# Friday, September 4
 - Gradient flow should have a 0 imaginary component, so I can take the real component safely, though I should check this.
 
 
@@ -382,12 +382,12 @@ Graduate School:
     - Add momentum constant to Gradient Flow evolution function.
     - Fix flow evolution bug!
 
-## Tuesday, September 8
+# Tuesday, September 8
 - Issue: Observable values are actually completely flat, may be a memory error in the code. This needs debugging.
 - Plot the results on a smaller flow time scale.
 
 
-## Friday, September 11
+# Friday, September 11
 - Reminder: Must rescale momenta by $\pi/L$.
 - Problem: Observables look flat
 
@@ -397,11 +397,11 @@ Graduate School:
     - Use inspirehep to find other sources.
     - Check out [http://www.scholarpedia.org/article/Nonlinear_Sigma_model]
 
-## Friday, September 18
+# Friday, September 18
 
 - For Wolff algorithm, chose arbitrary vector to flip along.
 
-## Tuesday, September 22
+# Tuesday, September 22
 
 - Converting Cython to C++
     - Converting to flat lattice
@@ -412,7 +412,7 @@ Graduate School:
     - also does affect system since factor of action is significant in path integral formalism.
     - No mass term.
 
-## Friday, September 25
+# Friday, September 25
 
 
 - 
@@ -431,7 +431,7 @@ Graduate School:
 
 \newpage
 
-## Wednesday, September 30
+# Wednesday, September 30
 
 - Implement MPI in C++.
 
@@ -446,13 +446,13 @@ Graduate School:
         - Dynamical generation of bosons, (like phonons, not explicit in Lagrangian).
     - In $d=4$, the NLSM is starting point for chiral perturbation theory.
 
-## Tuesday, October 6
+# Tuesday, October 6
 - Added MPI to C++
     - Some issues with conversion to C array
 
 - Make sure in implementation to keep lattice data continuous.
 
-## Wednesday, October 14
+# Wednesday, October 14
 - How to debug compilation errors?
     - Can't use print statements like Python.
     - I can use dummy routines to isolate issues.
@@ -460,7 +460,7 @@ Graduate School:
 - Priorities:
     - Ensure that Enrico's project is on the Arxiv while still doing work on my thesis in good faith.
 
-## Wednesday, October 21
+# Wednesday, October 21
 
 - Prof. Chris will ask Prof. Orginos about static memory allocation for rank and size.
 - Code finally compiles!
@@ -468,7 +468,7 @@ Graduate School:
     - Get other measurements (suscpetibility, BC, etc.)
     - No need to export lattice average of $\phi^2$.
 
-## Wednesday, October 28
+# Wednesday, October 28
 - Progress
     - Plot with $U$ and $\chi$
     - I think I can statically allocate data in the Sweeper class using an initializer list.
@@ -482,7 +482,7 @@ Graduate School:
 
 
 
-## November 4 
+# November 4 
 
 - Comparing Python and C++ part. Some issues:
     - Susceptibilities have errors that are too large.
@@ -497,7 +497,7 @@ Graduate School:
 - Transition to $O(3)$ model.
 - I realized that vectors are continuous memory, almost no slowdown.
 
-## November 11
+# November 11
 
 - Updates:
     - Ran calculations again
@@ -522,7 +522,7 @@ Graduate School:
 
 # Spring Semester
 
-## January 12
+# January 12
 
 - Some clarifying theory questions:
     - Twist-2 operators: not trivial! mass dimension is not just mass of the field. 
@@ -541,7 +541,7 @@ Graduate School:
     - Specifically, fix "long-term" issues in mid-year report.
 
 
-## January 21
+# January 21
 
 
 - New direction, since papers cover what we did:
@@ -715,5 +715,22 @@ Todo:
     - Two timescales: April 23rd and later for paper   
         - Since I *could* write this up, I have some time to do some reading.
     - Email Stathopoulos
+
+# February 24
+- Some errors in the $Q$ value:
+    - Try a more statistics and lower tolerance
+    - Overall pretty good.
+
+- Where to go next:
+    - [@bogli2012] studies $\theta\neq 0$ case, which Bietenholz only lightly touches.
+    - Read [@bogli2012].
+
+# March 1
+- Progress:
+    - Compiled on cluster
+    - Ran with $10^5$ measurements and lower tolerance, same result ($Q\neq 0$ within errors).
+    
+        - Seems like errors are too small and Jackknife value are proportional to $\sqrt{N}$.
+    - Read [@bogli2012], looks like this only applies to $\theta=\pi$.
 
 # References

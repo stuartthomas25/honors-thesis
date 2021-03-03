@@ -1,0 +1,262 @@
+\documentclass[12pt]{report}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\setlength{\oddsidemargin}{0.5in}
+\setlength{\evensidemargin}{0.5in}
+\setlength{\textwidth}{6.0in}
+\setlength{\topmargin}{.75in}
+\setlength{\textheight}{8.6in}
+
+
+% Modified by S. Aubin for the class of 2019 Physics theses
+
+%
+% This is a LaTeX template for an undergraduate honors or
+%   senior thesis in physics at William & Mary. Created from
+%   several theses from previous students of D.S. Armstrong,
+%   pared down to bare bones.
+%
+%   you will need this present file (thesis_template.tex)
+%   as well as the file  figure1.eps  to make the whole thing
+%   (the latter is just an encapsulated postscript figure)
+%     For simplicity, we don't use bibtex here; experts can choose
+%   to use that more powerful way of dealing with citations.
+%
+%   To compile it, do:
+% > pdflatex thesis_template.tex
+% > pdflatex thesis_template.tex  (yes, you need to do it twice to
+%                                  fill in the list of tables, figures
+%                                  and references).
+
+\begin{document}
+\setlength{\baselineskip}{24pt}
+\begin{titlepage}
+\LARGE
+\begin{center}
+{\bf A Wonderful Piece of Scientific Research}\\[2.3cm]
+
+\normalsize
+A thesis submitted in partial fulfillment of the requirement \\
+for the degree of Bachelor of Science with Honors in \\
+Physics from the College of William and Mary in Virginia,\\[0.5cm]
+by\\[0.5cm]
+Stuart Thomas \\[2.5cm]
+\end{center}
+\normalsize
+\begin{flushright}
+%\hfill Accepted for Honors \\[.5cm]
+\hfill \hrulefill \\
+\hfill \hfill Advisor: Prof. Christopher J. Monahan\\[.6cm]
+\hfill \hrulefill \\Prof. Todd Averett \\[.6cm]
+\hfill \hrulefill \\Prof. Andreas Stathopoulos \\[.6cm]
+\end{flushright}
+\begin{center}
+Williamsburg, Virginia\\
+May 2021
+\end{center}
+\end{titlepage}
+
+\setlength{\topmargin}{0.0in}
+
+\pagenumbering{roman}
+\tableofcontents
+\chapter*{Acknowledgments}
+\addcontentsline{toc}{chapter}{Acknowledgments}
+\paragraph
+\indent I would like to thank lots of people, and this is where
+I will do it...
+
+
+\listoffigures
+\addcontentsline{toc}{chapter}{List of Figures}
+\listoftables
+\addcontentsline{toc}{chapter}{List of Tables}
+
+\begin{abstract}
+\setcounter{page}{5}
+\addcontentsline{toc}{chapter}{Abstract}
+\paragraph
+\indent An experiment was conducted at the Thomas Jefferson National
+Accelerator Facility (JLab) to study something very interesting and
+unusual....
+
+The abstract should present a synopsis of all the main results of the research,
+and should be self-contained. Generally, there should not be citations
+in an abstract.
+
+\end{abstract}
+
+\chapter{Introduction}
+\pagenumbering{arabic}
+I have provided some suggested Chapter titles here, but you should use what makes sense for your research.
+
+The introduction should present the primary motivation (i.e. big picture motivation, what big science question(s) your research is trying to answer or assist in answering) for the research and the results that you are presenting. You should also provide background information on your research (what has been done before) and also mention what some of the applications of your research are. You can also discuss some of the specifics of the exact thing you are working on. 
+
+\section{The Goal of the Experiment/Research}
+\paragraph
+\indent One can have sections of chapters and sub-sections as well (sub-sub-sections are possible, but are probably overkill for your purposes.
+
+\chapter{Theory}
+\paragraph
+\indent Lots of theory...
+
+You can introduce the basic concepts and theory that are necessary for understanding your research objective, methods, and results.
+
+\section{Quantum Chromodynamics}\label{QCD} % label for referring to this section
+
+\indent This is a subsection of the Theory section. Quantum chromodynamics
+is a wonderful theory... here is a citation~\cite{Perkins} from a textbook, and here is another~\cite{IsgurKumano} from a journal article.
+
+\subsubsection{Meson Spectrum in QCD}
+
+Here is a numbered equation, taken from the thesis of A. Dubanowitz~\cite{UPV}:
+%
+\begin{eqnarray}
+\frac{\phi\rightarrow a_0\gamma}{\phi\rightarrow f_0\gamma} = 0 .
+\end{eqnarray}\label{eq:a0_decay_equation} %for referring to equation
+%
+We now introduce another equation, where we show that we need to define
+every symbol in an equation. The parity-violating electron-proton
+scattering asymmetry $A_{ep}$ can be expressed as
+%
+\begin{equation}
+A_{ep} / A_0 = Q_{W}^{p}+Q^{2}F^{p}(Q^{2},\theta) \;\;\;\;\;  ,
+\label{eq:asymmetry}
+\end{equation}
+%
+where
+$A_0 = -G_{F}Q^{2} / \left( {4\pi\alpha\sqrt{2}} \, \right)$,
+$G_F$ is the Fermi constant, and $\alpha$ the fine structure constant.
+$Q^2$ is the four-momentum transfer squared.
+The second term, $Q^2 F^p$, contains the nucleon structure defined in terms of electromagnetic, neutral-weak, and axial form factors, which are encoded in the
+hadronic form factor $F^p$.
+
+Notice that equations are parts of sentences,
+and should be punctuated as such. Read a real article from a refereed journal
+(such as Physical Review or Physical Review Letters to see how this should
+be done). Short, unnumbered equations can even appear
+inline in a sentence, as was done in the preceding paragraph.
+
+Every table you include must be referred to in the body of the text,
+they can't just stand on their own. For example, we show the
+dominant decay branching ratios of the $\phi$ meson in Table~\ref{tab:phidecays}.
+You can refer to a section or chapter of your thesis, for example, we can look
+back to Sec.~\ref{QCD} for a description of Quantum Chromodynamics.
+
+\begin{table}[!thb]
+\begin{center}
+\begin{tabular}{|l|r|}
+\hline
+Decay Modes &\\ $\phi \rightarrow$ & Branching Ratio \\ \hline\hline
+$K^+K^-$ & $(49.1\pm 0.8)\%$ \\ \hline
+$K_{L}^{0}K_{S}^{0}$ & $(34.1\pm 0.6)\%$ \\ \hline
+$\rho \pi + \pi^+ \pi^- \pi^0$ & $(15.5\pm 0.7)\%$ \\ \hline
+$\omega \gamma$ & $<5\%$ \\ \hline
+$f_0(980)\gamma$ & $<1\times 10^{-4}$ \\ \hline
+$a_0(980)\gamma$ & $<5\times 10^{-3}$ \\ \hline
+\end{tabular}
+\end{center}
+\caption[Main decays of the $\phi$ meson.] % title of the table for List of Tables
+        {Main decays of the $\phi$ meson and their measured branching ratios. Notice that the caption is
+        not the same as the much shorter title for the table, which appears in the List of Tables. You can see how to provide both the full caption and the title of the table by looking at the .tex source code.} % caption to the table
+\label{tab:phidecays} % for referring to the table
+\end{table}
+
+
+A similar statement applies for figures. For example, we show a single event display of
+a typical radiative decay in Fig.~\ref{fig:NeatFigure}. Figures and tables should not appear
+earlier than they are first referenced in the body of the text, if at all possible.
+
+Here I refer back to Eq.~\ref{eq:a0_decay_equation}; notice the use of
+an abbreviation for the word ``equation''. Equation~\ref{eq:asymmetry} shows
+how we refer to an equation at the start of a sentence.
+
+
+\begin{figure*}[!tb]
+\begin{center}
+%\includegraphics[width=0.8\textwidth]{figure1.pdf} % set the width of the figure to 80% of the text width
+\end{center}
+\caption[A neat figure] %(this is the name of the figure, for the Table of Figures, and should be short and sweet).
+{\label{fig:NeatFigure} % this is a label with which to refer to the figure
+  This is a very nifty figure, which should be described in detail in this caption. Remember to
+  describe all relevant aspects: what is plotted against what, if it is a graph, what the relevant features and
+  symbols are, {\em etc.} . Your reader should be able to read the caption and understand everything of relevance in the figure. Figure captions should be in
+  complete, properly punctuated sentences.
+  % this is the body of the caption to the figure
+}
+\end{figure*}
+
+\chapter{Experimental Technique}
+
+\chapter{Results}
+
+\chapter{Conclusion/Outlook}
+
+
+
+\appendix
+\chapter{My Great Computer Program}
+You may wish to include some material in appendices, such as this one.
+An appendix should have material that is not required to be read by
+the average reader of the thesis, but which may be useful for
+some readers, and to document important material for the future - {\em i.e.}
+the next folks to carry and expand your work. You can include things like
+additional data, code, instructions for use of some piece of equipment or
+software, etc.
+
+\section{Code sample}
+\paragraph
+\indent The following is the C code which .....
+\setlength{\baselineskip}{12pt}
+{\footnotesize \begin{verbatim}
+/***********************************************************/
+
+/*   Ima G. Physicist   */
+
+int makeBSDHits(itape_header_t *event, time_list_t *timeList)
+{
+#define nBSDChannels 48  /*corresponds to the number of scintillators of the BSD*/
+  adc_values_t *bsd=NULL;
+  tdc_values_t *tbsd=NULL;
+  int i,j,k,m;
+  int size;
+
+  int adcValue[nBSDChannels];
+  int ntdchits[nBSDChannels];
+
+  struct bsdtimes{
+    int ntimes;
+    int tdctimes[16];
+  };
+
+  struct bsdtimes tdcValue[nBSDChannels];
+
+  for(i=0; i < nBSDChannels; i++){
+    tdcValue[i].ntimes=0;
+    for(j=0; j < 16; j++){
+      tdcValue[i].tdctimes[j]=0;
+    }
+  }
+
+  return(0);
+}
+\end{verbatim}}
+
+\begin{flushleft}
+\bibliographystyle{unsrt}
+\begin{thebibliography}{99.}
+
+
+\bibitem{Perkins} Perkins, Donald H.  Introduction to High Energy
+Physics.  3rd ed.  Menlo Park: Addison-Wesley, 1987.
+
+\bibitem{IsgurKumano} F. Close, N. Isgur and S. Kumano,
+Nucl. Phys. {\bf B389}, 513 (1993).
+
+\bibitem{UPV} Alex Dubanowitz, Senior project thesis, College of
+William and Mary, 1998. (unpublished).
+
+\end{thebibliography}
+\end{flushleft}
+
+\end{document}

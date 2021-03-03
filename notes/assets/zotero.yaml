@@ -229,6 +229,36 @@ references:
   URL: http://arxiv.org/abs/1808.08129
   volume: '98'
 
+- id: bogli2012
+  accessed:
+    - year: 2021
+      month: 3
+      day: 1
+  author:
+    - family: Bögli
+      given: M.
+    - family: Niedermayer
+      given: F.
+    - family: Pepe
+      given: M.
+    - family: Wiese
+      given: U.-J.
+  container-title: Journal of High Energy Physics
+  container-title-short: J. High Energ. Phys.
+  DOI: 10.1007/JHEP04(2012)117
+  ISSN: 1029-8479
+  issue: '4'
+  issued:
+    - year: 2012
+      month: 4
+  language: en
+  page: '117'
+  source: DOI.org (Crossref)
+  title: Non-trivial $\theta$-vacuum effects in the 2-d O(3) model
+  type: article-journal
+  URL: http://link.springer.com/10.1007/JHEP04(2012)117
+  volume: '2012'
+
 - id: deldebbio2005
   abstract: >-
     We compute the topological susceptibility for the SU(3) Yang--Mills theory
