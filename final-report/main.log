@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.4.7)  3 MAR 2021 11:43
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.4.7)  3 MAR 2021 13:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -180,74 +180,46 @@ Chapter 1.
 
 ]
 Chapter 2.
-
-LaTeX Warning: Citation `Perkins' on page 2 undefined on input line 108.
-
-
-LaTeX Warning: Citation `IsgurKumano' on page 2 undefined on input line 108.
-
-
-LaTeX Warning: Citation `UPV' on page 2 undefined on input line 112.
-
 [2
 
 ]
-
-LaTeX Warning: Reference `tab:phidecays' on page 3 undefined on input line 142.
-
-
-
-LaTeX Warning: Reference `fig:NeatFigure' on page 3 undefined on input line 167
-.
-
-[3] [4]
 Chapter 3.
-[5
+[3
 
 ]
 Chapter 4.
-[6
+[4
 
 ]
 Chapter 5.
-[7
+[5
+
+]
+Chapter 6.
+[6
 
 ]
 Appendix A.
-[8
+[7
 
-] [9] [10
-
-] (./main.aux)
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+] (./main.aux) ) 
 Here is how much of TeX's memory you used:
- 1821 strings out of 480608
- 24582 string characters out of 5903631
- 267933 words of memory out of 5000000
- 17723 multiletter control sequences out of 15000+600000
- 538388 words of font info for 45 fonts, out of 8000000 for 9000
+ 1816 strings out of 480608
+ 24549 string characters out of 5903631
+ 263903 words of memory out of 5000000
+ 17719 multiletter control sequences out of 15000+600000
+ 539664 words of font info for 49 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 30i,9n,25p,484b,308s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
-></usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb>
-</usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb><
-/usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></u
-sr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr
-/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/lo
-cal/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/loc
-al/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local
-/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/
-texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on main.pdf (16 pages, 124399 bytes).
+ 30i,4n,25p,221b,147s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmbx12.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmmi12.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmr12.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmti12.pfb>
+Output written on main.pdf (13 pages, 54836 bytes).
 PDF statistics:
- 96 PDF objects out of 1000 (max. 8388607)
- 67 compressed objects within 1 object stream
+ 63 PDF objects out of 1000 (max. 8388607)
+ 43 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
