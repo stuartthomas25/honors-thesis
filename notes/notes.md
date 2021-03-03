@@ -708,7 +708,7 @@ Todo:
         - Look at $\theta$ term numerically.
 
             - Two methods for fixing the "sign problem": 
-            - Reweighting, or we can use the Tyalor expansion method.
+            - Reweighting, or we can use the Taylor expansion method.
             - Use the Taylor expansion method.
     - In the context of Lattice field theory, $Q$ is the main topological quantity.
     - Spend some time learning topological quantities.
@@ -726,11 +726,27 @@ Todo:
     - Read [@bogli2012].
 
 # March 1
-- Progress:
-    - Compiled on cluster
-    - Ran with $10^5$ measurements and lower tolerance, same result ($Q\neq 0$ within errors).
-    
-        - Seems like errors are too small and Jackknife value are proportional to $\sqrt{N}$.
-    - Read [@bogli2012], looks like this only applies to $\theta=\pi$.
+- Compiled on cluster
+- Ran with $10^5$ measurements and lower tolerance, same result ($Q\neq 0$ within errors).
+
+    - Seems like errors are too small and Jackknife value are proportional to $\sqrt{N}$.
+    - We can bring the tolerance back to a normal regime
+    - *standard error vs. standard mean*
+
+- Read [@bogli2012], looks like this only applies to $\theta=\pi$.
+    - They consider $\theta = \pi / 2$
+
+
+- Several unanswered questions:
+    - Is this a problem with the definition of topological charge? Could we look at another definition?
+    - We can look at the results around $\theta=0$.
+    - We may need a different gradient flow for a $\theta$ term.
+    - _What is the gradient flow with a $\theta$ term?_
+
+- Try to reproduce the Bietenholz plot
+    - Derive around $\theta$.
+- Set up an outline of the report.
+    - Pick a good \Latex template that is in accordance with department regulations.
+
 
 # References
