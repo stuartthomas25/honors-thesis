@@ -1,0 +1,40 @@
+\begin{thebibliography}{1}
+
+\bibitem{solbrig2007}
+Stefan Solbrig, Falk Bruckmann, Christof Gattringer, Ernst-Michael Ilgenfritz,
+  Michael {M{\"u}ller-Preussker}, and Andreas Sch{\"a}fer.
+\newblock Smearing and filtering methods in lattice {{QCD}} - a quantitative
+  comparison.
+\newblock {\em arXiv:0710.0480 [hep-lat]}, October 2007.
+
+\bibitem{monahan2015}
+Christopher Monahan and Kostas Orginos.
+\newblock Locally smeared operator product expansions in scalar field theory.
+\newblock {\em Phys. Rev. D}, 91(7):074513, April 2015.
+
+\bibitem{makino2015a}
+Hiroki Makino and Hiroshi Suzuki.
+\newblock Renormalizability of the gradient flow in the {{2D}} \${{O}}({{N}})\$
+  non-linear sigma model.
+\newblock {\em Progress of Theoretical and Experimental Physics},
+  2015(3):33B08--0, March 2015.
+
+\bibitem{bietenholz2018}
+Wolfgang Bietenholz, Philippe {de Forcrand}, Urs Gerber, H{\'e}ctor
+  {Mej{\'i}a-D{\'i}az}, and Ilya~O. Sandoval.
+\newblock Topological {{Susceptibility}} of the 2d {{O}}(3) {{Model}} under
+  {{Gradient Flow}}.
+\newblock {\em Phys. Rev. D}, 98(11):114501, December 2018.
+
+\bibitem{schaich2006}
+David~A Schaich and William Loinaz.
+\newblock {\em Lattice {{Simulations}} of {{Nonperturbative Quantum Field
+  Theories}}}.
+\newblock PhD thesis, Amherst College, May 2006.
+
+\bibitem{wolff2007}
+Ulli Wolff.
+\newblock Monte {{Carlo}} errors with less errors.
+\newblock {\em Computer Physics Communications}, 176(5):383, March 2007.
+
+\end{thebibliography}

@@ -1,5 +1,7 @@
 \documentclass[12pt]{report}
 \usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
 \usepackage{graphicx}
 \setlength{\oddsidemargin}{0.5in}
 \setlength{\evensidemargin}{0.5in}
@@ -88,14 +90,88 @@ I will do it...
 
 \chapter{Theory}
 \section{Gradient Flow}
+To remove ultraviolet fluctuations, we introduce a momentum cutoff, effectively reducing the predictive power of our theory by ignoring very high momentum states. In a gauge theory, such as QCD, a hard cutoff violates gauge invariance. Therefore, renormalization techniques must be more nuanced in the reduction of high-frequency divergences. 
+
+One such technique is ``smearing,'' a local averaging of a gauge field in order to remove diverging fluctuations \cite{solbrig2007}. In this study, we use a technique known as the ``gradient flow'' \cite{monahan2015} which introduces a new half-dimension called ``flow time''. The flow time parameterizes the smearing; an evolution in flow time corresponds to suppressing ultraviolet divergences. In a 2D $\phi^4$ scalar field theory, given by the action
+\begin{equation}
+    S_\phi [\phi] = \frac{1}{2}\int d^2x\left[(\partial \phi)^2+m^2\phi^2+\frac{\lambda}{2}\right],
+\end{equation}
+we can define the evolution in flow time as
+\begin{equation}
+    \frac{\partial \rho(\tau, x)}{\partial \tau} = \partial^2 \rho(\tau,x)
+\end{equation}
+where $\partial^2$ is the Laplacian in 4-D Euclidean spacetime and $\tau$ is the flow time. Here, $\rho$ is the field evolved into a nonzero flow time, bounded by the condition $\rho(\tau=0,x) = \phi(x)$. When solved exactly, this function forms a Gaussian which forces operators to converge. Therefore, in all orders of pertubation theory, any correlation function in the gauge field that has been evolved in flow time becomes immune to these divergences\cite{makino2015a}.
+
+Generally, we can choose any flow time equation that drives the field towards a classical minimum. Beyond the $\phi^4$ model, we need flow equations that incorporate different types of fields. In the nonlinear $\sigma$ model, it has been shown that an appropriate manifestation of the flow time can resolve divergencies \cite{makino2015a}. Therefore, it is possible to define a different flow equation for this model as well. Our goal is to understand this renormalizability in the nonlinear $\sigma$ model using the gradient flow. Specifically, we seek to define vacuum condensates, or nonpertubative vacuum expectation values.
+
+To explore this technique, we first plan to produce numerical calculations using a nonlinear $\sigma$ model. Using a Monte Carlo method in 1+1 dimensions, we can calculate the correlation functions of quantum field theories. With more computing power, expanding this simulation to 2+1 dimensions would provide an analysis more relevant to quantum chromodynamics.  Following this numerical calculation, we seek to find and understand an implementation of the gradient flow in this model using analytic methods. This understanding can then be verified by the numerical solution. 
+
 \section{Field Theories on the Lattice}
 \section{Non-linear $\sigma$ model}
 
+The nonlinear $\sigma$ model is a prototypical theory for many physical phenomena, including applications in string theory. As a simple nonperturbative model, it provides an ideal starting point for lattice QCD studies. Specifically, the nonlinear $\sigma$ model exhibits many properties shared by Yang-Mills gauge theories, such as a mass gap, asymptotic freedom and $O(2)$ renormalizability. Furthermore, it has an exact application to Heisenberg ferromagnets in condensed matter. The theory is defined by the Euclidean action 
+\begin{equation}
+    S_E = \frac{1}{2g^2} \int d^Dx \partial^\mu \vec\phi \cdot \partial_\mu \vec\phi
+\end{equation}
+subject to the constraint that $\vec\phi\cdot\vec\phi = 1$. In this report, we primarily consider $O(3)$, where $\vec\phi$ is a $3$ dimensional vector.
+
+Following \cite{bietenholz2018}, we can define the gradient flow in this model via the differential equation
+\begin{equation}
+    \label{eq:nsm_gradflow}
+    \partial_\tau \vec\rho (\tau,x) = P(\tau,x) \nabla^2 \vec\rho(\tau,x),
+\end{equation}
+where $\nabla^2$ is the Laplacian operator in Euclidean space and $P(\tau,x)$ is a $N \times N$ matrix defined as
+\begin{equation*}
+    P(\tau, x) = 1 - \vec\rho(\tau,x) \vec\rho(\tau,x)^T.
+\end{equation*}
+We solve this equation numerically using the boundary condition $\vec\rho(0,x) = \phi(x)$.
+
+In order to use this theory on the lattice, we discretize the action. We replace the derivatives with a simple difference and impose periodic boundary conditions on the system.
+
+\section{Topological Charge}
+
+For every configuration of the non-linear sigma model, there is an associated integer quantity known as the topological charge. By viewing the field as a mapping from periodic real space to the sphere $S^{N-1}$, we can can associate each configuration with a member of the homotopy group $\Pi_2(S^2) = \mathbb{Z}$. This integer value is the topological charge of such a configuration. 
+
+
+
+
 \chapter{Methods}
-\section{Markov Chain Monte Carlo}
+\label{sec:methods}
+Our study of the gradient flow in the nonlinear $\sigma$ model consists of a computational part and an analytical part. We begin by outlining a numerical Monte Carlo method to simulate the lattice in 2 and 3 dimensions. We verify our program with the well-studied $\phi^4$ scalar field theory. We then generalize our model to a vector field to simulate the non-linear sigma model. This simulation system provides data on vacuum states with which we study the gradient flow's effect on topology.
+
+We implement these two algorithms first in Python for the $\phi^4$ model. Afterwards, we transition to C/C++ code due to the increased speed for more complicated theories. 
+
+\section{Monte Carlo Simulations}
+\label{sec:mc}
+
+We implement a Markov Chain Monte Carlo method following Schaich's thesis \cite{schaich2006}. This implementation utilizes a ``random walk,'' i.e. a set of random steps through phase space, to determine statistical values such as correlation functions across the lattice. By the definition of the Markov chain, the probability of adoption of each state, and therefore its inclusion in the Monte Carlo calculation, depends only on the current state and the proposed state. This probability is denoted as $P(\mu\rightarrow\nu)$ where $\mu$ and $\nu$ are the existing and proposed lattice configurations respectively. We use a combination of the Metropolis and Wolff algorithms to determine this value.
+
 \subsection{Metropolis Algorithm}
+We primarily use the Metropolis algorithm for the calculation of new Markov chain configurations. We begin with a so-called ``hot start,'' where each field value at each lattice site is randomly selected. Then we propose a new value for a single lattice point, which is accepted with a probability
+\begin{equation}
+    P(\mu\rightarrow\nu) = \begin{cases} 
+        e^{-(S_\nu - S_\mu)} & S_\nu > S_\mu \\
+        1 & \mathrm{otherwise} \\
+   \end{cases}
+\end{equation}
+where $S_\nu$ and $S_\mu$ are the lattice actions of configuration before and after the change. This process is performed for each point on the lattice, making up a ``sweep.'' Repeating this sweep many times pushes the lattice toward the action minimum.
+
 \subsection{Wolff Cluster Algorithm}
-\subsection{Autocorrelation}
+
+Though the Metropolis algorithm will slowly find the absolute minimum of the theory, the presence of local minima can greatly prolong the convergence. Both the $\phi^4$ model and the nonlinear $\sigma$ model feature ``kinetic'' terms with gradients of $\phi$. Therefore, the presence of large similarly-valued regions in the lattice can lead to a local minimum. The Wolff algorithm helps reduce the presence of these clusters through two steps: identifying a cluster and flipping it along some arbitrary vector. In the case of $\phi^4$ theory, this flipping takes the form of a simple sign change. In the non-linear sigma model we choose a random unit vector $\vec r$ and consider the projection of the field on this vector. When the cluster flips, each site is flipped along this direction. \footnote{citation needed}. To identify the cluster, the algorithm uses a recursive algorithm defined by the probability of adding a new site. In the non-linear $\sigma$ model, this value is derived as 
+\begin{equation}
+    P_{add} = 1-e^{- \beta \vec\phi_a\vec\phi_b}.
+\end{equation}
+ % TODO: derive this
+
+
+\subsection{Checkerboard algorithm}
+
+In order to parallelize the Metropolis algorithm, we use a checkerboard algorithm. Since the Lagrangian density at each site does not depend on any sites diagonal to it, the lattice can be split into ``white'' sites and ``black'' sites, like the tiles on a checkerboard. Each white site is independent of every other white site and likewise with black sites. Therefore, we can split the sites of each color into separate parallel processing nodes and independently run the Metropolis algorithm, ensuring that no site affects the Lagrangian density at any other site. We use this method to parallelize the code through the Message Passing Interface (MPI).
+
+\subsection{Autocorrelation times and thermalization}
+One important aspect is the correlation between different states of the Markov chain. Ideally, each sample of the lattice would be completely independent, but this is not the case. Therefore, we must sweep the lattice sufficiently to produce an effective Monte Carlo result. We use Wolff's automatic windowing procedure \cite{wolff2007} and the magnetic susceptibility $\chi_m$ to estimate the autocorrelation and determine an appropriate number of sweep between measurements for each theory. Furthermore, the initial values of our Markov chain will be highly correlated with the initial random start. Therefore, we also wait a set number of sweeps before taking any measurements so that the lattice can approach a minimum of the action.
+
 
 \chapter{Results}
 \chapter{Statistical Analysis}
@@ -109,5 +185,6 @@ I will do it...
 
 \section{Code sample}
 \bibliographystyle{unsrt}
+\bibliography{library}
 
 \end{document}
