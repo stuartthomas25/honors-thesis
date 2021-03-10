@@ -746,7 +746,7 @@ Todo:
 - Try to reproduce the Bietenholz plot
     - Derive around $\theta$.
 - Set up an outline of the report.
-    - Pick a good \Latex template that is in accordance with department regulations.
+     Pick a good Latex template that is in accordance with department regulations.
 
 # March 3
 - Standard error vs Standard deviation: things are correct.
@@ -766,11 +766,16 @@ Todo:
 - No from Berkeley, probably between Yale, UMD and *maybe* Cornell.
 
 - Question about final report: how much to include regarding $\phi^4$ model?
+    - Double check page minimum
+    - No more than $1/3$ regarding $\phi^4$ model.
 
 - Data progress:
     - Long simulation, 2 days, up to $L=270$.
-
     - Convergence plot
+    - Calculate jackknife errors on $\langle Q \rangle |_{\theta=0}$
+        - Perform this on each sector?
+    - Should we use **plug in formula**
 
+- Explore [@hasenbusch1995].
 
 # References
