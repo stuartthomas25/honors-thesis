@@ -9,6 +9,7 @@
 \setlength{\topmargin}{.75in}
 \setlength{\textheight}{8.6in}
 
+\newcommand{\e}{\vec e}
 
 % Modified by S. Aubin for the class of 2019 Physics theses
 
@@ -118,15 +119,11 @@ subject to the constraint that $\vec\phi\cdot\vec\phi = 1$. In this report, we p
 Following \cite{bietenholz2018}, we can define the gradient flow in this model via the differential equation
 \begin{equation}
     \label{eq:nsm_gradflow}
-    \partial_\tau \vec\rho (\tau,x) = P(\tau,x) \nabla^2 \vec\rho(\tau,x),
+    \partial_\tau \vec\rho (\tau,x) = \left( 1 - \vec\rho(\tau,x) \vec\rho(\tau,x)^T \right) \nabla^2 \vec\rho(\tau,x),
 \end{equation}
-where $\nabla^2$ is the Laplacian operator in Euclidean space and $P(\tau,x)$ is a $N \times N$ matrix defined as
-\begin{equation*}
-    P(\tau, x) = 1 - \vec\rho(\tau,x) \vec\rho(\tau,x)^T.
-\end{equation*}
-We solve this equation numerically using the boundary condition $\vec\rho(0,x) = \phi(x)$.
+where $\nabla^2$ is the Laplacian operator in Euclidean space. We solve this equation numerically using the boundary condition $\vec\rho(0,x) = \phi(x)$.
 
-In order to use this theory on the lattice, we discretize the action. We replace the derivatives with a simple difference and impose periodic boundary conditions on the system.
+In order to use this theory on the lattice, we discretize the action. We replace the derivatives with a simple difference and impose periodic boundary conditions on the system. For a more in-depth discussion, see Section~\ref{sec:grad_flow}.
 
 \section{Topological Charge}
 
@@ -160,7 +157,7 @@ where $S_\nu$ and $S_\mu$ are the lattice actions of configuration before and af
 
 Though the Metropolis algorithm will slowly find the absolute minimum of the theory, the presence of local minima can greatly prolong the convergence. Both the $\phi^4$ model and the nonlinear $\sigma$ model feature ``kinetic'' terms with gradients of $\phi$. Therefore, the presence of large similarly-valued regions in the lattice can lead to a local minimum. The Wolff algorithm helps reduce the presence of these clusters through two steps: identifying a cluster and flipping it along some arbitrary vector. In the case of $\phi^4$ theory, this flipping takes the form of a simple sign change. In the non-linear sigma model we choose a random unit vector $\vec r$ and consider the projection of the field on this vector. When the cluster flips, each site is flipped along this direction. \footnote{citation needed}. To identify the cluster, the algorithm uses a recursive algorithm defined by the probability of adding a new site. In the non-linear $\sigma$ model, this value is derived as 
 \begin{equation}
-    P_{add} = 1-e^{- \beta \vec\phi_a\vec\phi_b}.
+    P_{add} = 1-e^{- \beta \vec e_a\vec e_b}.
 \end{equation}
  % TODO: derive this
 
@@ -171,6 +168,20 @@ In order to parallelize the Metropolis algorithm, we use a checkerboard algorith
 
 \subsection{Autocorrelation times and thermalization}
 One important aspect is the correlation between different states of the Markov chain. Ideally, each sample of the lattice would be completely independent, but this is not the case. Therefore, we must sweep the lattice sufficiently to produce an effective Monte Carlo result. We use Wolff's automatic windowing procedure \cite{wolff2007} and the magnetic susceptibility $\chi_m$ to estimate the autocorrelation and determine an appropriate number of sweep between measurements for each theory. Furthermore, the initial values of our Markov chain will be highly correlated with the initial random start. Therefore, we also wait a set number of sweeps before taking any measurements so that the lattice can approach a minimum of the action.
+
+\section{Gradient Flow}
+\label{sec:gradflow_disc}
+On the lattice, the definition of the gradient flow (Eq.~\ref{eq:nsm_gradflow}) becomes 
+\begin{equation}
+    \label{eq:nsm_gradflow_disc}
+    \partial_\tau \e (\tau)_x = \left( 1 - \e(\tau)_x \e(\tau)_x^T\right) \nabla^2 \e(\tau)_x,
+\end{equation}
+ where the Laplace operator $\nabla^2$ is defined as
+\begin{equation*}
+    \nabla^2 \e(t)_x = \sum^d_{\mu=1} \left( \e(t)_{x+\hat \mu} - \e(t)_{x-\hat \mu}\right) - 2 d \e(t)_x.
+\end{equation*}
+
+In order to calculate the gradient flow, we numerically solve the differential equation using a fourth-order Runga-Kutta approximation. We use an adaptive step size algorithm to dramatically increase efficiency.
 
 
 \chapter{Results}
