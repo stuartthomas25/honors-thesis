@@ -774,8 +774,62 @@ Todo:
     - Convergence plot
     - Calculate jackknife errors on $\langle Q \rangle |_{\theta=0}$
         - Perform this on each sector?
-    - Should we use **plug in formula**
 
 - Explore [@hasenbusch1995].
+
+
+# March 10
+
+- Better intuition on topology
+- Described gradient flow in the non-linear $\sigma$ model. Here I use some different notation from Bietenholz since it is more consistent with the rest of my paper. This may be something we want to clear up early on.
+
+Writing:
+
+- Convention:
+    #. First priority: internal consistency
+    #. Second priority: consistency with literature
+    #. Change $\vec\phi$ to $\vec e$.
+- Index notation to vector notation: make sure you note that you understand.
+In a way, I am trying to demonstrate mastery and knowledge as well as present research.
+
+
+Issues with topological charge measurement:
+
+- $\langle Q \rangle_\theta = \sum_{Q'} e^{i Q' \theta} \langle Q \rangle^{Q=Q'}_{\theta=0}$
+- Let's try the $\theta = \pi$.
+- It's possible that my arbitrary $\theta$ formula requires infinite measurements.
+- A good exploration of the value of $\theta$ and the uncertainty of the calculation may be in order.
+
+ Try calculating $\xi$, then $\xi_2$.
+
+Q: What is step scaling?
+
+- A way to change the scale nonperturbatively
+
+# March 15
+
+### Some notes on topological sector statistics 
+From [@berg1981], we can naively extrapolate a formula for $\langle Q\rangle_{\theta}$ given arbitrary $\theta$:
+
+$$\langle Q \rangle_\theta = \sum_{Q'} e^{i Q' \theta} \langle Q \rangle^{Q=Q'}_{\theta=0}$$ {#eq:sectorsplit}
+
+Though this expression accurately estimates $\langle Q\rangle_\theta$ as $N\rightarrow \infty$, the rotational nature of the sum in the complex plane prohibits numerical calculation when $\theta$ is not a fraction of $2\pi$. We demonstrate this obstacle by calculating the standard error of the mean for arbitrary $\theta$.
+
+We assume that the standard deviation of each topological sector is equivalent to the standard deviation of the entire ensemble $\sigma$. Given the formula for standard error of the mean $\mathrm{StdErr}(Q) = \sigma /\sqrt{N}$, we can determine the error of each topological sector to be $\mathrm{StdErr}_{Q=Q'}(Q)=\sqrt{N/N_{Q'}} \; \mathrm{StdErr}(Q)$. Using a Pythagorean sum, we can write the standard error of $Q_\theta$ from Eq. @eq:sectorsplit as
+
+$$\mathrm{StdErr}(Q_\theta) = \sqrt{\sum_{Q'} \frac{N}{N_{Q'}}} \; \mathrm{StdErr}(Q_{\theta=0}). $$
+
+From this formula, it is clear that the standard error becomes infinite when any topological sector contains no configurations. This result prohibits numerical calculations of the topological charge (or any observable) in the $\theta \neq 0$ case unless $\theta = 2\pi/n$ where $n \in \mathbb{Z}$. Even when the number of topological sectors is finite, the statistical errors are significantly larger. If we assume each topological sector is equally large, the standard error reduces to 
+
+$$\mathrm{StdErr}(Q_\theta) = n \;\mathrm{StdErr}(Q_{\theta=0}) $$
+
+where $n$ is the number of topological sectors.
+
+
+
+
+
+
+Meeting Wednesday? (it is a Spring Break Day)
 
 # References
