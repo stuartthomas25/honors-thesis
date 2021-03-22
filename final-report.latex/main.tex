@@ -181,7 +181,30 @@ On the lattice, the definition of the gradient flow (Eq.~\ref{eq:nsm_gradflow}) 
     \nabla^2 \e(t)_x = \sum^d_{\mu=1} \left( \e(t)_{x+\hat \mu} - \e(t)_{x-\hat \mu}\right) - 2 d \e(t)_x.
 \end{equation*}
 
-In order to calculate the gradient flow, we numerically solve the differential equation using a fourth-order Runga-Kutta approximation. We use an adaptive step size algorithm to dramatically increase efficiency.
+\subsection{Runge-Kutta Algorithm}
+In order to calculate the gradient flow, we numerically solve the differential equation using a fourth-order Runga-Kutta approximation. This algorithm refines the Euler method 
+\begin{equation*}
+    \e(\tau+h)_x \approx \e(\tau)_x + h f(\e(\tau)_x).
+\end{equation*}
+where $f(\e)$ is defined for convenience as 
+\begin{equation}
+    f(\e)=\partial_\tau \e (\tau)_x  = \left( 1 - \e(\tau)_x \e(\tau)_x^T\right) \nabla^2 \e(\tau)_x,
+\end{equation}
+following from Eq.~\ref{eq:nsm_gradflow_disc}. To the fourth order, this approximation becomes 
+%
+\begin{align}
+    \label{eq:rungekutta}
+    k_1 &= h f(\e(\tau)_x) \\ 
+    k_2 &= h f(\e(\tau)_x + \frac{k_1}{2}) \\ 
+    k_3 &= h f(\e(\tau)_x + \frac{k_2}{2}) \\ 
+    k_4 &= h f(\e(\tau)_x + k_3) \\ 
+    \e(\tau+h)_x &= \e(\tau)_x + \frac{k_1}{6} + \frac{k_2}{3} + \frac{k_3}{3} + \frac{k_4}{6} + O(h^5).
+\end{align}
+This method is usually superior to Euler's method and the midpoint method \cite{vetterling1992}.
+
+To increase the efficiency of this algorithm, we implement the step-doubling algorithm to adaptively adjust $h$. If the error of a Runge-Kutta step is greater than the tolerance, the same step is repeated with half the step size. Alternatively, if the error is less than half of the tolerance, the step size is doubled for the next calculation. Finally, if the step size is greater than the distance to the next measurement, that distance is used as the step size, using the normal value afterwards. Otherwise, the algorithm proceeds with the consistent step size. 
+
+
 
 
 \chapter{Results}

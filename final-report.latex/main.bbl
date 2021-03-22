@@ -37,4 +37,10 @@ Ulli Wolff.
 \newblock Monte {{Carlo}} errors with less errors.
 \newblock {\em Computer Physics Communications}, 176(5):383, March 2007.
 
+\bibitem{vetterling1992}
+William~T Vetterling, William~T Vetterling, William~H Press, William~H Press,
+  Saul~A Teukolsky, Brian~P Flannery, and Brian~P Flannery.
+\newblock {\em Numerical Recipes: {{Example}} Book c}.
+\newblock {Cambridge University Press}, 1992.
+
 \end{thebibliography}
