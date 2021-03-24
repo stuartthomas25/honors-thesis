@@ -891,6 +891,28 @@ references:
   type: article-journal
   URL: https://cds.cern.ch/record/204810
 
+- id: vetterling1992
+  author:
+    - family: Vetterling
+      given: William T
+    - family: Vetterling
+      given: William T
+    - family: Press
+      given: William H
+    - family: Press
+      given: William H
+    - family: Teukolsky
+      given: Saul A
+    - family: Flannery
+      given: Brian P
+    - family: Flannery
+      given: Brian P
+  issued:
+    - year: 1992
+  publisher: Cambridge University Press
+  title: 'Numerical recipes: Example book c'
+  type: book
+
 - id: wang1989
   accessed:
     - year: 2020

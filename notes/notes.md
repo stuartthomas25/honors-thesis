@@ -827,9 +827,57 @@ where $n$ is the number of topological sectors.
 
 
 
+### Meeting notes
+
+Writing questions:
+
+- @schaich2006 splits $P(\mu\rightarrow\nu)$ into $g(\mu\rightarrow\nu)$ and $A(\mu\rightarrow\nu)$. Is this necessary?
+    - This is for clarity.
+    - A minor change. Pick what I think, then fix it in the rough draft.
+
+- Describe Runge-Kutta?
+    - No more than a paragraph, but yes.
 
 
+$\theta=0$ results:
 
-Meeting Wednesday? (it is a Spring Break Day)
+- Some issues: $\chi_t$ and $Q$ are both zero, this disagrees with Bietenholz's qualitative Fig. 7.
+- Perhaps, measure around the neighborhood with higher moments. If all these are zero, there may be something wrong.
+
+Continuum limit:
+
+- Just use $\xi_2$, no need to calculate.
+- Use less expensive suscpetibility measurement. No need for exact values or larger values, just use Bietenholz's tables. We just need to check values are within errors.
+
+TODO: 
+    - Calculate higher moments, determine if something is wrong with $\theta=\pi$ case. Perhaps use this to create a plot of $Q$ around $\theta=0$ and $\theta=\pi$.
+    - Run simulation with $\xi_2$ calculation.
+    - Keep writing, keep writing, keep writing.
+
+*No meeting Wednesday, Spring Break day.*
+
+
+# March 22
+
+- Still working on calculating $\xi_2$,
+
+
+- Runge-Kutta:
+    - Use ``\left'' and ``\right''.
+    - Make sure to cite numerical recipes a second time for step doubling 
+    - Prof. Chris likes to outline Introduction, but wait until the end to write. You should have some idea so that the literature review is robust.
+    - Prof. Chris will look at them sometime after 3:00pm tomorrow.
+
+- No progress on $\langle Q \rangle _\theta $.
+
+- Still no details on symposium, will bug Dan after April 5th.
+
+# March 24
+
+- GRFP feedback
+- No from UCSB, all done!
+
+Research Work:
+- Some developments on higher order values of $Q$.
 
 # References
