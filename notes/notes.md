@@ -856,19 +856,18 @@ TODO:
 
 *No meeting Wednesday, Spring Break day.*
 
-
 # March 22
 
 - Still working on calculating $\xi_2$,
 
 
 - Runge-Kutta:
-    - Use ``\left'' and ``\right''.
+    - Use `\\left` and `\\right`.
     - Make sure to cite numerical recipes a second time for step doubling 
     - Prof. Chris likes to outline Introduction, but wait until the end to write. You should have some idea so that the literature review is robust.
     - Prof. Chris will look at them sometime after 3:00pm tomorrow.
 
-- No progress on $\langle Q \rangle _\theta $.
+- No progress on ${\langle Q \rangle}_\theta$.
 
 - Still no details on symposium, will bug Dan after April 5th.
 
@@ -877,7 +876,57 @@ TODO:
 - GRFP feedback
 - No from UCSB, all done!
 
-Research Work:
+### Research Work:
 - Some developments on higher order values of $Q$.
+    - Looks pretty good, but a little weird.
+    - Can we interpolate a spline within just hte second-order approximations.
+    - TODO: 
+        - Why does the $3\pi/4$ term have no uncertainty on the constant term?
+        - What range should we plot the snippets?
+        - When the cluster is back up, we can try running more statistics on the smaller lattices.
+        - Let's not worry about calculating $\xi_2$ right now, we'll get to it when the server goes back up.
+
+
+### Writing:
+- We need a lot before 2.1. This needs to be readable for graduate students. 
+** Remember your audience **
+- Outline introduction
+- Technical points:
+    - Be careful about reducing the predictive power. This may not be correct because at large scales, it doesn't matter what's happening at small scales. It's not an approximation.
+    - The gradient flow is a not a renormalizing technique. Maybe say "makes them finite".
+    - We need two mechanisms: one for renormalizing the parameters of the Lagrangian and one for the operators we insert. 
+    - Question: is nonlinear sigma renormalizable? Perturbatively no, but general in 2D yes.
+    - Restructure first GF paragraph.
+
+- Smearing is not just for gauge fields. Remove these instances.
+- Add exact solution for $\phi^4$.
+- Remove divergencies
+- Last paragraph of 2.1 should be moved to introduction.
+- Goals should be tailored to results.
+- write out any number less than 20 (3 -> three).
+- Define the Laplace operator in continuous space.
+- Put the discretization in the theory section.
+- Choose sigma of $\sigma$.
+    - Monahan prefers "sigma".
+- Define homotopy group.
+- *Try the cold start*.
+    - Test of an observable is best. Plot is best.
+    - A thesis is not a paper: show a lot! It is difficult to test this against experiment. If there is a test, you should do it to convince people that your code is right.
+
+
+
+
+
+
+    - _NOTE_: we can parallelize a single lattice for many many measurements.
+
+    - For presentation:
+        - Show that the derivative of the plot increases in the infinite volume limit 
+
+# March 29
+
+Writing questions:
+- Feynman diagrams?
+- Topology: due to periodic boundary conditions or vanishing Lagrangian?
 
 # References
