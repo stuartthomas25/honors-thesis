@@ -33,14 +33,51 @@ namespace observables {
         public:
             double operator()(const Lattice2D& lat) const {
                 double val = 0;
-                const Phi phi0 = lat[0];
-                //for (const Phi& phi : as_const(lat)) {
-                for (auto it = lat.cbegin(); it!=lat.cend(); ++it) {
-                    val += (*it)*phi0;
+
+                for (auto itx = lat.cbegin(); itx!=lat.cend(); ++itx) {
+                    for (auto ity = lat.cbegin(); ity!=lat.cend(); ++ity) {
+                        val += (*itx)*(*ity);
+                    }
                 }
                 return val;
             };
             const string name() const { return "chi_m"; };
+    };
+
+    //class C : public BaseObservable {
+        //public:
+            //double operator()(const Lattice2D& lat) const {
+                //double val = 0;
+                //const Phi phi0 = lat[0];
+                ////for (const Phi& phi : as_const(lat)) {
+                //for (auto it = lat.cbegin(); it!=lat.cend(); ++it) {
+                    //val += (*it)*phi0;
+                //}
+                //return val;
+            //};
+            //const string name() const { return "chi_m"; };
+    //};
+
+    class F : public BaseObservable {
+        public:
+            double operator()(const Lattice2D& lat) const {
+                double val = 0;
+
+                int x=0;
+                int y=0;
+
+                //for (const Phi& phi : as_const(lat)) {
+                for (auto itx = lat.cbegin(); itx!=lat.cend(); ++itx) {
+                    for (auto ity = lat.cbegin(); ity!=lat.cend(); ++ity) {
+                        val += (*itx)*(*ity) * cos( 2pi_L * (x - y));
+                        x++;
+                        if (x==lat.L) x=0; // This ensures that x is the Euclidean space dimension
+                    }
+                    if (y==lat.L) y=0;
+                }
+                return val;
+            };
+            const string name() const { return "F"; };
     };
 
     class Q : public BaseObservable {
