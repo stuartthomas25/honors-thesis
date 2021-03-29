@@ -1,4 +1,23 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
+
+\bibitem{monahan2016}
+Christopher Monahan.
+\newblock The gradient flow in simple field theories.
+\newblock In {\em Proceedings of {{The}} 33rd {{International Symposium}} on
+  {{Lattice Field Theory}} \textemdash{} {{PoS}}({{LATTICE}} 2015)}, page 052,
+  {Kobe International Conference Center, Kobe, Japan}, July 2016. {Sissa
+  Medialab}.
+
+\bibitem{zee2010}
+Anthony Zee.
+\newblock {\em Quantum Field Theory in a Nutshell}, volume~7.
+\newblock {Princeton university press}, 2010.
+
+\bibitem{feynman1963a}
+Richard~P. Feynman, Robert~B. Leighton, and Matthew~L. Sands.
+\newblock The {{Principle}} of {{Least Action}}.
+\newblock In {\em The {{Feynman Lectures}} on {{Physics}}}, volume~II of {\em
+  World Student Series}. {Addison-Wesley Pub. Co.}, {Reading, Mass.}, 1963.
 
 \bibitem{solbrig2007}
 Stefan Solbrig, Falk Bruckmann, Christof Gattringer, Ernst-Michael Ilgenfritz,
@@ -14,7 +33,7 @@ Christopher Monahan and Kostas Orginos.
 
 \bibitem{makino2015a}
 Hiroki Makino and Hiroshi Suzuki.
-\newblock Renormalizability of the gradient flow in the {{2D}} \${{O}}({{N}})\$
+\newblock Renormalizability of the gradient flow in the {{2D}} {$O(N)$}
   non-linear sigma model.
 \newblock {\em Progress of Theoretical and Experimental Physics},
   2015(3):33B08--0, March 2015.
