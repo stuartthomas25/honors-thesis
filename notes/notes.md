@@ -947,13 +947,25 @@ x Technical points:
 
 ### Writing questions:
 
-- What is the general definition of the gradient flow? 
 - Cite exact solution of gradient flow?
-- Draft deadline coming up (April 9), what is our goal?
+    - Yes, done.
 - Include Bietenholz reproduction?
+    - Yes
+- Draft deadline coming up (April 9), what is our goal?
+    - Our goal is to calculate the topological $Q$ as a function of $\theta$
+    - Calculating $\chi_t$ is an intermediate step.
+    - The $Q(\theta)$ would be the "crowning achievement".
 
 ### Programming issues
 
 - $\xi_2$ is not correct
+    - Check code and try again
 - I'm getting overflow errors with high powers of Q.
+    - There must a solution!
+    - Try `np.longdouble`, otherwise check internet.
+    - Can we learn anything from Bietenholz's analytic function?
+
+- What is the radius of convergence?
+    - If we solve the first issue we can analyze this one numerically
+
 # References
