@@ -888,10 +888,10 @@ TODO:
 
 
 ### Writing:
-- We need a lot before 2.1. This needs to be readable for graduate students. 
+x We need a lot before 2.1. This needs to be readable for graduate students. 
 ** Remember your audience **
-- Outline introduction
-- Technical points:
+x Outline introduction
+x Technical points:
     - Be careful about reducing the predictive power. This may not be correct because at large scales, it doesn't matter what's happening at small scales. It's not an approximation.
     - The gradient flow is a not a renormalizing technique. Maybe say "makes them finite".
     - We need two mechanisms: one for renormalizing the parameters of the Lagrangian and one for the operators we insert. 
@@ -925,8 +925,29 @@ TODO:
 
 # March 29
 
-Writing questions:
+### Writing questions:
 - Feynman diagrams?
+    - No
 - Topology: due to periodic boundary conditions or vanishing Lagrangian?
+    - Unknown, use Bietenholz for now 
+- Is NLSM a gauge theory?
+    - No, there is no local symmetry
+    - There is a global $O(3)$ symmetry
+    - A hard momentum cutoff does not have the gauge-invariance issue.
+        - Instead, the main motivation is for application to QCD. Prof. Chris will think about it more.
+        - Bietenholz motivates GF as a way to define topological charge in QCD. Removes $1/a^4$.
+        - _Gradient flow removes power-divergent mixing._
+        - Already proven to work for the topological charge in QCD.
+
+### Notes from Chris:
+
+- QFT is a framework, not a model
+
+# March 31
+
+Writing questions:
+
+- What is the general definition of the gradient flow? 
+- Cite exact solution of gradient flow?
 
 # References
