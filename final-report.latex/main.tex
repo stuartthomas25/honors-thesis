@@ -3,6 +3,8 @@
 \usepackage{amsfonts}
 \usepackage{hyperref}
 \usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
 \setlength{\oddsidemargin}{0.5in}
 \setlength{\evensidemargin}{0.5in}
 \setlength{\textwidth}{6.0in}
@@ -10,6 +12,7 @@
 \setlength{\textheight}{8.6in}
 
 \newcommand{\e}{\vec e}
+\newcommand{\citeneeded}{}
 
 % Modified by S. Aubin for the class of 2019 Physics theses
 
@@ -86,21 +89,31 @@ I will do it...
 \pagenumbering{arabic}
 \chapter{Introduction}
 
-Quantum field theory (QFT) is an extraordinarily successful model which can be applied to a range of physical phenomena. Paired with the Standard Model, QFT provides the prevailing basis for all small-scale physics (that is, where general relativity does not apply) and is the fundamental framework of particle physics. In condensed matter physics, effective field theories can model emergent effects such as phonons and quasiparticles. Compared to experiment, QFT is remarkably accurate, famously matching the experimental value for the electron $g$-factor to eight significant figures.\cite{weisskopf1981} 
+Quantum field theory (QFT) is an extraordinarily successful framework which can be applied to a range of physical phenomena. Paired with the Standard Model, QFT provides the prevailing basis for all small-scale physics (that is, where general relativity does not apply) and is the fundamental tool for studying particle physics. In condensed matter physics, effective field theories model emergent effects such as phonons and quasiparticles. Compared to experiment, QFT is remarkably accurate, famously matching the experimental value for the electron $g$-factor to eight significant figures.\cite{weisskopf1981} 
 
 However, this power comes at a cost: the study of quantum fields is rife with infinities. A na\"ive treatment of quantum field theory produces divergent values for physical quantities, a clearly impossible result. Since the 1950s, this issue has been resolved for a large number of models--- most notably quantum electrodynamics--- through perturbation theory and the so-called \textit{renormalization group}. However, the technique fails with perturbatively nonrenormalizable theories. 
 
-One such example is the \textit{non-linear sigma model} which provides a prototypical theory in both condensed matter and particle physics. In solid-state systems, this model describes Heisenberg ferromagnets. In nuclear physics, the non-linear sigma model acts as a prototype for quantum chromodynamics, exhibiting characteristic features such as a mass gap and asymptotic freedom. % citation needed
+One such example is the \textit{non-linear sigma model}, a prototypical theory in both condensed matter and particle physics. In solid-state systems, this model describes Heisenberg ferromagnets and in nuclear physics, it acts as a prototype for quantum chromodynamics (QCD), exhibiting characteristic features such as a mass gap and asymptotic freedom. \citeneeded
 
-In this study, we specifically consider the $O(3)$ nonlinear sigma model in $1+1$ dimensions (one dimension of space, one dimension of time). This theory exhibits topological properties such as \textit{instantons}, or classical field solutions at local minima of the action.
+In this study, we specifically consider the $O(3)$ non-linear sigma model in $1+1$ dimensions (one dimension of space, one dimension of time). This theory exhibits topological properties such as \textit{instantons}, or classical field solutions at local minima of the action.
 
 Since the non-linear sigma model cannot be renormalized perturbatively, we cannot study these topological effects with normal perturbative techniques. An alternative solution is placing the field on a discretized lattice, a technique originally used for quantum chromodynamics. In this scenario, field configurations become computationally calculable. This process introduces an nonphysical length scale $a$, the lattice spacing. Therefore, we expect any physical result to converge in the continuum limit, i.e. when $a\rightarrow 0$. However, this is not always the case as observables mix on the lattice, leading to divergences. As an example, states of definite angular momentum mix when discretized, a clear violation of the angular momentum commutation relations. 
 
-The gradient flow is a technique to remove these divergences. By dampening high-momentum fluctuations, the gradient flow reduces power-divergent mixing and make observables finite on the lattice.\cite{monahan2016} To explore this technique, we first plan to produce numerical calculations using a non-linear sigma model. Using a Monte Carlo method in 1+1 dimensions, we can calculate the topological properties of quantum field theories. 
+The gradient flow is a technique designed to remove these divergences. By dampening high-momentum fluctuations, the gradient flow reduces power-divergent mixing and make observables finite on the lattice.\cite{monahan2016} In quantum chromodynamics, previous studies have verified the ability of the gradient flow to make observables finite\citeneeded. Due to its success in QCD, there has been interest in using the gradient flow to finitize the topological susceptibility in the 1+1 $O(3)$ non-linear sigma model.\cite{bietenholz2018}.
+
+%goals here
+
+\section{Method Overview}
+
+To numerically study the topological qualities of the non-linear sigma model, we first implement a Markov Chain Monte Carlo simulation. We initially construct a proof-of-concept Python program that models the simpler $\phi^4$ model (see Sec.~\ref{sec:phi4}. After comparing with existing literature, we transition to a C++ simulation for efficiency, implementing the non-linear sigma model in larger lattices. Since the gradient flow has no exact solution in the non-linear sigma model, we implement a numerical solution using a fourth-order Runge-Kutta approximation. By applying the gradient flow to every configuration in the sample, we can measure its effect on the topological charge and susceptibility.
+
+
+
 
 \section{Conventions}
-
-Throughout this paper, we use natural units, i.e. $\hbar = 1$ and $c=1$.
+\begin{itemize}
+    \item Throughout this paper, we use natural units, i.e. $\hbar = 1$ and $c=1$.
+\end{itemize}
 
 %\section{Main Experimental Goal}
 
@@ -157,6 +170,20 @@ allowing us to redefine the path integral as
 
 By replacing the Minkowski action $S$ with a Euclidean action $S_E$, we have transformed the amplitude $e^{iS}$ to a statistical Boltzmann factor $e^{-S_E}$.
 
+\subsection{$\phi^4$ model}
+\label{sec:phi4}
+
+The simplest interacting field theory is known as the $\phi^4$ model. This theory describes a spin-0 boson and consists of a real scalar field given by the action
+\begin{equation}
+    \label{eq:phi4 action}
+    S[\phi] = \int d^D x \left[ \frac{1}{2}\partial^\mu \phi \partial_\mu\phi - \frac{1}{2} m_0^2 \phi^2 - \frac{\lambda}{4!}\phi^4\right].
+\end{equation}
+The first two terms describe a free relativistic particle of mass $m_0$ while the last term describes an interaction with strength $\lambda$. Per Einstein summation notation, there is an implicit sum over spacetime dimensions $\mu\in\{0,1,2,3\}$, indexing the derivative vectors\footnote{This canonical representation of the kinetic term $\frac{1}{2}\partial^\mu\phi\partial_\mu\phi$ is equivalent to $\frac{1}{2}\dot\phi^2-\frac{1}{2}\left(\nabla \phi\right)^2$.}
+\begin{align*}
+    \partial^\mu &= \left( \frac{\partial}{\partial t}, \frac{\partial}{\partial x},\frac{\partial}{\partial y}, \frac{\partial}{\partial z} \right) \\
+    \partial_\mu &= \left( \frac{\partial}{\partial t}, -\frac{\partial}{\partial x}, -\frac{\partial}{\partial y}, -\frac{\partial}{\partial z} \right).
+\end{align*}
+
 \subsection{Ultraviolet Divergences}
 
 \section{Markov Chain Monte Carlo}
@@ -194,20 +221,20 @@ This formula will provide the explicit probabilities of the Metropolis and Wolff
 
 
 \section{Gradient Flow}
-To remove ultraviolet fluctuations, we introduce a momentum cutoff which reduces ultraviolet divergences. In a gauge theory, such as QCD, a hard cutoff violates gauge invariance, so more nuanced techniques are required.
+\label{sec:gradflow}
+To remove ultraviolet fluctuations, we introduce a momentum cutoff which reduces ultraviolet divergences. In a gauge theory, such as QCD, a hard cutoff violates gauge invariance, so more nuanced techniques are required. One such technique is ``smearing,'' a local averaging designed to remove diverging fluctuations \cite{solbrig2007}. In this study, we use a technique known as the ``gradient flow'' \cite{monahan2015} which introduces a new half-dimension called ``flow time'', or $\tau$.\footnote{The term ``half-dimension'' indicates that $\tau>0$.}  The flow time parameterizes the smearing such that an evolution in flow time corresponds to suppressing ultraviolet divergences. 
 
-One such technique is ``smearing,'' a local averaging of a gauge field in order to remove diverging fluctuations \cite{solbrig2007}. In this study, we use a technique known as the ``gradient flow'' \cite{monahan2015} which introduces a new half-dimension called ``flow time''. The flow time parameterizes the smearing; an evolution in flow time corresponds to suppressing ultraviolet divergences. In a 2D $\phi^4$ scalar field theory, given by the action
-
-\begin{equation}
-    S_\phi [\phi] = \frac{1}{2}\int d^2x\left[(\partial \phi)^2+m^2\phi^2+\frac{\lambda}{2}\right],
-\end{equation}
-we can define the evolution in flow time as
+Specifically, the gradient flow pushes field configuration toward classical minima of the action. Additionally, renormalized correlation functions remain renormalized at nonzero flow time.\cite{luscher2013} In 2D $\phi^4$ scalar field theory, the gradient flow is defined by the differential equation 
 \begin{equation}
     \frac{\partial \rho(\tau, x)}{\partial \tau} = \partial^2 \rho(\tau,x)
 \end{equation}
-where $\partial^2$ is the Laplacian in 4-D Euclidean spacetime and $\tau$ is the flow time. Here, $\rho$ is the field evolved into a nonzero flow time, bounded by the condition $\rho(\tau=0,x) = \phi(x)$. When solved exactly, this function forms a Gaussian which forces operators to converge. Therefore, in all orders of pertubation theory, any correlation function in the gauge field that has been evolved in flow time becomes immune to these divergences\cite{makino2015a}.
+where $\partial^2$ is the Laplacian in 4-D Euclidean spacetime\footnote{$\partial^2 = \frac{\partial}{\partial t} - \nabla^2$} and $\tau$ is the flow time. Here, $\rho$ is the field evolved into a nonzero flow time, bounded by the condition $\rho(\tau=0,x) = \phi(x)$. In the $\phi^4$ theory, we can solve this equation exactly to find
+\begin{equation}
+    \rho(\tau, x) = \frac{1}{4 \pi \tau} \int d^2 y e^{-(x-y)^2/4\tau} \phi(y).
+\end{equation}
+This function forms a Gaussian, smoothly dampening high-momentum modes and removing ultraviolet divergences from evolved correlation functions.\cite{makino2015a}
 
-Generally, we can choose any flow time equation that drives the field towards a classical minimum. Beyond the $\phi^4$ model, we need flow equations that incorporate different types of fields. In the non-linear sigma model, it has been shown that an appropriate manifestation of the flow time can resolve divergencies \cite{makino2015a}. Therefore, it is possible to define a different flow equation for this model as well. Our goal is to understand this renormalizability in the non-linear sigma model using the gradient flow.
+Generally, we can choose any flow time equation that drives the field towards a classical minimum. Beyond the $\phi^4$ model, we need flow equations that incorporate different types of fields. In the non-linear sigma model, it has been shown that an appropriate manifestation of the flow time can resolve divergences \cite{makino2015a}. Therefore, it is possible to define a different flow equation for this model as well.
 
 
 \section{Non-linear sigma model}
@@ -216,7 +243,7 @@ The non-linear sigma model is a prototypical theory for many physical phenomena,
 \begin{equation}
     S_E = \frac{1}{2g^2} \int d^Dx \partial^\mu \vec\phi \cdot \partial_\mu \vec\phi
 \end{equation}
-subject to the constraint that $\vec\phi\cdot\vec\phi = 1$. In this report, we primarily consider $O(3)$, where $\vec\phi$ is a $3$ dimensional vector.
+subject to the constraint that $\vec\phi\cdot\vec\phi = 1$. In this report, we primarily consider $O(3)$, where $\vec\phi$ is a three dimensional vector.
 
 Following \cite{bietenholz2018}, we can define the gradient flow in this model via the differential equation
 \begin{equation}
@@ -225,7 +252,7 @@ Following \cite{bietenholz2018}, we can define the gradient flow in this model v
 \end{equation}
 where $\nabla^2$ is the Laplacian operator in Euclidean space. We solve this equation numerically using the boundary condition $\vec\rho(0,x) = \phi(x)$.
 
-In order to use this theory on the lattice, we discretize the action. We replace the derivatives with a simple difference and impose periodic boundary conditions on the system. For a more in-depth discussion, see Section~\ref{sec:grad_flow}.
+In order to use this theory on the lattice, we discretize the action. We replace the derivatives with a simple difference and impose periodic boundary conditions on the system. For a more in-depth discussion, see Section~\ref{sec:gradflow}.
 
 \section{Topological Charge}
 
@@ -240,7 +267,7 @@ With these two properties, we can view the field as a continuous mapping between
 
 \chapter{Methods}
 \label{sec:methods}
-Our study of the gradient flow in the non-linear sigma model consists of a computational part and an analytical part. We begin by outlining a numerical Monte Carlo method to simulate the lattice in 2 and 3 dimensions. We verify our program with the well-studied $\phi^4$ scalar field theory. We then generalize our model to a vector field to simulate the non-linear sigma model. This simulation system provides data on vacuum states with which we study the gradient flow's effect on topology.
+Our study of the gradient flow in the non-linear sigma model consists of a computational part and an analytical part. We begin by outlining a numerical Monte Carlo method to simulate the lattice in two and three dimensions. We verify our program with the well-studied $\phi^4$ scalar field theory. We then generalize our model to a vector field to simulate the non-linear sigma model. This simulation system provides data on vacuum states with which we study the gradient flow's effect on topology.
 
 We implement these two algorithms first in Python for the $\phi^4$ model. Afterwards, we transition to C/C++ code due to the increased speed for more complicated theories. 
 
@@ -261,7 +288,7 @@ where $S_\nu$ and $S_\mu$ are the lattice actions of configuration before and af
 
 \subsection{Wolff Cluster Algorithm}
 
-Though the Metropolis algorithm will slowly find the absolute minimum of the theory, the presence of local minima can greatly prolong the convergence. Both the $\phi^4$ model and the non-linear sigma model feature ``kinetic'' terms with gradients of $\phi$. Therefore, the presence of large similarly-valued regions in the lattice can lead to a local minimum. The Wolff algorithm helps reduce the presence of these clusters through two steps: identifying a cluster and flipping it along some arbitrary vector. In the case of $\phi^4$ theory, this flipping takes the form of a simple sign change. In the non-linear sigma model we choose a random unit vector $\vec r$ and consider the projection of the field on this vector. When the cluster flips, each site is flipped along this direction. \footnote{citation needed}. To identify the cluster, the algorithm uses a recursive algorithm defined by the probability of adding a new site. In the non-linear sigma model, this value is derived as 
+Though the Metropolis algorithm will slowly find the absolute minimum of the theory, the presence of local minima can greatly prolong the convergence. Both the $\phi^4$ model and the non-linear sigma model feature ``kinetic'' terms with gradients of $\phi$. Therefore, the presence of large similarly-valued regions in the lattice can lead to a local minimum. The Wolff algorithm helps reduce the presence of these clusters through two steps: identifying a cluster and flipping it along some arbitrary vector. In the case of $\phi^4$ theory, this flipping takes the form of a simple sign change. In the non-linear sigma model we choose a random unit vector $\vec r$ and consider the projection of the field on this vector. When the cluster flips, each site is flipped along this direction.\citeneeded To identify the cluster, the algorithm uses a recursive algorithm defined by the probability of adding a new site. In the non-linear sigma model, this value is derived as 
 \begin{equation}
     P_{add} = 1-e^{- \beta \vec e_a\vec e_b}.
 \end{equation}
@@ -300,10 +327,10 @@ following from Eq.~\ref{eq:nsm_gradflow_disc}. To the fourth order, this approxi
 %
 \begin{align}
     \label{eq:rungekutta}
-    k_1 &= h f(\e(\tau)_x) \\ 
-    k_2 &= h f(\e(\tau)_x + \frac{k_1}{2}) \\ 
-    k_3 &= h f(\e(\tau)_x + \frac{k_2}{2}) \\ 
-    k_4 &= h f(\e(\tau)_x + k_3) \\ 
+    k_1 &= h f\left(\e\left(\tau\right)_x\right) \\ 
+    k_2 &= h f\left(\e\left(\tau\right)_x + \frac{k_1}{2}\right) \\ 
+    k_3 &= h f\left(\e\left(\tau\right)_x + \frac{k_2}{2}\right) \\ 
+    k_4 &= h f\left(\e\left(\tau\right)_x + k_3\right) \\ 
     \e(\tau+h)_x &= \e(\tau)_x + \frac{k_1}{6} + \frac{k_2}{3} + \frac{k_3}{3} + \frac{k_4}{6} + O(h^5).
 \end{align}
 This method is usually superior to Euler's method and the midpoint method \cite{vetterling1992}.
@@ -314,10 +341,63 @@ To increase the efficiency of this algorithm, we implement the step-doubling alg
 
 
 \chapter{Results}
+\section{$\phi^4$ model}
+
+We initially implemented the $\phi^4$ model using the Monte Carlo method described in Sec.~\ref{sec:methods} to verify the results of our system. According to previous studies (\cite{monahan2016}, \cite{schaich2006}), the $\phi^4$ model exhibits a symmetric and broken phase depending on its parameters $m_0^2$ and $\lambda$, specifically occurring at $m_0^2 = -0.72$ for $\lambda = 0.5$. We verify this result by plotting four observables: the lattice average $|\langle\bar\phi\rangle|$, the lattice variance $\chi$, the Binder cumulant $U$ and the bimodality $B$ in Fig.~\ref{fig:phi4}.
+
+\begin{figure}[h]
+  \centering
+      \includegraphics[width=0.7\textwidth]{imgs/phi4.png}
+      \caption{The lattice average $|\langle\bar\phi\rangle|$, the lattice variance $\chi$, the Binder cumulant $U$ and the bimodality $B$ plotted as functions of $m_0^2$. $N=32$, $\lambda=0.5$. The lattice was thermalized from a hot start for 1000 sweeps. Afterwards, 100 measurements were taken with 100 sweeps between each. The red horizontal line indicates $U=2/3$, the symmetric limit of the Binder cumulant.}
+  \label{fig:phi4}
+\end{figure}
+
+To improve efficiency, we transitioned from a Python based simulation to a C++ code. The comparison between these results are found in Fig.~\ref{fig:compare}, using the same values from Fig.~\ref{fig:phi4}.
+
+\begin{figure}[h]
+  \centering
+      \includegraphics[width=0.7\textwidth]{imgs/compare.png}
+      \caption{Comparison between Python and C++ code, using the lattice average $|\langle\bar\phi\rangle|$, the lattice variance $\chi$, the Binder cumulant $U$ and the bimodality $B$ plotted as functions of $m_0^2$. $N=32$, $\lambda=0.5$. The lattice was thermalized from a hot start for 1000 sweeps. Afterwards, 100 measurements were taken with 100 sweeps between each. The red horizontal line indicates $U=2/3$, the symmetric limit of the Binder cumulant.}
+  \label{fig:compare}
+\end{figure}
+
+
+Furthermore, we implemented the gradient flow in this theory. Fig.~\ref{fig:flow} demonstrates the effect of the gradient flow on scalar lattice, specifically the dampening of high frequency modes.
+\begin{figure}[h]
+  \centering
+      \begin{subfigure}[b]{0.2\textwidth}\centering
+        \includegraphics[width=\textwidth]{imgs/0.png}
+        \caption{$\tau=0$}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}[b]{0.2\textwidth}\centering
+        \includegraphics[width=\textwidth]{imgs/0_5.png}
+        \caption{$\tau=0.5$}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}[b]{0.2\textwidth}\centering
+        \includegraphics[width=\textwidth]{imgs/2.png}
+        \caption{$\tau=2$}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}[b]{0.2\textwidth}\centering
+            \includegraphics[width=\textwidth]{imgs/10.png}
+            \caption{$\tau=10$}
+      \end{subfigure}
+      \hfill
+      \caption{\label{fig:flow} Effect of flow time evolution on a random lattice in the symmetric phase. Red and blue indicate positive and negative values of the field in 2D spacetime.}
+  
+\end{figure}
+
+
+
+
 \chapter{Statistical Analysis}
 
 \chapter{Conclusion \& Outlook}
 
+
+% MPI is unnecessary in this case
 
 
 \appendix
