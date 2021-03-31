@@ -945,9 +945,15 @@ x Technical points:
 
 # March 31
 
-Writing questions:
+### Writing questions:
 
 - What is the general definition of the gradient flow? 
 - Cite exact solution of gradient flow?
+- Draft deadline coming up (April 9), what is our goal?
+- Include Bietenholz reproduction?
 
+### Programming issues
+
+- $\xi_2$ is not correct
+- I'm getting overflow errors with high powers of Q.
 # References
