@@ -295,6 +295,35 @@ references:
   URL: http://arxiv.org/abs/hep-th/0407052
   volume: '94'
 
+- id: feynman1963a
+  archive: WorldCat.org
+  author:
+    - family: Feynman
+      given: Richard P.
+    - family: Leighton
+      given: Robert B.
+    - family: Sands
+      given: Matthew L.
+  collection-title: World student series
+  container-title: The Feynman Lectures on Physics
+  event-place: Reading, Mass.
+  ISBN: >-
+    0-201-02010-6 978-0-201-02010-6 0-201-02116-1 978-0-201-02116-5
+    0-201-02011-4 978-0-201-02011-3 0-201-02117-X 978-0-201-02117-2
+    0-201-02118-8 978-0-201-02118-9 0-8053-9045-6 978-0-8053-9045-2
+    0-8053-9046-4 978-0-8053-9046-9 0-8053-9047-2 978-0-8053-9047-6
+    0-8053-9049-9 978-0-8053-9049-0 0-8053-9063-4 978-0-8053-9063-6
+    81-85015-82-1 978-81-85015-82-8 0-201-51003-0 978-0-201-51003-4
+  issued:
+    - year: 1963
+  language: English
+  publisher: Addison-Wesley Pub. Co.
+  publisher-place: Reading, Mass.
+  title: The Principle of Least Action
+  type: chapter
+  URL: http://www.feynmanlectures.caltech.edu/
+  volume: II
+
 - id: hasenbusch1995
   accessed:
     - year: 2021
@@ -519,6 +548,41 @@ references:
   URL: http://arxiv.org/abs/1006.4518
   volume: '2010'
 
+- id: luscher2013
+  abstract: >-
+    In the last few years, the Yang–Mills gradient ﬂow was shown to be an
+    attractive tool for non-perturbative studies of non-Abelian gauge theories.
+    Here a simple extension of the ﬂow to the quark ﬁelds in QCD is considered.
+    As in the case of the pure-gauge gradient ﬂow, the renormalizability of
+    correlation functions involving local ﬁelds at positive ﬂow times can be
+    established using a representation through a local ﬁeld theory in 4 + 1
+    dimensions. Applications of the extended ﬂow in lattice QCD include
+    non-perturbative renormalization and O(a) improvement as well as accurate
+    calculations of the chiral condensate and of the pseudo-scalar decay
+    constant in the chiral limit.
+  accessed:
+    - year: 2021
+      month: 3
+      day: 31
+  author:
+    - family: Lüscher
+      given: Martin
+  container-title: Journal of High Energy Physics
+  container-title-short: J. High Energ. Phys.
+  DOI: 10.1007/JHEP04(2013)123
+  ISSN: 1029-8479
+  issue: '4'
+  issued:
+    - year: 2013
+      month: 4
+  language: en
+  page: '123'
+  source: arXiv.org
+  title: Chiral symmetry and the Yang--Mills gradient flow
+  type: article-journal
+  URL: http://arxiv.org/abs/1302.5246
+  volume: '2013'
+
 - id: makino2015
   accessed:
     - year: 2020
@@ -586,7 +650,7 @@ references:
   page: 33B08-0
   source: arXiv.org
   title: >-
-    Renormalizability of the gradient flow in the 2D $O(N)$ non-linear sigma
+    Renormalizability of the gradient flow in the 2D {$O(N)$} non-linear sigma
     model
   type: article-journal
   URL: http://arxiv.org/abs/1410.7538
@@ -937,6 +1001,21 @@ references:
   type: article-journal
   URL: https://linkinghub.elsevier.com/retrieve/pii/0378437189904688
   volume: '161'
+
+- id: weisskopf1981
+  author:
+    - family: Weisskopf
+      given: Victor F.
+  container-title: Physics today
+  ISSN: 0031-9228
+  issue: '11'
+  issued:
+    - year: 1981
+  page: '69'
+  publisher: American Institute of Physics,
+  title: Development of field theory in the last 50 years
+  type: article-journal
+  volume: '34'
 
 - id: wolff2007
   abstract: >-
