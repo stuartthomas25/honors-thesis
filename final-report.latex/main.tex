@@ -89,7 +89,7 @@ I will do it...
 \pagenumbering{arabic}
 \chapter{Introduction}
 
-Quantum field theory (QFT) is an extraordinarily successful framework which can be applied to a range of physical phenomena. Paired with the Standard Model, QFT provides the prevailing basis for all small-scale physics (that is, where general relativity does not apply) and is the fundamental tool for studying particle physics. In condensed matter physics, effective field theories model emergent effects such as phonons and quasiparticles. Compared to experiment, QFT is remarkably accurate, famously matching the experimental value for the electron $g$-factor to eight significant figures.\cite{weisskopf1981} 
+Quantum field theory (QFT) is an extraordinarily successful framework which can be applied to a range of physical phenomena. Paired with the Standard Model, QFT provides the prevailing basis for all small-scale physics (that is, where general relativity does not apply) and is the fundamental tool for studying subatomic particles. In condensed matter physics, effective field theories model emergent effects such as phonons and quasiparticles. Compared to experiment, QFT is remarkably accurate, famously matching the experimental value for the electron $g$-factor to eight significant figures.\cite{weisskopf1981} 
 
 However, this power comes at a cost: the study of quantum fields is rife with infinities. A na\"ive treatment of quantum field theory produces divergent values for physical quantities, a clearly impossible result. Since the 1950s, this issue has been resolved for a large number of models--- most notably quantum electrodynamics--- through perturbation theory and the so-called \textit{renormalization group}. However, the technique fails with perturbatively nonrenormalizable theories. 
 
@@ -97,7 +97,10 @@ One such example is the \textit{non-linear sigma model}, a prototypical theory i
 
 In this study, we specifically consider the $O(3)$ non-linear sigma model in $1+1$ dimensions (one dimension of space, one dimension of time). This theory exhibits topological properties such as \textit{instantons}, or classical field solutions at local minima of the action.
 
+
+
 Since the non-linear sigma model cannot be renormalized perturbatively, we cannot study these topological effects with normal perturbative techniques. An alternative solution is placing the field on a discretized lattice, a technique originally used for quantum chromodynamics. In this scenario, field configurations become computationally calculable. This process introduces an nonphysical length scale $a$, the lattice spacing. Therefore, we expect any physical result to converge in the continuum limit, i.e. when $a\rightarrow 0$. However, this is not always the case as observables mix on the lattice, leading to divergences. As an example, states of definite angular momentum mix when discretized, a clear violation of the angular momentum commutation relations. 
+
 
 The gradient flow is a technique designed to remove these divergences. By dampening high-momentum fluctuations, the gradient flow reduces power-divergent mixing and make observables finite on the lattice.\cite{monahan2016} In quantum chromodynamics, previous studies have verified the ability of the gradient flow to make observables finite\citeneeded. Due to its success in QCD, there has been interest in using the gradient flow to finitize the topological susceptibility in the 1+1 $O(3)$ non-linear sigma model.\cite{bietenholz2018}.
 
@@ -111,6 +114,11 @@ To numerically study the topological qualities of the non-linear sigma model, we
 \section{Conventions}
 \begin{itemize}
     \item Throughout this paper, we use natural units, i.e. $\hbar = 1$ and $c=1$.
+    \item We use Einstein summation notation, an implicit sum over repeated spacetime indices. For example, if $x^\mu$ is a spacetime four-vector and $x_\mu$ is its covariant form, the term
+        \begin{align*}
+            x^\mu x_\mu &= \sum^4_{\mu=0} x^\mu x_\mu \\
+            &= x_0^2-x_1^2-x_2^2-x_3^2.
+        \end{align*}
 \end{itemize}
 
 %\section{Main Experimental Goal}
@@ -131,6 +139,7 @@ This general description allows QFT to easily incorporate special relativity. By
 Though most introductions to QFT use the ``second quantization,'' we will use a alternative formulation known as the path integral formulation (for a similar introduction see Zee's textbook \cite{zee2010}).
  
 \subsection{Path Integral Formulation}
+\label{sec:pathintegral}
 
 As stated above, we can model a quantum field theory as a superposition of all possible classical fields. Like single-particle quantum mechanics, each configuration has a probability amplitude. To measure expectation values of observables, we simply take an average over all configurations weighted by this complex amplitude. We can formalize this notion using the fundamental formula\footnote{Since this study concerns vacua, we do not include a source term.}
 \begin{equation}
@@ -138,24 +147,24 @@ As stated above, we can model a quantum field theory as a superposition of all p
     \langle \hat O \rangle = \frac{1}{Z} \int \mathcal{D}\phi \: \hat O [\phi]\; e^{iS[\phi]}
 \end{equation}
 % not sure if the semicolons is good form
-where $\langle \hat O \rangle$ is the expectation value of an arbitrary operator $\hat O$; $Z$ is a normalization constant; $S$ is the action functional, defined from the field's Lagrangian; and $\int \mathcal{D}\phi$ represents the eponymous path integral. Though it is possible to define this integral rigorously, for our purposes we can equate it to a sum over all possible configurations. This form generalizes the classical principle of least action, a relationship that Richard Feynman pedagogically explains in his lectures on physics \cite{feynman1963a}. 
+where $\langle \hat O \rangle$ is the expectation value of an arbitrary operator $\hat O$; $Z$ is a normalization constant; $S$ is the action functional, defined from the field's Lagrangian; and $\int \mathcal{D}\phi$ represents the eponymous path integral. Though it is possible to define this integral rigorously, for our purposes we can equate it to a sum over all possible configurations. This form is the quantum analog of the classical principle of least action and reduces to such for large values of the action. For a more pedagogical explanation, see Richard Feynman's lectures on physics.\cite{feynman1963a}
 
 At first glance, Eq.~\ref{eq:pathintegral} is remarkably similar to the statistics of the canonical ensemble. Through this similarity, we will be able to use mathematical tools from statistical mechanics to study quantum field theories. However, the factor of $i$ in the exponent currently prohibits us from making this jump. To remedy this issue, we perform a ``Wick rotation'' which shifts spacetime into Euclidean coordinates. In normal spacetime, defined by the Minkowski metric, the Lorentz-invariant distance is given as
 \begin{equation}
-    s = x^2_0 - x^2_1- x^2_3- x^2_3
+    s^2 = x^2_0 - x^2_1- x^2_3- x^2_3
 \end{equation}
-where $x_0=ct$ and $\vec{x} = (x_1, x_2, x_3)^T$. By redefining the time coordinate $x_0$ of a spacetime point $x$ to be $x_4=ix_0$, we find that the quantity
+where $x_0=ct$ and $\vec{x} = (x_1, x_2, x_3)^T$. By redefining the time coordinate of a spacetime point $x$ to be $x_4=ix_0$, we find that the quantity
 \begin{equation}
-    s_E = x^2_1+ x^2_3+ x^2_3 + x^2_4,
+    s_E^2 = x^2_1+ x^2_3+ x^2_3 + x^2_4,
 \end{equation}
-is invariant, which is representative of a four-dimensional Euclidean space. Furthermore, we find that
+is equivalently Lorentz invariant, which is representative of a four-dimensional Euclidean space. Furthermore, we find that
 \begin{align}
     d^4x_E &= d^3\vec{x}dx_4 \\
     &= i d^3\vec{x}dx_0 \\
     &= i d^4x. \label{eq:wickdifferential}
 \end{align}
 
-We can use this transformation to redefine the Lagrangian $\mathcal{L}$ in Euclidean space as $\mathcal{L}_E$. Since a Lorentz-invariant Lagrangian must include only even powers and derivatives of $x$, the Euclidean Lagrangian is necessarily real. Subsequently, we can define a Euclidean action based on the differential in Eq.~\ref{eq:wickdifferential}:
+We can use this transformation to redefine the Lagrangian $\mathcal{L}$ in Euclidean space as $\mathcal{L}_E$, replacing all $x_0$ with $ix_0$. Since a Lorentz-invariant Lagrangian must include only even powers and derivatives of $x$, the Euclidean Lagrangian remains real. Subsequently, we can define a Euclidean action based on the differential in Eq.~\ref{eq:wickdifferential}:
 \begin{align}
     S_E &= \int d^4x_E \mathcal{L}_E \\
     &= i \int d^4x \mathcal{L}_E,
@@ -166,7 +175,7 @@ allowing us to redefine the path integral as
     \langle \hat O \rangle = \frac{1}{Z} \int \mathcal{D}\phi \: \hat O (\phi)\; e^{-S_E[\phi]}.
 \end{equation}
 
-By replacing the Minkowski action $S$ with a Euclidean action $S_E$, we have transformed the amplitude $e^{iS}$ to a statistical Boltzmann factor $e^{-S_E}$.
+By replacing the Minkowski action $S$ with a Euclidean action $S_E$, we have transformed the amplitude $e^{iS}$ to a statistical Boltzmann factor $e^{-S_E}$. This new form will allow us to use statistical techniques to simulate quantum fields.
 
 \subsection{$\phi^4$ model}
 \label{sec:phi4}
@@ -176,13 +185,21 @@ The simplest interacting field theory is known as the $\phi^4$ model. This theor
     \label{eq:phi4 action}
     S[\phi] = \int d^D x \left[ \frac{1}{2}\partial^\mu \phi \partial_\mu\phi - \frac{1}{2} m_0^2 \phi^2 - \frac{\lambda}{4!}\phi^4\right].
 \end{equation}
-The first two terms describe a free relativistic particle of mass $m_0$ while the last term describes an interaction with strength $\lambda$. Per Einstein summation notation, there is an implicit sum over spacetime dimensions $\mu\in\{0,1,2,3\}$, indexing the derivative vectors\footnote{This canonical representation of the kinetic term $\frac{1}{2}\partial^\mu\phi\partial_\mu\phi$ is equivalent to $\frac{1}{2}\dot\phi^2-\frac{1}{2}\left(\nabla \phi\right)^2$.}
+The first two terms describe a free relativistic particle of mass $m_0$ while the last term describes an interaction with strength $\lambda$. Note that we have generalized the action for $D$ dimensions. Per Einstein summation notation, there is an implicit sum over spacetime dimensions $\mu\in\{0,1,2,3\}$ indexing the derivative vectors\footnote{This canonical representation of the kinetic term $\frac{1}{2}\partial^\mu\phi\partial_\mu\phi$ is equivalent to $\frac{1}{2}\dot\phi^2-\frac{1}{2}\left(\nabla \phi\right)^2$.}
 \begin{align*}
     \partial^\mu &= \left( \frac{\partial}{\partial t}, \frac{\partial}{\partial x},\frac{\partial}{\partial y}, \frac{\partial}{\partial z} \right) \\
     \partial_\mu &= \left( \frac{\partial}{\partial t}, -\frac{\partial}{\partial x}, -\frac{\partial}{\partial y}, -\frac{\partial}{\partial z} \right).
 \end{align*}
 
+This field features spontaneous symmetry breaking at a critical value of $m_0^2$. In practice this property causes the field to spontaneously align, similarly to spins aligning in a ferromagnet. The name ``symmetry breaking'' refers to the transformation $\phi\rightarrow-\phi$, which changes the values of observables in the aligned regime but not the disordered regime.
+
 \subsection{Ultraviolet Divergences}
+
+In Section~\rec{sec:pathintegral},  we defined a fundamental equation of quantum fields using an ``path integral'' which encompasses an uncountably infinite configuration space.  Likewise in perturbation theory, infinite integrals over momenta are commonplace. Unfortunately, these integrals often diverge, even when calculating physical values.
+
+The accepted remedy is unintuitive. Essentially, we adopt infinite values for the parameters of the Lagragian ($m_0^2$ and $\lambda$ in $\phi^4$ theory). In practice, this technique is involved and consists of two steps: regularization and renormalization.
+
+Regularization is a process which introduces a new parameter into calculations this can take multiple forms 
 
 \section{Markov Chain Monte Carlo}
 
@@ -191,6 +208,8 @@ To accomplish a statistical analysis of quantum fields, we use a Monte Carlo sim
 \subsection{The Markov Chain}
 The Markov chain is an effective method to identity these low-action states. Essentially, we begin with a random configuration and then make small adjustments, gradually lowering the action. Starting with a field configuration $\phi_a$, we propose a new field $\phi_b$. The probability of accepting this change, thereby adding the configuration to the chain, is given by the function 
 \[P(\phi_a \rightarrow \phi_b).\]
+
+
 
 There are four requirements that this function must obey to produce a Boltzmann distribution of samples:
 \begin{enumerate}
@@ -336,8 +355,6 @@ This method is usually superior to Euler's method and the midpoint method \cite{
 To increase the efficiency of this algorithm, we implement the step-doubling algorithm to adaptively adjust $h$. If the error of a Runge-Kutta step is greater than the tolerance, the same step is repeated with half the step size. Alternatively, if the error is less than half of the tolerance, the step size is doubled for the next calculation. Finally, if the step size is greater than the distance to the next measurement, that distance is used as the step size, using the normal value afterwards. Otherwise, the algorithm proceeds with the consistent step size. 
 
 
-
-
 \chapter{Results}
 \section{$\phi^4$ model}
 
@@ -361,6 +378,7 @@ To improve efficiency, we transitioned from a Python based simulation to a C++ c
 
 
 Furthermore, we implemented the gradient flow in this theory. Fig.~\ref{fig:flow} demonstrates the effect of the gradient flow on scalar lattice, specifically the dampening of high frequency modes.
+
 \begin{figure}[h]
   \centering
       \begin{subfigure}[b]{0.2\textwidth}\centering
