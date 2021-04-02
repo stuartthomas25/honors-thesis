@@ -89,7 +89,7 @@ I will do it...
 \pagenumbering{arabic}
 \chapter{Introduction}
 
-Quantum field theory (QFT) is an extraordinarily successful framework which can be applied to a range of physical phenomena. Paired with the Standard Model, QFT provides the prevailing basis for all small-scale physics (that is, where general relativity does not apply) and is the fundamental tool for studying subatomic particles. In condensed matter physics, effective field theories model emergent effects such as phonons and quasiparticles. Compared to experiment, QFT is remarkably accurate, famously matching the experimental value for the electron $g$-factor to eight significant figures.\cite{weisskopf1981} 
+Quantum field theory (QFT) is an extraordinarily successful framework which can be applied to a range of physical phenomena. Paired with the Standard Model, QFT provides the prevailing basis for all small-scale physics (that is, where general relativity does not apply) and is the fundamental tool for studying particle physics. In condensed matter physics, effective field theories model emergent effects such as phonons and quasiparticles. Compared to experiment, QFT is remarkably accurate, famously matching the experimental value for the electron $g$-factor to eight significant figures.\cite{weisskopf1981} 
 
 However, this power comes at a cost: the study of quantum fields is rife with infinities. A na\"ive treatment of quantum field theory produces divergent values for physical quantities, a clearly impossible result. Since the 1950s, this issue has been resolved for a large number of models--- most notably quantum electrodynamics--- through perturbation theory and the so-called \textit{renormalization group}. However, the technique fails with perturbatively nonrenormalizable theories. 
 
@@ -199,7 +199,14 @@ In Section~\rec{sec:pathintegral},  we defined a fundamental equation of quantum
 
 The accepted remedy is unintuitive. Essentially, we adopt infinite values for the parameters of the Lagragian ($m_0^2$ and $\lambda$ in $\phi^4$ theory). In practice, this technique is involved and consists of two steps: regularization and renormalization.
 
-Regularization is a process which introduces a new parameter into calculations this can take multiple forms 
+Regularization is a process which introduces a new parameter into calculations. One example is a momentum cutoff. This technique transforms infinite momentum integral integrals as 
+\begin{equation*}
+    \int_0^\infty dk \rightarrow \int_0^\Lambda dk,
+\end{equation*}
+introducing $\Lambda$ as a regularization parameter.
+
+\subsection{Fields on the lattice}
+
 
 \section{Markov Chain Monte Carlo}
 
@@ -362,24 +369,6 @@ We initially implemented the $\phi^4$ model using the Monte Carlo method describ
 \begin{figure}[h]
   \centering
       \includegraphics[width=0.7\textwidth]{imgs/phi4.png}
-      \caption{The lattice average $|\langle\bar\phi\rangle|$, the lattice variance $\chi$, the Binder cumulant $U$ and the bimodality $B$ plotted as functions of $m_0^2$. $N=32$, $\lambda=0.5$. The lattice was thermalized from a hot start for 1000 sweeps. Afterwards, 100 measurements were taken with 100 sweeps between each. The red horizontal line indicates $U=2/3$, the symmetric limit of the Binder cumulant.}
-  \label{fig:phi4}
-\end{figure}
-
-To improve efficiency, we transitioned from a Python based simulation to a C++ code. The comparison between these results are found in Fig.~\ref{fig:compare}, using the same values from Fig.~\ref{fig:phi4}.
-
-\begin{figure}[h]
-  \centering
-      \includegraphics[width=0.7\textwidth]{imgs/compare.png}
-      \caption{Comparison between Python and C++ code, using the lattice average $|\langle\bar\phi\rangle|$, the lattice variance $\chi$, the Binder cumulant $U$ and the bimodality $B$ plotted as functions of $m_0^2$. $N=32$, $\lambda=0.5$. The lattice was thermalized from a hot start for 1000 sweeps. Afterwards, 100 measurements were taken with 100 sweeps between each. The red horizontal line indicates $U=2/3$, the symmetric limit of the Binder cumulant.}
-  \label{fig:compare}
-\end{figure}
-
-
-Furthermore, we implemented the gradient flow in this theory. Fig.~\ref{fig:flow} demonstrates the effect of the gradient flow on scalar lattice, specifically the dampening of high frequency modes.
-
-\begin{figure}[h]
-  \centering
       \begin{subfigure}[b]{0.2\textwidth}\centering
         \includegraphics[width=\textwidth]{imgs/0.png}
         \caption{$\tau=0$}
