@@ -162,6 +162,12 @@ class Lattice(object):
         c = np.vectorize(hls_to_rgb) (h,l,s) # --> tuple
         c = np.array(c)  # -->  array of (3,n,m) shape, but need (n,m,3)
         c = c.swapaxes(0,2)
+
+        beta = 6
+        c[:,:,0] = 1/(1+np.exp(-beta*np.real(M)))
+        c[:,:,1] = 1/(1+np.exp(-beta*np.real(M)))
+        c[:,:,2] = 1/(1+np.exp(-beta*np.real(M)))
+
         plt.figure(figsize=figsize)
         im = plt.imshow(c)
         if show:
@@ -277,16 +283,16 @@ class GifProducer(object):
 if __name__=="__main__":
     # seed(a=14231)
     L = int(sys.argv[1])
-    m = 0
-    lam = 0
+    m = -0.9
+    lam = 0.5
     ncores = 6
-    timeout = 1
+    timeout = 1000
     wolff = True
     parallel = 'parallel' in sys.argv
     l = Lattice(dim=L, m=m, l=lam)
 
     rw = RandomWalk(l)
-    wolff_rate = 1
+    wolff_rate = 10
     stop_acceptance = 0.0
 
     counter = 0
@@ -326,11 +332,12 @@ if __name__=="__main__":
             rw.full_sweep()
 
             sweep_count += 1
-            record_state(l)
 
 
         if wolff:
-            #rw.wolff()
+            record_state(l)
+            rw.wolff()
+            record_state(l)
             pass
         else:
             rw.swendsen_wang()
