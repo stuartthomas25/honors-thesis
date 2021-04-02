@@ -245,7 +245,7 @@ Specifically, the gradient flow pushes field configuration toward classical mini
 \begin{equation}
     \frac{\partial \rho(\tau, x)}{\partial \tau} = \partial^2 \rho(\tau,x)
 \end{equation}
-where $\partial^2$ is the Laplacian in 4-D Euclidean spacetime\footnote{$\partial^2 = \frac{\partial}{\partial t} - \nabla^2$} and $\tau$ is the flow time. Here, $\rho$ is the field evolved into a nonzero flow time, bounded by the condition $\rho(\tau=0,x) = \phi(x)$. In the $\phi^4$ theory, we can solve this equation exactly to find
+where $\partial^2$ is the Laplacian in 4-D Euclidean spacetime\footnote{Explicitly, $\partial^2 = \frac{\partial^2}{\partial t^2} + \nabla^2$} and $\tau$ is the flow time. Here, $\rho$ is the field evolved into a nonzero flow time, bounded by the condition $\rho(\tau=0,x) = \phi(x)$. In the $\phi^4$ theory, we can solve this equation exactly to find \cite{monahan2016}
 \begin{equation}
     \rho(\tau, x) = \frac{1}{4 \pi \tau} \int d^2 y e^{-(x-y)^2/4\tau} \phi(y).
 \end{equation}
@@ -281,7 +281,6 @@ The $O(3)$ non-linear sigma model model features topological properties originat
 
 With these two properties, we can view the field as a continuous mapping between two 3D spheres, denoted as $S^2$, and associate an integer number of wrappings to each mapping from $S^2$ to $S^2$. We can envision a tangible metaphor for this wrapping with a balloon and a baseball: by simply inserting the baseball into the balloon, we have established a mapping from every point on the balloon to every point on the baseball. We can create an equally valid map by twisting the balloon's mouth and wrapping the baseball again. In a purely mathematical world, we perform this process an infinite number of times, thereby associating every possible mapping with an integer. The group of integers is known as the \textit{homotopy group} of the non-linear sigma model. We associate every field configuration with an element of this group, known as the \textit{topological charge}, which we denote as $Q$.
 
-
 \chapter{Methods}
 \label{sec:methods}
 Our study of the gradient flow in the non-linear sigma model consists of a computational part and an analytical part. We begin by outlining a numerical Monte Carlo method to simulate the lattice in two and three dimensions. We verify our program with the well-studied $\phi^4$ scalar field theory. We then generalize our model to a vector field to simulate the non-linear sigma model. This simulation system provides data on vacuum states with which we study the gradient flow's effect on topology.
@@ -296,7 +295,7 @@ We implement a Markov Chain Monte Carlo method following Schaich's thesis \cite{
 \subsection{Metropolis Algorithm}
 We primarily use the Metropolis algorithm for the calculation of new Markov chain configurations. We begin with a so-called ``hot start,'' where each field value at each lattice site is randomly selected. Then we propose a new value for a single lattice point, which is accepted with a probability
 \begin{equation}
-    P(\mu\rightarrow\nu) = \begin{cases} 
+    P(\phi_a\rightarrow\phi_b) = \begin{cases} 
         e^{-(S_\nu - S_\mu)} & S_\nu > S_\mu \\
         1 & \mathrm{otherwise} \\
    \end{cases}
