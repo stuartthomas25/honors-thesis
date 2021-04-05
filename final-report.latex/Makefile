@@ -3,7 +3,7 @@
 all : pdf clean
 
 pdf: main.tex $(wildcard imgs/*)
-	latexmk -pdflatex="pdflatex -synctex=1 %O %S" -pdf
+	latexmk -pdflatex="pdflatex -synctex=1 %O %S" -pdf main.tex
 
 .PHONY: clean
 

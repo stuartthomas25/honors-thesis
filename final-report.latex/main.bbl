@@ -1,5 +1,10 @@
 \begin{thebibliography}{10}
 
+\bibitem{weisskopf1981}
+Victor~F. Weisskopf.
+\newblock Development of field theory in the last 50 years.
+\newblock {\em Physics today}, 34(11):69, 1981.
+
 \bibitem{monahan2016}
 Christopher Monahan.
 \newblock The gradient flow in simple field theories.
@@ -37,6 +42,11 @@ Stefan Solbrig, Falk Bruckmann, Christof Gattringer, Ernst-Michael Ilgenfritz,
 Christopher Monahan and Kostas Orginos.
 \newblock Locally smeared operator product expansions in scalar field theory.
 \newblock {\em Phys. Rev. D}, 91(7):074513, April 2015.
+
+\bibitem{luscher2013}
+Martin L{\"u}scher.
+\newblock Chiral symmetry and the {{Yang}}--{{Mills}} gradient flow.
+\newblock {\em J. High Energ. Phys.}, 2013(4):123, April 2013.
 
 \bibitem{makino2015a}
 Hiroki Makino and Hiroshi Suzuki.
