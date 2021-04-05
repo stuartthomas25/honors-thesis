@@ -604,7 +604,7 @@ Graduate School:
     May be a shortcut to calculate the gradient flow :[@luscher2010]:
         - Used with $SU(3)$ but not $O(3)$.
         - Could be mapped but the mathematics are very difficult (see general technique in [@munthe-kaas1999]).
-        - Note that Bietenholz does not use L\"uscher's method.
+        - Note that Bietenholz does not use Lüscher's method.
 
 - Internal Energy:
     - Run 100x100 and compare with specific $\beta$ values from Table 1 [@berg1981].
@@ -967,5 +967,25 @@ x Technical points:
 
 - What is the radius of convergence?
     - If we solve the first issue we can analyze this one numerically
+
+# April 5
+
+### Writing
+
+- Almost finished with theory and methods sections.
+
+### Theory
+
+- I think $\langle Q e^{i \theta Q}\rangle$ will actually work.
+    - There was an error my uncertainty calculation
+    - Per the Path integral definition, they should be equivalent
+    - Then  why doesn't Bietenholz or Bögli do it? I assume in the second case because it doesnt represent anything physical.
+![Bietenholz Fig. 7 quantitative reproduction](bietenholz_fig7)
+
+- Tried Bietenholz's analytic guess, doesn't work globally.
+
+### Calculation
+
+- Looked at expression for $\xi_2$, looks right.
 
 # References
