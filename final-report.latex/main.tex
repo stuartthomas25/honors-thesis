@@ -693,14 +693,23 @@ We initially implemented the $\phi^4$ model using the Monte Carlo method describ
 \appendix
 \chapter{C++ NLSM Monte Carlo Program}
 \lstset{language=C++,
-                basicstyle=\ttfamily,
+                basicstyle=\small\ttfamily,
                 keywordstyle=\color{blue}\ttfamily,
                 stringstyle=\color{red}\ttfamily,
                 commentstyle=\color{green}\ttfamily,
-                morecomment=[l][\color{magenta}]{\#}
+                morecomment=[l][\color{magenta}]{\#},
+                breaklines=true,
+                postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}
 }
 
-
+\codeexample{sweep.h}
+\codeexample{sweep.cpp}
+\codeexample{lattice.h}
+\codeexample{lattice.cpp}
+\codeexample{phi.h}
+\codeexample{phi.cpp}
+\codeexample{observables.h}
+\codeexample{constants.h}
 
 \bibliographystyle{unsrt}
 \bibliography{library}
