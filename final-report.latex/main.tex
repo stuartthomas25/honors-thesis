@@ -280,24 +280,24 @@ Each primary observable is defined on each configuration independently, meaning 
 There are two potential points of confusion here. The first lies in the definition of ``broken`` phase. Though the symmetric phase more closely resembles a pane of broken glass, it leaves $\phi\rightarrow-\phi$ symmetry \textit{un}-broken, thereby giving the title ``broken'' to the more visually uniform configuration. An additional potential pitfall is the distinction between the \textit{lattice average} and the \textit{ensemble average}. The first is a mean over all lattice sites while the second is a mean over all configurations in the Markov Chain.
 
 \begin{figure}[h]
-  \centering
+    \begin{center}
       \begin{subfigure}[b]{0.3\textwidth}\centering
         \includegraphics[width=0.6\textwidth]{imgs/broken.png}
-        \caption{broken phase ($m_0^2=-1.0$)}
+        \caption{broken phase \\($m_0^2=-1.0$)}
       \end{subfigure}%
       \hfill
       \begin{subfigure}[b]{0.3\textwidth}\centering
         \includegraphics[width=0.6\textwidth]{imgs/transition.png}
-        \caption{transition ($m_0^2=-0.7$)}
+        \caption{transition \\($m_0^2=-0.7$)}
       \end{subfigure}%
-
       \hfill
       \begin{subfigure}[b]{0.3\textwidth}\centering
         \includegraphics[width=0.6\textwidth]{imgs/symmetric.png}
-        \caption{symmetric phase ($m_0^2=-0.4$)}
+        \caption{symmetric phase \\($m_0^2=-0.4$)}
       \end{subfigure}
       \hfill
       \caption{\label{fig:primary observables} Visualization of broken phase, symmetric phase and transition. Simulation run on $64\times64$ lattice, plotted after 1000 sweep thermalization.}
+  \end{center}
 \end{figure}
 
 \begin{table}[h]
@@ -305,11 +305,10 @@ There are two potential points of confusion here. The first lies in the definiti
     \begin{tabular}{ c|| c | c | c}
         & broken & transition & symmetric \\ \hline
         $|\bar\phi|$ & 0.56 & 0.07 & 0.02 \\ 
-        $\chi_m$ & 1274.05& 22.37 & 1.98\\  
-        $\S_E/L^2$ & 0.29 & 0.40 & 0.44
+        $S_E/L^2$ & 0.29 & 0.40 & 0.44
     \end{tabular}
     \end{center}
-    \caption{\label{tab:primary observables} Primary observables with average action per site corresponding to the particular configurations in Fig.~\ref{fig:primary observables}.}
+    \caption{\label{tab:primary observables} Average magnetization with average action per site corresponding to the particular configurations in Fig.~\ref{fig:primary observables}.}
 \end{table}
 
 \subsubsection{Average Magnetization}
@@ -476,24 +475,23 @@ where $\partial^2$ is the Laplacian in 4-D Euclidean spacetime and $\tau$ is the
 \end{equation}
 This function forms a Gaussian, smoothly dampening high-momentum modes and removing ultraviolet divergences from evolved correlation functions.\cite{makino2015a} We can visualize this by plotting the $\phi$ field, shown in Fig.~\ref{fig:flow}. These plots demonstrate the reduction of high momentum modes.
 
-%TODO: make this in black and white
 \begin{figure}[h]
   \centering
       \begin{subfigure}[b]{0.2\textwidth}\centering
-        \includegraphics[width=\textwidth]{imgs/0.png}
+        \includegraphics[width=0.9\textwidth]{imgs/gf0.png}
         \caption{$\tau=0$}
       \end{subfigure}%
       \begin{subfigure}[b]{0.2\textwidth}\centering
-        \includegraphics[width=\textwidth]{imgs/0_5.png}
-        \caption{$\tau=0.5$}
+        \includegraphics[width=0.9\textwidth]{imgs/gf1.png}
+        \caption{$\tau=0.001$}
       \end{subfigure}%
       \begin{subfigure}[b]{0.2\textwidth}\centering
-        \includegraphics[width=\textwidth]{imgs/2.png}
-        \caption{$\tau=2$}
+        \includegraphics[width=0.9\textwidth]{imgs/gf2.png}
+        \caption{$\tau=0.01$}
       \end{subfigure}%
       \begin{subfigure}[b]{0.2\textwidth}\centering
-            \includegraphics[width=\textwidth]{imgs/10.png}
-            \caption{$\tau=10$}
+        \includegraphics[width=0.9\textwidth]{imgs/gf3.png}
+        \caption{$\tau=0.1$}
       \end{subfigure}%
       \caption{\label{fig:flow} Effect of flow time evolution on a random lattice in the symmetric phase. Red and blue indicate positive and negative values of the field in 2D spacetime.}
 \end{figure}
@@ -673,10 +671,8 @@ We initially implemented the $\phi^4$ model using the Monte Carlo method describ
     \centering
       \includegraphics[width=0.7\textwidth]{imgs/phi4.png}
       \caption{\label{fig:phi4} Simulation of the phase transition in the $\phi^4$ model: Magnetization $\langle |\bar\phi|\rangle$, magnetic susceptibility $\chi_m$, Binder cumulant $U$ and bimodality $B$ for various values of the mass squared $m_0^2$.}
-
-
-
 \end{figure}
+
 
 
 
@@ -693,7 +689,7 @@ We initially implemented the $\phi^4$ model using the Monte Carlo method describ
 \appendix
 \chapter{C++ NLSM Monte Carlo Program}
 \lstset{language=C++,
-                basicstyle=\small\ttfamily,
+                basicstyle=\scriptsize\ttfamily,
                 keywordstyle=\color{blue}\ttfamily,
                 stringstyle=\color{red}\ttfamily,
                 commentstyle=\color{green}\ttfamily,
