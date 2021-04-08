@@ -2,6 +2,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{hyperref}
+\usepackage{tikz}
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{subcaption}
@@ -34,6 +35,7 @@
 % > pdflatex thesis_template.tex  (yes, you need to do it twice to
 %                                  fill in the list of tables, figures
 %                                  and references).
+
 
 \begin{document}
 \setlength{\baselineskip}{24pt}
@@ -197,7 +199,7 @@ Following Sec.~\ref{sec:pathintegral}, we calculate the Euclidean action in 1+1 
 \end{equation}
 where $\partial_t$ and $\partial_x$ are the two derivatives in 1+1 Euclidean spacetime. 
 
-This field features spontaneous symmetry breaking at a critical value of $m_0^2$. In practice this property causes the field to spontaneously align, similarly to spins aligning in a ferromagnet. The name ``symmetry breaking'' refers to the transformation $\phi\rightarrow-\phi$, which changes the values of observables in the aligned regime but not the disordered regime.
+This field features spontaneous symmetry breaking at a critical value of $m_0^2$. In practice this property causes the field to spontaneously align, similarly to spins aligning in a ferromagnet. The name ``symmetry breaking'' refers to the transformation $\phi\rightarrow-\phi$, which changes the values of observables in the aligned regime but not the disordered regime. These two phases are known as the ``broken'' and ``symmetric'' phases and their transition is well understood.
 
 
 \subsection{Non-linear sigma model}
@@ -213,17 +215,13 @@ The theory is defined by the Euclidean action
 \end{equation}
 subject to the constraint that $\e\cdot\e = 1$. Here, $\beta$ is the inverse coupling.
 
+\subsection{NLSM $\theta$ term}
 
-%TODO: this has to go somewhere else
-Following \cite{bietenholz2018}, we can define the gradient flow in this model via the differential equation
+In order to make the non-linear sigma model topologically nontrivial, we introduce a $\theta$ term into the action such that 
 \begin{equation}
-    \label{eq:nsm_gradflow}
-    \partial_\tau \vec\rho (\tau,x) = \left( 1 - \vec\rho(\tau,x) \vec\rho(\tau,x)^T \right) \partial^2 \vec\rho(\tau,x),
+    S[\e] \rightarrow S[\e] - i \theta Q[\phi],
 \end{equation}
-where $\partial^2$ is the Laplacian operator in Euclidean space\footnote{Explicitly, $\partial^2 = \frac{\partial^2}{\partial t^2} + \nabla^2$}. We solve this equation numerically using the boundary condition $\vec\rho(0,x) = \e(x)$.
-
-In order to use this theory on the lattice, we discretize the action. We replace the derivatives with a simple difference and impose periodic boundary conditions on the system. For a more in-depth discussion, see Section~\ref{sec:gradflow}.
-
+where $Q$ is the topological charge (see Sec.~\ref{sec:topological charge}).
 
 
 \section{Markov Chain Monte Carlo}
@@ -264,8 +262,70 @@ This formula will provide the explicit probabilities of the Metropolis and Wolff
 
 
 
-\section{Topological Charge}
+\section{Observables}
 
+To extract physics from Monte Carlo simulations, we define a set of ``observables''. These quantities manifest as expectation values of operators, calculated using the Euclidean path integral formula (Eq.~\ref{eq:pathintegraleuclidean}). We can classify these observables into two categories: primary and secondary observables. Primary observables are calculated as expectation values of global operators while secondary observables are derived from these quantities.
+
+\subsection{Primary Observables}
+Each primary observable is defined on each configuration independently, meaning they do not encode ensemble statistics of the Markov Chain.\footnote{One slight exception is the magnetic susceptibility, which can be defined both ways.} In the $\phi^4$ model, we can develop an intuition around these quantities by visualizing the symmetric and broken phases. Fig~\ref{fig:primary observables} and Tab.~\ref{tab:primary observables} show examples of these quantities in three different configurations: one in the broken phase, one in the symmetric phase, and one at the transition. 
+
+There are two potential points of confusion here. The first lies in the definition of ``broken`` phase. Though the symmetric phase more closely resembles a pane of broken glass, it leaves $\phi\rightarrow-\phi$ symmetry \textit{un}-broken, thereby giving the title ``broken'' to the more visually uniform configuration. An additional potential pitfall is the distinction between the \textit{lattice average} and the \textit{ensemble average}. The first is a mean over all lattice sites while the second is a mean over all configurations in the Markov Chain.
+
+\begin{figure}[h]
+  \centering
+      \begin{subfigure}[b]{0.3\textwidth}\centering
+        \includegraphics[width=0.6\textwidth]{imgs/broken.png}
+        \caption{broken phase}
+      \end{subfigure}%
+      \hfill
+      \begin{subfigure}[b]{0.3\textwidth}\centering
+        \includegraphics[width=0.6\textwidth]{imgs/transition.png}
+        \caption{transition}
+      \end{subfigure}%
+      \hfill
+      \begin{subfigure}[b]{0.3\textwidth}\centering
+        \includegraphics[width=0.6\textwidth]{imgs/symmetric.png}
+        \caption{symmetric phase}
+      \end{subfigure}
+      \hfill
+      \caption{\label{fig:primary observables} Visualization of broken phase, symmetric phase and transition. Simulation run on $64\times64$ lattice, plotted after 1000 sweep thermalization.}
+\end{figure}
+
+\begin{table}[h]
+    \begin{center}
+    \begin{tabular}{ c|| c | c | c}
+        & broken & transition & symmetric \\ \hline
+        $|\bar\phi|$ & 0.56 & 0.07 & 0.02 \\ 
+        $\chi_m$ & 1274.05& 22.37 & 1.98\\  
+        $\S_E/L^2$ & 0.29 & 0.40 & 0.44
+    \end{tabular}
+    \end{center}
+    \caption{\label{tab:primary observables} Primary observables with average action per site corresponding to the particular configurations in Fig.~\ref{fig:primary observables}.}
+\end{table}
+
+\subsubsection{Average Magnetization}
+The average magnetization quantifies the total alignment of the field. In the $\phi^4$ theory, this value is a scalar and indicates the spontaneous symmetry breaking of the field. In the NLSM, this value is a vector and also represents a spontaneous symmetry breaking, though this quality is outside the scope of this study. In both theories, a value of zero indicates the symmetric phase while a nonzero value indicates broken symmetry. In the NLSM, a magnitude of one represents total alignment.
+
+Mathematically, we can define this quantity in the $\phi^4$ model as 
+\begin{equation}
+    |\bar\phi| \equiv \frac{1}{L^2}\sum_i^{L^2} \phi(x_i).
+\end{equation}
+In the NLSM, the equivalent value is defined as 
+\begin{equation}
+    |\bar\e| \equiv \frac{1}{L^2}\sum_i^{L^2} \e(x_i).
+\end{equation}
+
+\subsubsection{Magnetic Susceptibility}
+
+
+\subsection{Secondary Observables}
+\subsubsection{Binder Cumulant}
+\subsection{Bimodality}
+
+
+\subsection{Jackknife Method}
+\section{Topological Observables}
+\label{sec:topological charge}
 The $O(3)$ non-linear sigma model model features topological properties originating from two properties: 
 \begin{enumerate}
     \item At $x\rightarrow\infty$, the field must become uniform since the Lagrangian must vanish. This allows us to model $x\rightarrow\infty$ as a single point on the field, forming a Riemann sphere in three dimensions.
@@ -273,6 +333,52 @@ The $O(3)$ non-linear sigma model model features topological properties originat
 \end{enumerate}
 
 With these two properties, we can view the field as a continuous mapping between two 3D spheres, denoted as $S^2$, and associate an integer number of wrappings to each mapping from $S^2$ to $S^2$. We can envision a tangible metaphor for this wrapping with a balloon and a baseball: by simply inserting the baseball into the balloon, we have established a mapping from every point on the balloon to every point on the baseball. We can create an equally valid map by twisting the balloon's mouth and wrapping the baseball again. In a purely mathematical world, we perform this process an infinite number of times, thereby associating every possible mapping with an integer. The group of integers is known as the \textit{homotopy group} of the non-linear sigma model. We associate every field configuration with an element of this group, known as the \textit{topological charge}, which we denote as $Q$.
+
+In practice, this quantity is nontrivial to calculate. To begin, we define a local topological charge density $q$, defined for each square of adjacent lattice points. This square, known as a \textit{plaquette}, is denoted $x^*$. The global charge $Q$ is the sum of all local charges:
+\begin{equation}
+    Q \equiv \sum_{x^*} q(x^*).
+\end{equation}
+As a function of $x^*$, the charge density is a function of the field on the plaquette vertices, an idea visualized in Fig.~\ref{fig:plaquette}.
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \draw[step=4cm,gray,thin] (-2,-2) grid (6,6);
+        \draw[dotted] (0,0) -- (4,4);
+        \draw[thick](0,0) node[circle,fill,inner sep=0pt, minimum size=0.3cm]{} node[anchor=north west] {$x_1$} -- 
+                    (0,4) node[circle,fill,inner sep=0pt, minimum size=0.3cm]{} node[anchor=north west] {$x_2$} -- 
+                    (4,4) node[circle,fill,inner sep=0pt, minimum size=0.3cm]{} node[anchor=north west] {$x_3$} -- 
+                    (4,0) node[circle,fill,inner sep=0pt, minimum size=0.3cm]{} node[anchor=north west] {$x_4$} -- cycle ;
+                    \draw[] (2,2) node[circle,fill,inner sep=0pt, minimum size=0.3cm]{} node[anchor=north east]{$x^*$};
+
+
+        \draw[-stealth] (0.2,1) -- (0.2,3);
+        \draw[-stealth] (1,3.8) -- (3,3.8);
+        \draw[-stealth] (3,3.5) -- (1,1.5);
+
+        \draw[-stealth] (1,0.5) -- (3,2.5);
+        \draw[-stealth] (3.8,3) -- (3.8,1);
+        \draw[-stealth] (3,0.2) -- (1,0.2);
+    \end{tikzpicture}
+    \caption{\label{fig:plaquette} Visualization of plaquette $x^*$. Dotted line separated plaquette into two signed areas which are used to define the topological charge density $q(x^*)$. Arrows represent order of signed area.}
+\end{figure}
+In the NLSM, the field at each of these vertices is a point on the sphere $S^2$. Therefore, there is a signed area $A$ on the sphere associated with each triplet of points (the sign changes with odd permutations of the ordering). We follow the derivation in \cite{berg1981} and split the plaquette into two triangles, as shown in Fig.~\ref{fig:plaquette}, with the ordering determining the sign. The topological charge density is defined using this signed area as
+\begin{equation}
+    q(x^*) = \frac{1}{4\pi} \bigg[A\Big(\e(x_1), \e(x_3), \e(x_3)\Big) + A\Big(\e(x_1), \e(x_3), \e(x_4)\Big) \bigg].
+\end{equation}
+This sign is defined if $A\neq 0, 2\pi$, or in other words, as long as the three points on the sphere are distinct and do not form a hemisphere. In numerical calculations, these points can be ignored. Therefore, we impose that the signed area is defined on the smallest spherical triangle, or mathematically
+\begin{equation}
+    -2\pi < A < 2\pi.
+\end{equation}
+Following \cite{berg1981}, this yields an expression for the signed area
+\begin{equation}
+    A(\e_1, \e_2, \e_1) = 2 \:\mathrm{arg}\Big(1+\e_1\cdot\e_2 + \e_2\cdot\e_3 + \e_3\cdot\e_1 + i\e_1 \cdot (\e_2\times\e_3)\Big).
+\end{equation}
+Under periodic boundary conditions, these triangles on the sphere necessarily wrap $S^2$ an integer number of times, ensuring $Q$ is an integer.
+
+Following this quantity, we can define a topological susceptibility $\chi_t$
+\begin{equation}
+\chi_t \equiv \frac{1}{L^2} \Big( \langle Q^2 \rangle - \langle Q \rangle^2 \Big).
+\end{equation}
 
 
 \section{Ultraviolet Divergences}
@@ -309,7 +415,7 @@ where $\partial^2$ is the Laplacian in 4-D Euclidean spacetime and $\tau$ is the
 \end{equation}
 This function forms a Gaussian, smoothly dampening high-momentum modes and removing ultraviolet divergences from evolved correlation functions.\cite{makino2015a} We can visualize this by plotting the $\phi$ field, shown in Fig.~\ref{fig:flow}. These plots demonstrate the reduction of high momentum modes.
 
-%TODO: make thi in black and white
+%TODO: make this in black and white
 \begin{figure}[h]
   \centering
       \begin{subfigure}[b]{0.2\textwidth}\centering
@@ -331,13 +437,12 @@ This function forms a Gaussian, smoothly dampening high-momentum modes and remov
       \caption{\label{fig:flow} Effect of flow time evolution on a random lattice in the symmetric phase. Red and blue indicate positive and negative values of the field in 2D spacetime.}
 \end{figure}
 
-Generally, we can choose any flow time equation that drives the field towards a classical minimum. Beyond the $\phi^4$ model, we need flow equations that incorporate different types of fields. In the non-linear sigma model, it has been shown that an appropriate manifestation of the flow time can resolve divergences \cite{makino2015a}. Therefore, it is possible to define a different flow equation for this model as well.
-
-
-
-
-
-
+Generally, we can choose any flow time equation that drives the field towards a classical minimum. Beyond the $\phi^4$ model, we need flow equations that incorporate different types of fields. In the non-linear sigma model, it has been shown that an appropriate manifestation of the flow time can resolve divergences \cite{makino2015a}. Therefore, it is possible to define a different flow equation for this model as well. Following \cite{bietenholz2018}, we can define the gradient flow in this model via the differential equation
+\begin{equation}
+    \label{eq:nsm_gradflow}
+    \partial_\tau \vec\rho (\tau,x) = \left( 1 - \vec\rho(\tau,x) \vec\rho(\tau,x)^T \right) \partial^2 \vec\rho(\tau,x),
+\end{equation}
+where $\partial^2$ is the Laplacian operator in Euclidean space\footnote{Explicitly, $\partial^2 = \frac{\partial^2}{\partial t^2} + \nabla^2$}. We solve this equation numerically using the boundary condition $\vec\rho(0,x) = \e(x)$.
 
 
 \chapter{Methods}
@@ -447,15 +552,15 @@ Fig.~\ref{fig:wolff} shows a real demonstration of this process. We can see a la
   \centering
       \begin{subfigure}[b]{0.5\textwidth}\centering
         \includegraphics[width=0.6\textwidth]{imgs/wolffa.png}
-        \caption{$\tau=0$}
+        \caption{before cluster flip}
       \end{subfigure}%
       \hfill
       \begin{subfigure}[b]{0.5\textwidth}\centering
         \includegraphics[width=0.6\textwidth]{imgs/wolffb.png}
-        \caption{$\tau=0.5$}
+        \caption{after cluster flip}
       \end{subfigure}
       \hfill
-      \caption{\label{fig:wolff} An example of the Wolff cluster algorithm in the $\phi^4$ model. White represent negative values of $\phi$ while black represents positive.}
+      \caption{\label{fig:wolff} An example of the Wolff cluster algorithm in the $\phi^4$ model. White represents negative values of $\phi$ while black represents positive. $\lambda=0.5$, $m_0^2=-0.9$}
   
 \end{figure}
 
@@ -499,7 +604,10 @@ We initially implemented the $\phi^4$ model using the Monte Carlo method describ
       \includegraphics[width=0.7\textwidth]{imgs/phi4.png}
       \caption{\label{fig:phi4} Simulation of the phase transition in the $\phi^4$ model: Magnetization $\langle |\bar\phi|\rangle$, magnetic susceptibility $\chi_m$, Binder cumulant $U$ and bimodality $B$ for various values of the mass squared $m_0^2$.}
 
+
+
 \end{figure}
+
 
 
 

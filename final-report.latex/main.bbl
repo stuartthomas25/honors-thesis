@@ -31,6 +31,12 @@ Richard~P. Feynman, Robert~B. Leighton, and Matthew~L. Sands.
 \newblock In {\em The {{Feynman Lectures}} on {{Physics}}}, volume~II of {\em
   World Student Series}. {Addison-Wesley Pub. Co.}, {Reading, Mass.}, 1963.
 
+\bibitem{berg1981}
+B~Berg and Martin L{\"u}scher.
+\newblock Definition and statistical distributions of a topological number in
+  the lattice \${{O}}(3)\$ \$\textbackslash sigma\$-model.
+\newblock {\em Nuclear Physics B}, 190(2):412--424, 1981.
+
 \bibitem{solbrig2007}
 Stefan Solbrig, Falk Bruckmann, Christof Gattringer, Ernst-Michael Ilgenfritz,
   Michael {M{\"u}ller-Preussker}, and Andreas Sch{\"a}fer.
