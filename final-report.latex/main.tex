@@ -3,9 +3,11 @@
 \usepackage{amsfonts}
 \usepackage{hyperref}
 \usepackage{tikz}
+\usetikzlibrary{arrows.meta}
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{listings}
 \setlength{\oddsidemargin}{0.5in}
 \setlength{\evensidemargin}{0.5in}
 \setlength{\textwidth}{6.0in}
@@ -15,6 +17,10 @@
 \newcommand{\e}{\vec e}
 \newcommand{\citeneeded}{\footnote{\textit{citation needed}}}
 \newcommand{\half}{\frac{1}{2}}
+\newcommand{\codeexample}[1]{
+    \section{\texttt{#1}}
+    \lstinputlisting[language=C++]{../code/cpp_code/#1}
+}
 
 % Modified by S. Aubin for the class of 2019 Physics theses
 
@@ -35,6 +41,7 @@
 % > pdflatex thesis_template.tex  (yes, you need to do it twice to
 %                                  fill in the list of tables, figures
 %                                  and references).
+
 
 
 \begin{document}
@@ -252,9 +259,10 @@ This final condition will allow us to explicitly define the transition probabili
 \begin{equation}
     P(\phi) = \frac{1}{Z} e^{-S_E[\phi]}.
 \end{equation}
-Therefore, be rearranging Eq.~\ref{eq:detailedbalance}, we find
+Therefore, by rearranging Eq.~\ref{eq:detailedbalance}, we find
 \begin{equation}
-    \frac{P(\phi_a\rightarrow\phi_b)}{P(\phi_b\rightarrow\phi_a)} = e^{-(S_E[\phi_b] - S_E[\phi_a])}.
+    \label{eq:detailedbalance2}
+    \frac{P(\phi_a\rightarrow\phi_b)}{P(\phi_b\rightarrow\phi_a)} = e^{S_E[\phi_a] - S_E[\phi_b]}.
 \end{equation}
 
 This formula will provide the explicit probabilities of the Metropolis and Wolff algorithms.
@@ -275,17 +283,18 @@ There are two potential points of confusion here. The first lies in the definiti
   \centering
       \begin{subfigure}[b]{0.3\textwidth}\centering
         \includegraphics[width=0.6\textwidth]{imgs/broken.png}
-        \caption{broken phase}
+        \caption{broken phase ($m_0^2=-1.0$)}
       \end{subfigure}%
       \hfill
       \begin{subfigure}[b]{0.3\textwidth}\centering
         \includegraphics[width=0.6\textwidth]{imgs/transition.png}
-        \caption{transition}
+        \caption{transition ($m_0^2=-0.7$)}
       \end{subfigure}%
+
       \hfill
       \begin{subfigure}[b]{0.3\textwidth}\centering
         \includegraphics[width=0.6\textwidth]{imgs/symmetric.png}
-        \caption{symmetric phase}
+        \caption{symmetric phase ($m_0^2=-0.4$)}
       \end{subfigure}
       \hfill
       \caption{\label{fig:primary observables} Visualization of broken phase, symmetric phase and transition. Simulation run on $64\times64$ lattice, plotted after 1000 sweep thermalization.}
@@ -361,7 +370,7 @@ As a function of $x^*$, the charge density is a function of the field on the pla
     \end{tikzpicture}
     \caption{\label{fig:plaquette} Visualization of plaquette $x^*$. Dotted line separated plaquette into two signed areas which are used to define the topological charge density $q(x^*)$. Arrows represent order of signed area.}
 \end{figure}
-In the NLSM, the field at each of these vertices is a point on the sphere $S^2$. Therefore, there is a signed area $A$ on the sphere associated with each triplet of points (the sign changes with odd permutations of the ordering). We follow the derivation in \cite{berg1981} and split the plaquette into two triangles, as shown in Fig.~\ref{fig:plaquette}, with the ordering determining the sign. The topological charge density is defined using this signed area as
+In the NLSM, the field at each of these vertices is a point on the sphere $S^2$. Therefore, there is a signed area $A$ on the sphere associated with each triplet of points, as shown in Fig.~\ref{fig:sphere} (the sign changes with odd permutations of the ordering). We follow the derivation in \cite{berg1981} and split the plaquette into two triangles, as shown in Fig.~\ref{fig:plaquette}, with the ordering determining the sign. The topological charge density is defined using this signed area as
 \begin{equation}
     q(x^*) = \frac{1}{4\pi} \bigg[A\Big(\e(x_1), \e(x_3), \e(x_3)\Big) + A\Big(\e(x_1), \e(x_3), \e(x_4)\Big) \bigg].
 \end{equation}
@@ -369,12 +378,64 @@ This sign is defined if $A\neq 0, 2\pi$, or in other words, as long as the three
 \begin{equation}
     -2\pi < A < 2\pi.
 \end{equation}
+
+
 Following \cite{berg1981}, this yields an expression for the signed area
 \begin{equation}
     A(\e_1, \e_2, \e_1) = 2 \:\mathrm{arg}\Big(1+\e_1\cdot\e_2 + \e_2\cdot\e_3 + \e_3\cdot\e_1 + i\e_1 \cdot (\e_2\times\e_3)\Big).
 \end{equation}
 Under periodic boundary conditions, these triangles on the sphere necessarily wrap $S^2$ an integer number of times, ensuring $Q$ is an integer.
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+    \pgfdeclarelayer{nodelayer}
+    \pgfdeclarelayer{edgelayer}
+    \pgfdeclareradialshading{sphere4}{\pgfpoint{-0.2cm}{0.5cm}}% 
+        {rgb(0cm)=(1,1,1);
+        rgb(1cm)=(0.5,0.5,0.5); rgb(1.05cm)=(1,1,1)}
+        %rgb(0.7cm)=(0.1,0.1,0.1); rgb(1cm)=(0.5,0.05,0); rgb(1.05cm)=(1,1,1)}
+    \pgfsetlayers{nodelayer,edgelayer}
+    \tikzstyle{label}=[fill=none, draw=none, shape=circle]
+    \tikzstyle{point}=[inner sep=0pt, minimum size=0.2cm,fill=black, draw, shape=circle]
+    %\tikzstyle{interior line}=[{Stealth[scale=1.5]}-,dotted,thick]
+    \tikzstyle{interior line}=[dotted,thick]
 
+    \tikzstyle{triangle}=[thick]
+    \tikzstyle{arrow}=[->, thick]
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=point] (4) at (0.5, 2.5) {};
+		\node [style=point] (5) at (0.55, 0.625) {};
+		\node [style=point] (6) at (2.25, 0.75) {};
+		\node (7) at (0, 0) {};
+		\node (8) at (1.25, 1.375) {};
+		\node (9) at (2.425, 2.525) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+        \draw (0,0) circle (3cm);
+        %\shade[inner color=white,outer color=lightgray] (0,0) circle (3cm);
+        \shade[shading=sphere4] (0,0) circle (3cm);
+		\draw [bend left=15,style=triangle] (4.center) to (6.center);
+		\draw [bend left=355,style=triangle] (6.center) to (5.center);
+		\draw [bend right=5,style=triangle] (5.center) to (4.center);
+		\draw [style=interior line] (4.center) to (7.center);
+		\draw [style=interior line] (5.center) to (7.center);
+        \draw [style=interior line] (6.center) to (7.center);
+        \draw [fill=gray!80] (4.center) to [bend left=15] (6.center) to [bend left=355] (5.center) to [bend right=5] cycle;
+
+		%\draw [style=arrow] (8.center) to (9.center);
+
+        \node [style=label, anchor=north] at (2.25, 0.75) {\small $\e(x_1)$};
+        \node [style=label, anchor=north] at (0.55, 0.625) {\small $\e(x_2)$};
+        \node [style=label, anchor=east] at (0.5, 2.5) {\small $\e(x_3)$};
+		\node [style=point] at (4){};
+		\node [style=point] at (5){};
+		\node [style=point] at (6){};
+
+        \node [style=label] at (8) {\small $A$};
+	\end{pgfonlayer}
+\end{tikzpicture}
+\caption{\label{fig:sphere} Visualization of signed area $A$ on the sphere $S^2$ traced out by field at points $x_1$, $x_2$ and $x_3$.}
+\end{figure}
 Following this quantity, we can define a topological susceptibility $\chi_t$
 \begin{equation}
 \chi_t \equiv \frac{1}{L^2} \Big( \langle Q^2 \rangle - \langle Q \rangle^2 \Big).
@@ -445,6 +506,7 @@ Generally, we can choose any flow time equation that drives the field towards a 
 where $\partial^2$ is the Laplacian operator in Euclidean space\footnote{Explicitly, $\partial^2 = \frac{\partial^2}{\partial t^2} + \nabla^2$}. We solve this equation numerically using the boundary condition $\vec\rho(0,x) = \e(x)$.
 
 
+
 \chapter{Methods}
 \label{sec:methods}
 Our study of the gradient flow in the non-linear sigma model consists of a computational part and an analytical part. We begin by outlining a numerical Monte Carlo method to simulate the lattice in two and three dimensions. We verify our program with the well-studied $\phi^4$ scalar field theory. We then generalize our model to a vector field to simulate the non-linear sigma model. This simulation system provides data on vacuum states with which we study the gradient flow's effect on topology.
@@ -481,7 +543,7 @@ Unlike the kinetic term, the mass and interaction terms remain unchanged under t
 such that the final discretized action becomes
 \begin{equation}
     \label{eq:phi4 discretized action}
-    S_{\mathrm{lat}}[\phi] = \sum_i \left[-\phi(x_i + a\hat{t}) - \phi(x_i + a\hat{x}) + \left(2+\half m_0^2\right)\phi^2(x_i) + \frac{1}{4}\lambda \phi^4(x_i)\right]
+    S_{\mathrm{lat}}[\phi] = \sum_i \left[-\phi(x_i + a\hat{t})\phi(x_i) - \phi(x_i + a\hat{x})\phi(x_i) + \left(2+\half m_0^2\right)\phi^2(x_i) + \frac{1}{4}\lambda \phi^4(x_i)\right]
 \end{equation}
 
 Likewise, we can discretize the non-linear sigma model. In this case, the derivative term becomes 
@@ -524,7 +586,7 @@ where $\phi_a$ is the initial configuration and $\phi_b$ is the proposed configu
 
 Though the Metropolis algorithm will slowly find the absolute minimum of the theory, the presence of local minima can greatly prolong the convergence. Both the $\phi^4$ model and the non-linear sigma model feature ``kinetic'' terms with gradients of $\phi$. Therefore, the presence of large similarly-valued regions in the lattice can lead to a local minimum. The Wolff algorithm helps reduce the presence of these clusters through two steps: identifying a cluster and flipping it along some arbitrary vector. In the case of $\phi^4$ theory, this flipping takes the form of a simple sign change. In the non-linear sigma model we choose a random unit vector $\vec r$ and consider the projection of the field on this vector. When the cluster flips, each site is flipped along this direction.\citeneeded To identify the cluster, the algorithm uses a recursive algorithm defined by the probability of adding a new site. 
 
-We define a cluster $C$ as a continuous set of aligned sites which is generated probabilistically. In $\phi^4$ theory, we define ``aligned'' as having the same sign. In the non-linear sigma model, we choose a random unit vector $\vec{r}$ and use it to project the field vector. The sign of this quantity defines ``aligned'' in the $O(3)$ NLSM. In order to find the probability $p_i$ of adding a site $x_i$ to the cluster $C$, we use the detailed balance equation (Eq.~\ref{eq:detailedbalance}) which relates the Markov chain probability $P(\phi_a \rightarrow \phi_b)$ to the actions of each configuration. In the context of the Wolff cluster algorithm, we will notate this probability as $P\left(\phi \rightarrow f_C\left(\phi\right)\right)$ and express it as 
+We define a cluster $C$ as a continuous set of aligned sites which is generated probabilistically. In $\phi^4$ theory, we define ``aligned'' as having the same sign. In the non-linear sigma model, we choose a random unit vector $\vec{r}$ and use it to project the field vector. The sign of this quantity defines ``aligned'' in the $O(3)$ NLSM. In order to find the probability $p_i$ of adding a site $x_i$ to the cluster $C$, we use the detailed balance equation (Eq.~\ref{eq:detailedbalance2}) which relates the Markov chain probability $P(\phi_a \rightarrow \phi_b)$ to the actions of each configuration. In the context of the Wolff cluster algorithm, we will notate this probability as $P\left(\phi \rightarrow f_C\left(\phi\right)\right)$ and express it as 
 \begin{equation}
     P\left(\phi \rightarrow f_C\left(\phi\right)\right) = \left( \prod_{i \in C} p_i \right) \left( \prod_{j \in N} \left(1 - p_j \right)\right)
 \end{equation}
@@ -534,13 +596,21 @@ where $N$ is the set of aligned neighboring sites. Since $p_i=0$ for sites that 
 \end{equation}
 where $M$ is the set of initially unaligned sites (they become aligned after the first flip).
 
+
 Using the detailed balance equations, we can now relate these quantities with the actions $S[\phi]$ and $S[f_C(\phi)]$:
-
 \begin{equation}
-    \frac{ \prod_{j \in N} \left(1 - p_j \right) }{ \prod_{j \in M} \left(1 - p_j \right) } = e^{-\left(S[f_c(\phi)] - S[\phi]\right)}.
+    \frac{ \prod_{j \in N} \left(1 - p_j \right) }{ \prod_{j \in M} \left(1 - p_j \right) } = e^{S[\phi] - S[f_C(\phi)]}.
 \end{equation}
-
-\textit{TODO: add end of derivation}
+To simplify the exponent, we follow the discretized $\phi^4$ action in Eq.~\ref{eq:phi4 discretized action}. We see that the mass and interaction terms are invariant under a sign change of $\phi$ and therefore disappear in the difference. In fact, the only change in the action results from the neighboring sites $N\cup M$. The first two terms of Eq.~\ref{eq:phi4 discretized action} can be viewed as a sum over all pairs of neighboring lattice points $x_a$ and $x_b$, such that a change 
+\begin{align}
+    \phi(x_a) &\rightarrow -\phi(x_a) \\
+    \phi(x_b) &\rightarrow \phi(x_b)
+\end{align}
+implies
+\begin{equation*}
+    -\phi(x_b)\phi(x_a) \rightarrow \phi(x_b)\phi(x_a),
+\end{equation*}
+leading to a term -$2\phi(x_a)\phi(x_b)$ in the exponent. Likewise, 
 
 \begin{equation}
     p_i = 1-e^{- \beta \vec e_a \cdot \vec e_b}.
@@ -621,9 +691,17 @@ We initially implemented the $\phi^4$ model using the Monte Carlo method describ
 
 
 \appendix
-\chapter{My Great Computer Program}
+\chapter{C++ NLSM Monte Carlo Program}
+\lstset{language=C++,
+                basicstyle=\ttfamily,
+                keywordstyle=\color{blue}\ttfamily,
+                stringstyle=\color{red}\ttfamily,
+                commentstyle=\color{green}\ttfamily,
+                morecomment=[l][\color{magenta}]{\#}
+}
 
-\section{Code sample}
+
+
 \bibliographystyle{unsrt}
 \bibliography{library}
 
