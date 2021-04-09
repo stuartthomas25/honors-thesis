@@ -1,5 +1,11 @@
 \begin{thebibliography}{10}
 
+\bibitem{berg1981}
+B~Berg and Martin L{\"u}scher.
+\newblock Definition and statistical distributions of a topological number in
+  the lattice \${{O}}(3)\$ \$\textbackslash sigma\$-model.
+\newblock {\em Nuclear Physics B}, 190(2):412--424, 1981.
+
 \bibitem{bietenholz2018}
 Wolfgang Bietenholz, Philippe {de Forcrand}, Urs Gerber, H{\'e}ctor
   {Mej{\'i}a-D{\'i}az}, and Ilya~O. Sandoval.
@@ -30,12 +36,6 @@ Richard~P. Feynman, Robert~B. Leighton, and Matthew~L. Sands.
 \newblock The {{Principle}} of {{Least Action}}.
 \newblock In {\em The {{Feynman Lectures}} on {{Physics}}}, volume~II of {\em
   World Student Series}. {Addison-Wesley Pub. Co.}, {Reading, Mass.}, 1963.
-
-\bibitem{berg1981}
-B~Berg and Martin L{\"u}scher.
-\newblock Definition and statistical distributions of a topological number in
-  the lattice \${{O}}(3)\$ \$\textbackslash sigma\$-model.
-\newblock {\em Nuclear Physics B}, 190(2):412--424, 1981.
 
 \bibitem{landau2000}
 David~P Landau and Kurt Binder.
