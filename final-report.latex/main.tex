@@ -580,40 +580,56 @@ We primarily use the Metropolis algorithm for the calculation of new Markov chai
 \end{equation}
 where $\phi_a$ is the initial configuration and $\phi_b$ is the proposed configuration. This process is performed for each point on the lattice, making up a ``sweep.'' Repeating this sweep many times pushes the lattice toward the action minimum.
 
+
 \subsection{Wolff Cluster Algorithm}
 
-Though the Metropolis algorithm will slowly find the absolute minimum of the theory, the presence of local minima can greatly prolong the convergence. Both the $\phi^4$ model and the non-linear sigma model feature ``kinetic'' terms with gradients of $\phi$. Therefore, the presence of large similarly-valued regions in the lattice can lead to a local minimum. The Wolff algorithm helps reduce the presence of these clusters through two steps: identifying a cluster and flipping it along some arbitrary vector. In the case of $\phi^4$ theory, this flipping takes the form of a simple sign change. In the non-linear sigma model we choose a random unit vector $\vec r$ and consider the projection of the field on this vector. When the cluster flips, each site is flipped along this direction.\citeneeded To identify the cluster, the algorithm uses a recursive algorithm defined by the probability of adding a new site. 
+Though the Metropolis algorithm will slowly find the absolute minimum of the theory, the presence of local minima can greatly prolong the convergence. Both the $\phi^4$ model and the non-linear sigma model feature ``kinetic'' terms with gradients of $\phi$. Therefore, the presence of large similarly-valued regions in the lattice can lead to a local minimum. One method of removing these clusters involves identifying all clusters on the lattice and probabilistically flipping each, a technique known as the Swendsen-Wang algorithm\cite{swendsen1987}. 
 
-We define a cluster $C$ as a continuous set of aligned sites which is generated probabilistically. In $\phi^4$ theory, we define ``aligned'' as having the same sign. In the non-linear sigma model, we choose a random unit vector $\vec{r}$ and use it to project the field vector. The sign of this quantity defines ``aligned'' in the $O(3)$ NLSM. In order to find the probability $p_i$ of adding a site $x_i$ to the cluster $C$, we use the detailed balance equation (Eq.~\ref{eq:detailedbalance2}) which relates the Markov chain probability $P(\phi_a \rightarrow \phi_b)$ to the actions of each configuration. In the context of the Wolff cluster algorithm, we will notate this probability as $P\left(\phi \rightarrow f_C\left(\phi\right)\right)$ and express it as 
+A more efficient approach is the Wolff algorithm\cite{wolff1989}, which \textit{grows} one cluster probabilistically and flips it unconditionally. In the case of $\phi^4$ theory, this flipping takes the form of a simple sign change. In the non-linear sigma model we choose a random unit vector $\vec r$ and consider the projection of the field on this vector. When the cluster flips, each site is flipped along this direction.\citeneeded To identify the cluster, the algorithm uses a recursive algorithm defined by the probability of adding a new site, growing the cluster from a single, randomly selected ``seed''. Starting with the seed, the probability of adding each neighboring site is given by the source site $x$ and the proposed site $x'$. Wolff defines this probability for arbitrary sigma models as 
 \begin{equation}
-    P\left(\phi \rightarrow f_C\left(\phi\right)\right) = \left( \prod_{i \in C} p_i \right) \left( \prod_{j \in N} \left(1 - p_j \right)\right)
+    \label{eq:wolff padd}
+    P_{add}(\e(x),\e(x')) = \begin{cases} 
+        1 - e^{2\beta [\vec{r} \cdot \e(x)][\vec{r} \cdot \e(x')]} & \mathrm{sgn}[\vec{r}\cdot\e(x)]=\mathrm{sgn}[\vec{r}\cdot\e(x')]\\
+        0 & \mathrm{otherwise} \\
+   \end{cases}
 \end{equation}
-where $N$ is the set of aligned neighboring sites. Since $p_i=0$ for sites that are not aligned with the cluster, they are not included in this expression.  Now if we consider the probability of flipping the cluster back, i.e. $P\left(f_C\left(\phi\right) \rightarrow \phi\right)$, we achieve a similar expression:
+This expression is designed to preserve the detailed balance equations. We can demonstrate this quality, and motivate an equivalent expression for the $\phi^4$ model, by considering the probability $P(\phi\rightarrow f_C(\phi))$ of flipping some cluster $C$. Generally,
 \begin{equation}
-    P\left(f_C\left(\phi\right) \rightarrow \phi  \right) = \left( \prod_{i \in C} p_i \right) \left( \prod_{j \in M} \left(1 - p_j \right)\right)
+    P\big(\phi \rightarrow f_C\left(\phi\right)\big) \propto \prod_{\langle x,x'\rangle \in \partial C}  \Big[1 - P_{add}\big(\e(x),\e(x')\big)\Big]
 \end{equation}
-where $M$ is the set of initially unaligned sites (they become aligned after the first flip).
+where $\partial C$ is the set of pairs of sites on the boundary of $C$. Since $P_{add}=0$ for unaligned sites, these pairs contribute nothing to the value. We can also find the probability $P(f_C(\phi) \rightarrow \phi)$ with the same expression:
+\begin{equation}
+P\big(f_C(\phi)\rightarrow \phi \big) \propto \prod_{\langle x,x'\rangle \in \partial C}  \Big[1 - P_{add}\big(\e(x),R\;\e(x')\big)\Big],
+\end{equation}
+where the matrix $R$ which is a reflection matrix along the vector $\vec{r}$.
 
-
-Using the detailed balance equations, we can now relate these quantities with the actions $S[\phi]$ and $S[f_C(\phi)]$:
+From the discretized action of the NLSM model (Eq.~\ref{eq:nlsm discretized action}) and the detailed balance equation (Eq.~\ref{eq:detailedbalance2}), we derive
 \begin{equation}
-    \frac{ \prod_{j \in N} \left(1 - p_j \right) }{ \prod_{j \in M} \left(1 - p_j \right) } = e^{S[\phi] - S[f_C(\phi)]}.
+    \prod_{\langle x,x'\rangle \in \partial C}  \frac{ 1 - P_{add}\big(\e(x),\e(x')\big)}{ 1 - P_{add}\big(\e(x),R\;\e(x')\big)}  = \mathrm{exp}\left\{\beta\sum_{\langle x,x'\rangle \in \partial C} \e(x)\cdot[R-1]\e(x')\right\}.
 \end{equation}
-To simplify the exponent, we follow the discretized $\phi^4$ action in Eq.~\ref{eq:phi4 discretized action}. We see that the mass and interaction terms are invariant under a sign change of $\phi$ and therefore disappear in the difference. In fact, the only change in the action results from the neighboring sites $N\cup M$. The first two terms of Eq.~\ref{eq:phi4 discretized action} can be viewed as a sum over all pairs of neighboring lattice points $x_a$ and $x_b$, such that a change 
-\begin{align}
-    \phi(x_a) &\rightarrow -\phi(x_a) \\
-    \phi(x_b) &\rightarrow \phi(x_b)
-\end{align}
-implies
-\begin{equation*}
-    -\phi(x_b)\phi(x_a) \rightarrow \phi(x_b)\phi(x_a),
-\end{equation*}
-leading to a term -$2\phi(x_a)\phi(x_b)$ in the exponent. Likewise, 
-
+Note that all the pairs within and outside the cluster cancel in the fraction on the left and the difference on the right. Using the definition of the reflection matrix
 \begin{equation}
-    p_i = 1-e^{- \beta \vec e_a \cdot \vec e_b}.
+    R\;\e = \e - 2(\e\cdot\vec{r})\e,
 \end{equation}
- % TODO: derive this
+we can simplify the equation to be 
+\begin{equation}
+    \prod_{\langle x,x'\rangle \in \partial C}  \frac{ 1 - P_{add}\big(\e(x),\e(x')\big)}{ 1 - P_{add}\big(\e(x),R\;\e(x')\big)}  = \prod_{\langle x,x'\rangle \in \partial C}\mathrm{exp}\big\{2\beta[r\cdot\e(x)][r\cdot\e(x')]\big\}.
+\end{equation}
+By plugging in Eq.~\ref{eq:wolff padd}, it is clear to see this equation is satisfied.
+
+Using this same reasoning, we can deduce an expression for $P_{add}$ in the $\phi^4$ model. Since this model is one dimensional, the reflection matrix $R$ is equivalent to $-1$. Adapting the NLSM detailed balance equation for the $\phi$ field, we find
+\begin{equation}
+    \prod_{\langle x,x'\rangle \in \partial C}  \frac{ 1 - P_{add}\big(\phi(x),\phi(x')\big)}{ 1 - P_{add}\big(\phi(x),-\phi(x')\big)}  = \prod_{\langle x,x'\rangle \in \partial C}\mathrm{exp}\{-2 \phi(x)\phi(x')\}.
+\end{equation}
+This equation is satisfied by the ansatz
+\begin{equation}
+    \label{eq:wolff padd}
+    P_{add}(\phi(x),\phi(x')) = \begin{cases} 
+        1 - e^{-2\phi(x)\phi(x')]} & \mathrm{sgn}[\phi(x)]=\mathrm{sgn}[\phi(x')]\\
+        0 & \mathrm{otherwise} \\
+   \end{cases}.
+\end{equation}
+We will use this expression in the computational implementation of this algorithm.
 
 Fig.~\ref{fig:wolff} shows a real demonstration of this process. We can see a large cluster of negative field values becoming positive. Note that periodic boundary conditions apply, so the small island of black at the bottom is actually part of the larger cluster. Furthermore, this visualization demonstrates the probabilistic nature of the Wolff algorithm. Since states are added probabilistically, there are some small holes in the cluster. These will be removed by following Metropolis sweeps.
 \begin{figure}[h]
@@ -662,6 +678,7 @@ This method is usually superior to Euler's method and the midpoint method \cite{
 
 To increase the efficiency of this algorithm, we implement the step-doubling algorithm to adaptively adjust $h$. If the error of a Runge-Kutta step is greater than the tolerance, the same step is repeated with half the step size. Alternatively, if the error is less than half of the tolerance, the step size is doubled for the next calculation. Finally, if the step size is greater than the distance to the next measurement, that distance is used as the step size, using the normal value afterwards. Otherwise, the algorithm proceeds with the consistent step size. 
 
+\section{Topological charge with a $\theta$ term}
 
 \chapter{Results}
 \section{$\phi^4$ model}

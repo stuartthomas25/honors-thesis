@@ -67,6 +67,16 @@ David~A Schaich and William Loinaz.
   Theories}}}.
 \newblock PhD thesis, Amherst College, May 2006.
 
+\bibitem{swendsen1987}
+Robert~H. Swendsen and Jian-Sheng Wang.
+\newblock Nonuniversal critical dynamics in {{Monte Carlo}} simulations.
+\newblock {\em Phys. Rev. Lett.}, 58(2):86--88, January 1987.
+
+\bibitem{wolff1989}
+Ulli Wolff.
+\newblock Collective monte carlo updating for spin systems.
+\newblock {\em Phys. Rev. Lett.}, 62(4):361--364, January 1989.
+
 \bibitem{wolff2007}
 Ulli Wolff.
 \newblock Monte {{Carlo}} errors with less errors.
