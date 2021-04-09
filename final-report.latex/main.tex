@@ -79,8 +79,9 @@ May 2021
 \chapter*{Acknowledgments}
 \addcontentsline{toc}{chapter}{Acknowledgments}
 \paragraph
-\indent I would like to thank lots of people, and this is where
-I will do it...
+\indent I would like to thank my advisor, Prof. Christopher Monahan. His constant helpfulness has made this research possible and enjoyable. I would also like to thank the entire faculty of the William \& Mary Physics Department. The amount of knowledge and wisdom they have bestowed upon me has been beyond my imagination.
+
+I also acknowledge the help the High Performance Computing group at William \& Mary, whose cluster performed many of these simulations. And finally, I would like to acknowledge the financial help of the 1693 Scholars Program which funded the summer portion of this research.
 
 
 \listoffigures
@@ -92,7 +93,7 @@ I will do it...
 \setcounter{page}{5}
 \addcontentsline{toc}{chapter}{Abstract}
 \paragraph
-\indent \textit{Abstract}
+\indent The $O(3)$ non-linear model features topological effects such as instantons but cannot be perturbatively renormalized. Other nonperturbative theories such as QCD have motivated the development of lattice quantum field theory, where fields are simulated as discrete arrays and extrapolated to the continuum limit. Unfortunately, operators such as the topological susceptibility diverge in this limit. The gradient flow is a strong contender to remove these infinites, having prior success in QCD. We confirm a previous result\cite{bietenholz2018} that the gradient flow does not make the topological susceptibility infinite. We also study the nontrivial field theory by introducing a $\theta$ term into the action and plot the topological charge as a function of $\theta$.
 
 \end{abstract}
 
@@ -382,7 +383,7 @@ The $O(3)$ non-linear sigma model model features topological properties originat
     \item The elements of the $O(3)$ non-linear sigma model are three-dimensional unit vectors, thereby existing on a three dimensional unit sphere. 
 \end{enumerate}
 
-With these two properties, we can view the field as a continuous mapping between two 3D spheres, denoted as $S^2$, and associate an integer number of wrappings to each mapping from $S^2$ to $S^2$. We can envision a tangible metaphor for this wrapping with a balloon and a baseball: by simply inserting the baseball into the balloon, we have established a mapping from every point on the balloon to every point on the baseball. We can create an equally valid map by twisting the balloon's mouth and wrapping the baseball again. In a purely mathematical world, we perform this process an infinite number of times, thereby associating every possible mapping with an integer. The group of integers is known as the \textit{homotopy group} of the non-linear sigma model. We associate every field configuration with an element of this group, known as the \textit{topological charge}, which we denote as $Q$.
+With these two properties, we can view the field as a continuous mapping between two 3D spheres, denoted as $S^2$, and associate an integer number of wrappings to each mapping from $S^2$ to $S^2$. We can envision a tangible metaphor for this wrapping with a balloon and a baseball: by simply inserting the baseball into the balloon, we have established a mapping from every point on the balloon to every point on the baseball. We can create an equally valid map by twisting the balloon's mouth and wrapping the baseball again. In a purely mathematical world, we perform this process an infinite number of times, thereby associating every possible mapping with an integer. The group of integers is known as the \textit{homotopy group} of the non-linear sigma model. We associate every field configuration with an element of this group, known as the \textit{topological charge}, which we denote as $Q$. Configurations with $|Q|=1$ are known as instantons.
 
 In practice, this quantity is nontrivial to calculate. To begin, we define a local topological charge density $q$, defined for each square of adjacent lattice points. This square, known as a \textit{plaquette}, is denoted $x^*$. The global charge $Q$ is the sum of all local charges:
 \begin{equation}
@@ -476,6 +477,12 @@ Under periodic boundary conditions, these triangles on the sphere necessarily wr
 	\end{pgfonlayer}
 \end{tikzpicture}
 \caption{\label{fig:sphere} Visualization of signed area $A$ on the sphere $S^2$ traced out by field at points $x_1$, $x_2$ and $x_3$.}
+\end{figure}
+In the trivial NLSM action (when $\theta=0$), the values of $Q$ are roughly Gaussian around $Q=0$, as shown in Fig.~\ref{fig:hist}.
+\begin{figure}[h]
+    \centering
+      \includegraphics[width=0.6\textwidth]{imgs/hist.png}
+      \caption{\label{fig:hist} Histogram of topological charge values $Q$ for trivial NLSM. $L=404$, 10,000 measurements, measurements very 50 sweeps, 1,000 sweep thermalization, $\tau=0$}
 \end{figure}
 
 Following this quantity, we can define a topological susceptibility $\chi_t$
@@ -718,31 +725,31 @@ Since we begin with a random lattice, the first few configurations of our Monte 
 \begin{figure}[h]
   \centering
       \begin{subfigure}[b]{0.5\textwidth}\centering
-        \includegraphics[width=0.6\textwidth]{imgs/therm24.png}
+        \includegraphics[width=0.9\textwidth]{imgs/therm24.png}
         \caption{$L=24$}
       \end{subfigure}%
       \hfill
       \begin{subfigure}[b]{0.5\textwidth}\centering
-        \includegraphics[width=0.6\textwidth]{imgs/therm404.png}
+        \includegraphics[width=0.9\textwidth]{imgs/therm404.png}
         \caption{$L=404$}
       \end{subfigure}
       \hfill
       \caption{\label{fig:therm} Plots of the action as a function of Monte Carlo time, starting with a random NLSM lattice.}
 \end{figure}
 Based on this plot, we determine that 1000 sweeps will give sufficient time for the system to reach the classical action minimum. We use this value for the remainder of this study.
-\subsection{Autocorrelation times and thermalization}
-One important aspect is the correlation between different states of the Markov chain. Ideally, each sample of the lattice would be completely independent, but this is not the case. Since each configuration is based on previous configurations, there is a correlation between each pair of members in the Markov chain, decreasing exponentially based on the number of steps between. Explicitly, the autocorrelation scales as \[e^{t/\tau_{int}}\] where $t$ is the number of steps between configurations and $\tau_{int}$ is the autocorrelation time.\footnote{Though it is called a time, $\tau_{int}$ is in units of Markov Chain steps.} When performing simulations of the lattice, the number of sweeps between measurements should be much larger than $\tau_{int}$. 
+\subsection{Autocorrelation}
+One important aspect is the correlation between different states of the Markov chain. Ideally, each sample of the lattice would be completely independent, but this is not the case. Since each configuration is based on previous configurations, there is a correlation between each pair of members in the Markov chain, decreasing exponentially based on the number of steps between. Explicitly, the autocorrelation scales as $e^{t/\tau_{int}}$ where $t$ is the number of steps between configurations and $\tau_{int}$ is the autocorrelation time.\footnote{Though it is called a time, $\tau_{int}$ is in units of Markov Chain steps.} When performing simulations of the lattice, the number of sweeps between measurements should be much larger than $\tau_{int}$. 
 
     We use Wolff's automatic windowing procedure \cite{wolff2007} and the magnetic susceptibility $\chi_m$ to estimate the autocorrelation. Using Wolff's public MatLab code\footnote{\url{https://www.physik.hu-berlin.de/de/com/ALPHAsoft}}, we estimate the autocorrelation time for $L=24$ and $L=404$ lattices. This algorithm identifies the optimal window size with which to calculate the autocorrelation time. We perform this process on $L=24$ and $L=404$ lattices using a thermalization of $1000$ sweeps and $500$ total measurements. Note that this calculation included a Wolff cluster algorithm every $5$ sweeps. The result of this calculation is shown in Fig.~\ref{fig:tauint}.
 \begin{figure}[h]
   \centering
       \begin{subfigure}[b]{0.5\textwidth}\centering
-        \includegraphics[width=0.6\textwidth]{imgs/tauint24.png}
+        \includegraphics[width=0.9\textwidth]{imgs/tauint24.png}
         \caption{$L=24$, $\tau_{int}=4.43$}
       \end{subfigure}%
       \hfill
       \begin{subfigure}[b]{0.5\textwidth}\centering
-        \includegraphics[width=0.6\textwidth]{imgs/tauint404.png}
+        \includegraphics[width=0.9\textwidth]{imgs/tauint404.png}
         \caption{$L=404$, $\tau_{int}=12.81$}
       \end{subfigure}
       \hfill
@@ -776,6 +783,7 @@ To increase the efficiency of this algorithm, we implement the step-doubling alg
 
 
 \section{Topological charge with a $\theta$ term}
+\label{sec:topotheta}
 In Sec.~\ref{sec:topological charge}, we discussed the introduction of a $\theta$ term into the action. This change made the theory ``topological'', pushing $\langle Q \rangle$ away from zero. In order to calculate $\langle Q \rangle$ as a function of $Q$, we consider the path integral
 \begin{align}
     \langle Q \rangle_\theta &=\int \mathcal{D}\e\:Q[\e]e^{-S[\e]+i\theta Q[\e]} \\
@@ -790,61 +798,84 @@ We can also relate this function to the topological susceptibility. By expanding
 \end{equation}
 such that 
 \begin{align}
-    -i \frac{\partial}{\partial \theta} \langle Q \rangle_\theta &= \langle Q^2 \rangle_{\theta=0}\\
+    -i \frac{\partial}{\partial \theta}\Big|_{\theta=0} \langle Q \rangle_\theta &= \langle Q^2 \rangle_{\theta=0}\\
                                                               &= \chi_t L^2.
 \end{align}
-We expect to see the slope of this function at zero increase for large lattice sizes.
-
+Since $\chi_t$ diverges at $\theta=0$, we expect the plot of $\langle Q\rangle_\theta$ to approach a vertical line in the in continuum limit. 
 
 \chapter{Results}
 \section{$\phi^4$ model results}
 
-We initially implemented the $\phi^4$ model using the Monte Carlo method described in Sec.~\ref{sec:methods} to verify the results of our system. According to previous studies (\cite{monahan2016}, \cite{schaich2006}), the $\phi^4$ model exhibits a symmetric and broken phase depending on its parameters $m_0^2$ and $\lambda$, specifically occurring at $m_0^2 = -0.72$ for $\lambda = 0.5$. We verify this result by plotting four observables: the lattice average $|\langle\bar\phi\rangle|$, the lattice variance $\chi$, the Binder cumulant $U$ and the bimodality $B$ in Fig.~\ref{fig:phi4}.
+We initially implement the $\phi^4$ model to verify the results of our system. According to previous studies (\cite{monahan2016, schaich2006}, the $\phi^4$ model exhibits a symmetric and broken phase depending on its parameters $m_0^2$ and $\lambda$, specifically occurring at $m_0^2 = -0.72$ for $\lambda = 0.5$. We verify this result by plotting four observables: the lattice average $|\langle\bar\phi\rangle|$, the magnetic susceptibility $\chi$, the Binder cumulant $U$ and the bimodality $B$ in Fig.~\ref{fig:phi4}.
 \begin{figure}[h]
     \centering
       \includegraphics[width=0.7\textwidth]{imgs/phi4.png}
-      \caption{\label{fig:phi4} Simulation of the phase transition in the $\phi^4$ model: Magnetization $\langle |\bar\phi|\rangle$, magnetic susceptibility $\chi_m$, Binder cumulant $U$ and bimodality $B$ for various values of the mass squared $m_0^2$.}
+      \caption{\label{fig:phi4} The lattice average $|\langle\bar\phi\rangle|$, the lattice suscpetibility $\chi$, the Binder cumulant $U$ and the bimodality $B$ plotted as functions of $m_0^2$. $L=32$, $\lambda=0.5$. The lattice was thermalized from a hot start for 1000 sweeps. Afterwards, 100 measurements were taken with 100 sweeps between each. The red horizontal line indicates $U=2/3$, the symmetric limit of the Binder cumulant.}
 \end{figure}
+This figure confirms a phase transition near $m_0^2=-0.72$ and supports the accurancy of our model.
 
 \section{Non-linear sigma model results}
-After confirming the phase transition 
+After confirming the phase transition in the $\phi^4$ model, we turn to the NLSM. In order to confirm the accuracy of the model, we compare results with existing literature. We first compare our results to Berg \& L\"uscher \cite{berg1981}, specifically measuring the internal energy and magnetic susceptibility. 
+
+\subsection{Comparison with Existing Literature}
+Following \cite{berg1981}, we approximate the internal energy in the strong ($\beta<1$) and weak ($\beta>2$) regimes as 
+\begin{equation}
+E \approx \begin{cases} 
+    4-4y-8y^3-\frac{48}{5}y^5& \beta<1 \\
+    \frac{2}{\beta} + \frac{4\beta^2} + 0.156\frac{1}{\beta^3}& \beta>2. 
+\end{cases}
+\end{equation}
+We compare this analytical result and simulated values of $\chi_m$ with the Monte Carlo simulation in Fig.~\ref{bergluscher}.
 \begin{figure}[h]
     \centering
       \includegraphics[width=\textwidth]{imgs/internal_energy.png}
       \caption{\label{fig:bergluscher}}
 \end{figure}
+These two charts show a high degree of agreement with the current literature.
 
-\begin{figure}[h]
-    \centering
-      \includegraphics[width=\textwidth]{imgs/theta.png}
-      \caption{\label{fig:theta} Imaginary part of $\langle Q \rangle$ as a function of $\theta$. Note the different scaling of the $y$-axis.}
-\end{figure}
+We also seek to confirm the results from Bietenholz et al.\cite{bietenholz2018}. Specifically, that the topological susceptibility $\chi_t$ diverges in the continuum limit even at finite flow time. Since $\chi_t$ is in units of inverse distance squared, we multiply by $\xi_2^2$, the square of the second moment correlation length, to achieve a scale-invariant value $\chi_t\xi_2^2$. Additionally, we use a parameter $t_0$ to scale the flow time such that $t_0\sim L^2$. In our Monte Carlo simulation, we adapt the same values as \cite{bietenholz2018} for $\xi_2$.
 
-
+To begin the comparison, we plot $\chi_t\xi_2^2$ as a function of flow time $\tau$, shown in Fig.~\ref{bietenholz}.
 \begin{figure}[h]
     \centering
       \includegraphics[width=\textwidth]{imgs/bietenholz.png}
-      \caption{\label{fig:bietenholz} $\langle Q^2 \rangle=\chi_t L^2$ as a  }
+      \caption{\label{fig:bietenholz} $\langle Q^2 \rangle=\chi_t L^2$ as a  function of flow time $\tau$. Simulation run with 10,000 measurements, measurements very 50 sweeps, 1,000 sweep thermalization.}
 \end{figure}
-
+We find that the flow time effectively decreases the topological susceptibility by dampening high-momentum modes. To analyze the divergence of $\chi_t$ in the continuum limit, we plot $\chi_t \xi_2^2$ as a function of lattice size $L$. We perform this simulation at flow time $\tau=5t_0$.
 \begin{figure}[h]
     \centering
-      \includegraphics[width=0.6\textwidth]{imgs/hist.png}
-      \caption{\label{fig:hist} Histogram of topological charge values $Q$ for trivial NLSM. $L=404$, 10,000 measurements, measurements very 50 sweps, 1,000 sweep thermalization, $\tau=0$}
+      \includegraphics[width=\textwidth]{imgs/divergence.png}
+      \caption{\label{fig:bietenholz} $\chi_t\xi_2^2$ as a function of $L$ for flow time $\tau=5t_0$. The data is fit with both a log and power fit. Simulation run with 10,000 measurements, measurements very 50 sweeps, 1,000 sweep thermalization.}
 \end{figure}
+The data is fit with two options: a log fit
+\begin{equation}
+    \chi_t \xi_2^2 = A \mathrm{log}(B L) + C
+\end{equation}
+and a power fit
+\begin{equation}
+    \chi_t \xi_2^2 = A B^L + C.
+\end{equation}
+The data fits these functions with $\chi^2/DOF$ of $31.3$ and $761.6$ respectively. Both of these function diverge as $L\rightarrow \intfy$, indicating that the topological susceptibility does as well. This is still a slower divergence than the linear divergence featured in the $\tau=0$ case.
 
-
-
+\subsection{Topological charge when $\theta\neq 0$}
+Following the method explained in Sec.~\ref{sec:topotheta}, we calculate the imaginary part of $\langle Q \rangle$ for arbitrary $\theta$. We perform this calculation for four values of the flow time $\tau$, shown in Fig~\ref{fig:theta}.
+\begin{figure}[h]
+    \centering
+      \includegraphics[width=\textwidth]{imgs/theta.png}
+      \caption{\label{fig:theta} Imaginary part of $\langle Q \rangle$ as a function of $\theta$. Simulation run with 10,000 measurements, measurements very 50 sweeps, 1,000 sweep thermalization. Note the different scaling of the $y$-axis.}
+\end{figure}
+These plots demonstrate the divergence of the continuum limit in the $\tau=0$ and the flowed regimes. In the $\tau=0$ case, the slope increases sharply, reflecting the linear divergence of $\chi_t$. However in the flowed regime, this divergence is much slower, reflecting the logarithmic or power-law relationship shown in Fig.~\ref{fig:divergence}.
 
 %\chapter{Statistical Analysis}
 
 \chapter{Conclusion \& Outlook}
 
-
+Using a Monte Carlo simulation, we have analyzed two main quantum field theories: the $\phi^4$ model and the $O(3)$ non-linear sigma model. In the former, we verified a phase transition at $m_0^2=-0.72$. 
 % MPI is unnecessary in this case
 
 
 \appendix
+
 \chapter{C++ NLSM Monte Carlo Program}
 \lstset{language=C++,
                 basicstyle=\scriptsize\ttfamily,

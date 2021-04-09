@@ -1,5 +1,12 @@
 \begin{thebibliography}{10}
 
+\bibitem{bietenholz2018}
+Wolfgang Bietenholz, Philippe {de Forcrand}, Urs Gerber, H{\'e}ctor
+  {Mej{\'i}a-D{\'i}az}, and Ilya~O. Sandoval.
+\newblock Topological {{Susceptibility}} of the 2d {{O}}(3) {{Model}} under
+  {{Gradient Flow}}.
+\newblock {\em Phys. Rev. D}, 98(11):114501, December 2018.
+
 \bibitem{weisskopf1981}
 Victor~F. Weisskopf.
 \newblock Development of field theory in the last 50 years.
@@ -12,13 +19,6 @@ Christopher Monahan.
   {{Lattice Field Theory}} \textemdash{} {{PoS}}({{LATTICE}} 2015)}, page 052,
   {Kobe International Conference Center, Kobe, Japan}, July 2016. {Sissa
   Medialab}.
-
-\bibitem{bietenholz2018}
-Wolfgang Bietenholz, Philippe {de Forcrand}, Urs Gerber, H{\'e}ctor
-  {Mej{\'i}a-D{\'i}az}, and Ilya~O. Sandoval.
-\newblock Topological {{Susceptibility}} of the 2d {{O}}(3) {{Model}} under
-  {{Gradient Flow}}.
-\newblock {\em Phys. Rev. D}, 98(11):114501, December 2018.
 
 \bibitem{zee2010}
 Anthony Zee.
