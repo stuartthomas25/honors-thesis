@@ -213,7 +213,7 @@ This field features spontaneous symmetry breaking at a critical value of $m_0^2$
 
 The non-linear sigma model (NLSM) is a prototypical theory for many physical phenomena, including applications in string theory. As a simple nonperturbative model, it provides an ideal starting point for lattice QCD studies. Specifically, the NLSM exhibits many properties shared by Yang-Mills gauge theories, such as a mass gap, asymptotic freedom and $O(2)$ renormalizability. Furthermore, it has an exact application to Heisenberg ferromagnets in condensed matter. 
 
-Unlike the $phi^4$ model, which consists of a real value at each point in spacetime, the $O(3)$ NLSM consists of a 3D unit vector at each point. For this reason, every transformation of the field must be ``norm preserving''. Per its name, the non-linear sigma model features a global symmetry under the 3D orthogonal group $O(3)$. In other words, the theory is invariant under rotating all vectors the same way. To differentiate it from the $\phi^4$ model, we denote the NLSM field as $\e(x)$.
+Unlike the $\phi^4$ model, which consists of a real value at each point in spacetime, the $O(3)$ NLSM consists of a 3D unit vector at each point. For this reason, every transformation of the field must be ``norm preserving''. Per its name, the non-linear sigma model features a global symmetry under the 3D orthogonal group $O(3)$. In other words, the theory is invariant under rotating all vectors. To differentiate it from the $\phi^4$ model, we denote the NLSM field as $\e(x)$.
 
 The theory is defined by the Euclidean action 
 \begin{equation}
@@ -221,14 +221,6 @@ The theory is defined by the Euclidean action
     S_E = \frac{\beta}{2} \int d^Dx \partial^\mu \e \cdot \partial_\mu \e
 \end{equation}
 subject to the constraint that $\e\cdot\e = 1$. Here, $\beta$ is the inverse coupling.
-
-\subsection{NLSM $\theta$ term}
-
-In order to make the non-linear sigma model topologically nontrivial, we introduce a $\theta$ term into the action such that 
-\begin{equation}
-    S[\e] \rightarrow S[\e] - i \theta Q[\phi],
-\end{equation}
-where $Q$ is the topological charge (see Sec.~\ref{sec:topological charge}).
 
 
 \section{Markov Chain Monte Carlo}
@@ -302,11 +294,13 @@ There are two potential points of confusion here. The first lies in the definiti
 
 \begin{table}[h]
     \begin{center}
+    {\renewcommand{\arraystretch}{1.2} %
     \begin{tabular}{ c|| c | c | c}
         & broken & transition & symmetric \\ \hline
         $|\bar\phi|$ & 0.56 & 0.07 & 0.02 \\ 
         $S_E/L^2$ & 0.29 & 0.40 & 0.44
-    \end{tabular}
+    \end{tabular}}
+
     \end{center}
     \caption{\label{tab:primary observables} Average magnetization with average action per site corresponding to the particular configurations in Fig.~\ref{fig:primary observables}.}
 \end{table}
@@ -435,11 +429,20 @@ Under periodic boundary conditions, these triangles on the sphere necessarily wr
 \end{tikzpicture}
 \caption{\label{fig:sphere} Visualization of signed area $A$ on the sphere $S^2$ traced out by field at points $x_1$, $x_2$ and $x_3$.}
 \end{figure}
+
 Following this quantity, we can define a topological susceptibility $\chi_t$
 \begin{equation}
 \chi_t \equiv \frac{1}{L^2} \Big( \langle Q^2 \rangle - \langle Q \rangle^2 \Big).
 \end{equation}
 
+
+\subsection{NLSM $\theta$ term}
+
+In the nonlinear sigma model, we expect $\langle Q \rangle=0$. By introducing a $\theta$ term into the action,
+\begin{equation}
+    S[\e] \rightarrow S[\e] - i \theta Q[\phi],
+\end{equation}
+we can construct a topologically nontrivial model (that is, $\langle Q \rangle \neq 0$).
 
 \section{Ultraviolet Divergences}
 
@@ -493,7 +496,7 @@ This function forms a Gaussian, smoothly dampening high-momentum modes and remov
         \includegraphics[width=0.9\textwidth]{imgs/gf3.png}
         \caption{$\tau=0.1$}
       \end{subfigure}%
-      \caption{\label{fig:flow} Effect of flow time evolution on a random lattice in the symmetric phase. Red and blue indicate positive and negative values of the field in 2D spacetime.}
+      \caption{\label{fig:flow} Effect of flow time evolution on a random lattice in the symmetric phase. White represents positive values of $\phi$ while black represents negative.}
 \end{figure}
 
 Generally, we can choose any flow time equation that drives the field towards a classical minimum. Beyond the $\phi^4$ model, we need flow equations that incorporate different types of fields. In the non-linear sigma model, it has been shown that an appropriate manifestation of the flow time can resolve divergences \cite{makino2015a}. Therefore, it is possible to define a different flow equation for this model as well. Following \cite{bietenholz2018}, we can define the gradient flow in this model via the differential equation
@@ -644,7 +647,7 @@ Fig.~\ref{fig:wolff} shows a real demonstration of this process. We can see a la
         \caption{after cluster flip}
       \end{subfigure}
       \hfill
-      \caption{\label{fig:wolff} An example of the Wolff cluster algorithm in the $\phi^4$ model. White represents negative values of $\phi$ while black represents positive. $\lambda=0.5$, $m_0^2=-0.9$}
+      \caption{\label{fig:wolff} An example of the Wolff cluster algorithm in the $\phi^4$ model. White represents positive values of $\phi$ while black represents negative. $\lambda=0.5$, $m_0^2=-0.9$}
   
 \end{figure}
 
@@ -680,6 +683,8 @@ To increase the efficiency of this algorithm, we implement the step-doubling alg
 
 \section{Topological charge with a $\theta$ term}
 
+
+
 \chapter{Results}
 \section{$\phi^4$ model}
 
@@ -691,6 +696,23 @@ We initially implemented the $\phi^4$ model using the Monte Carlo method describ
 \end{figure}
 
 
+\begin{figure}[h]
+    \centering
+      \includegraphics[width=\textwidth]{imgs/theta.png}
+      \caption{\label{fig:theta} Imaginary part of $\langle Q \rangle$ as a function of $\theta$.}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+      \includegraphics[width=\textwidth]{imgs/bietenholz.png}
+      \caption{\label{fig:bietenholz} }
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+      \includegraphics[width=0.6\textwidth]{imgs/hist.png}
+      \caption{\label{fig:hist} Histogram of topological charge values $Q$ for trivial NLSM. $L=404$, 10,000 measurements, measurements very 50 sweps, 1,000 sweep thermalization, $\tau=0$}
+\end{figure}
 
 
 
