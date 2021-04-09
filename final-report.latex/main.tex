@@ -306,26 +306,74 @@ There are two potential points of confusion here. The first lies in the definiti
 \end{table}
 
 \subsubsection{Average Magnetization}
-The average magnetization quantifies the total alignment of the field. In the $\phi^4$ theory, this value is a scalar and indicates the spontaneous symmetry breaking of the field. In the NLSM, this value is a vector and also represents a spontaneous symmetry breaking, though this quality is outside the scope of this study. In both theories, a value of zero indicates the symmetric phase while a nonzero value indicates broken symmetry. In the NLSM, a magnitude of one represents total alignment.
+\label{sec:avg mag}
+The average magnetization quantifies the total alignment of the field. In both theories, a value of zero indicates the symmetric phase while a nonzero value indicates broken symmetry. In the NLSM, a magnitude of one represents total alignment.
 
-Mathematically, we can define this quantity in the $\phi^4$ model as 
+Due to the $\phi\rightarrow-\phi$ symmetry of the $\phi^4$ model, the ensemble mean of the average magnetization $\langle \phi \rangle$ is $0$. Likewise, the $O(3)$ symmetry in the NLSM enforces $\langle \e \rangle$. To measure the alignment, we therefore use the magnitude of this quantity, defined in the $\phi^4$ model as 
 \begin{equation}
-    |\bar\phi| \equiv \frac{1}{L^2}\sum_i^{L^2} \phi(x_i).
+|\bar\phi| \equiv \frac{1}{L^2}\left| \sum_i^{L^2} \phi(x_i)\right|.
 \end{equation}
-In the NLSM, the equivalent value is defined as 
+and in the NLSM as
 \begin{equation}
-    |\bar\e| \equiv \frac{1}{L^2}\sum_i^{L^2} \e(x_i).
+    |\bar\e| \equiv \frac{1}{L^2}\left|\sum_i^{L^2} \e(x_i)\right|.
 \end{equation}
+
+In the symmetric phase, both $\langle \bar\e \rangle$ and $\langle \bar\phi \rangle = 0$ while in the broken phase they are both nonzero.
 
 \subsubsection{Magnetic Susceptibility}
+Despite being the prototypical indicator of a phase transition, the magnitude of the magnetization is not always clear on a discretized lattice. For this reason, we consider other observables such as the magnetic susceptibility. Generally, this value is defined as 
+\begin{equation}
+    \chi_m \equiv L^2 \big(\langle {\bar e}^2 \rangle - \langle \bar e \rangle^2\big)
+\end{equation}
+in the NLSM (the $\phi^2$ expression is nearly identical). Manifestly, this expression appears as a secondary observable since it is not defined for each lattice configuration. However, due to the rotation invariance of both fields, the second term disappears (see Sec.~\ref{sec:avg mag}), yielding
+\begin{align}
+    \chi_m &= L^2 \left\langle \left( \sum_x e(x) \right)^2\right\rangle  \\
+           &= L^2 \left\langle \sum_{x,y}\e(x)\cdot \e(y) \right\rangle. 
+\end{align}
+Due to translational invariance from the periodic boundary conditions, this expression becomes
+\begin{equation}
+    \chi_m = \left\langle \sum_x \e(0)\cdot\e(x) \right\rangle
+\end{equation}
+for the NLSM. Following the same logic, we derive 
+\begin{equation}
+    \chi_m = \left\langle \sum_x \phi(0)\phi(x) \right\rangle
+\end{equation}
+for the $\phi^4$ model.
+
+\subsubsection{Internal Energy}
+The internal energy is defined as \cite{berg1981}
+\begin{equation}
+    E = \frac{2}{\beta L^2} \langle S \rangle
+\end{equation}
+in the NLSM.
 
 
 \subsection{Secondary Observables}
+Unlike primary observables, secondary observables are defined for each \textit{ensemble}, not each configuration. To further ensure an accurate perspective of the phase transition in the $\phi^4$ model, we incorporate two indicators: the Binder cumulant and the bimodality. Since we do not measure these observables on the NLSM, we do not include their analogous expressions here.
+
 \subsubsection{Binder Cumulant}
+We define the Binder cumulant $U$ as \cite{landau2000}
+\begin{equation}
+    U \equiv 1-\frac{\langle \bar{\phi^4} \rangle}{3\langle \bar{\phi^2}\rangle^2}.
+\end{equation}
+Similar to the magnitude of the average magnetization, this formula yields $0$ in the symmetric phase and a nonzero value in the broken phase. This nonzero value i $2/3$ for the Binder cumulant. The advantage of this metric is a sharper transition at the critical $m_0^2$.
+
 \subsection{Bimodality}
+The final phase transition indicator we use is the bimodality. In the symmetric phase, the average magnetization $\bar\phi$ centers around $0$ while in the broken phase, these values cluster around two peaks. Qualitatively, this metric measures the separation of these peaks.
 
-
+We begin by measuring $\bar\phi$ for each configuration. We separate each value into an odd number number of bins, ensuring that there is a bin centered at $\bar\phi=0$. We then calculate the number of configurations $n_0$ in the center bin and the number of configurations $n_{max}$ in the fullest bin. The bimodality is then calculated as
+\begin{equation}
+    B = 1 - \frac{n_0}{n_{max}}.
+\end{equation}
+When the configurations are centered around $\bar\phi=0$, i.e. the symmetric phase, this value is $0$. When the configurations are aligned such that $\bar\phi\neq0$, i.e. the broken phase, this value becomes $1$.
 \subsection{Jackknife Method}
+Though it simple to measure the uncertainties associated with primary observables, secondary observables make this process more complicated. While we could propagate the uncertainty of the Binder cumulant, such a process is not clear for the bimodality. Therefore, we utilize a method known Jackknife resampling. 
+
+We begin by calculating some observable $O$ on an ensemble of $N$ configurations. Then, for each configuration $i$, we calculate the same observable but exclude said configuration. This leaves us with a set of $N$ observables $O_i$. Assuming independent measurements, we can calculate the variance of $O$ as
+\begin{equation}
+    \mathrm{Var}(O) = \sum_{i} \left(C_i - C\right)^2.
+\end{equation}
+We use this formula to calculate all uncertainties in this study.
 \section{Topological Observables}
 \label{sec:topological charge}
 The $O(3)$ non-linear sigma model model features topological properties originating from two properties: 
@@ -434,7 +482,16 @@ Following this quantity, we can define a topological susceptibility $\chi_t$
 \begin{equation}
 \chi_t \equiv \frac{1}{L^2} \Big( \langle Q^2 \rangle - \langle Q \rangle^2 \Big).
 \end{equation}
+In the trivial case, $\langle Q \rangle$ disappears and   
+\begin{equation}
+    \chi_t = \frac{1}{L^2} \sum_{x,y} \langle q(x)q(y)\rangle.
+\end{equation}
+Assuming periodic boundary conditions and therefore translational symmetry, this expression simplifies to 
+\begin{equation}
+    \chi_t = \frac{1}{L^2} \sum_{x} \langle q(x)q(0)\rangle.
+\end{equation}
 
+On the lattice, this quantity is known to diverge in the continuum limit.\cite{bietenholz2018}
 
 \subsection{NLSM $\theta$ term}
 
@@ -551,7 +608,7 @@ Likewise, we can discretize the non-linear sigma model. In this case, the deriva
 \begin{equation}
     \half \left(\partial_t\e\right)^2 + \half \left(\partial_x\e\right)^2 \rightarrow \frac{1}{a^2}\left[ 2 - \e(x+a\hat{t})\cdot\e(x) - \e(x+a\hat{x})\cdot\e(x) \right].
 \end{equation}
-Note that we have used the identity $\e\cdot\e = 1$. Inserting this into equation\label{eq:nlsm euclidean action} yields the discretized action
+Note that we have used the identity $\e\cdot\e = 1$. Inserting this into Eq.~\ref{eq:nlsm euclidean action} yields the discretized action
 \begin{equation}
     \label{eq:nlsm discretized action}
     S_\mathrm{lat}[\e] = \sum_i \left[ 2 - \e(x+a\hat{t})\cdot\e(x) - \e(x+a\hat{x})\cdot\e(x) \right].
@@ -590,7 +647,7 @@ Though the Metropolis algorithm will slowly find the absolute minimum of the the
 
 A more efficient approach is the Wolff algorithm\cite{wolff1989}, which \textit{grows} one cluster probabilistically and flips it unconditionally. In the case of $\phi^4$ theory, this flipping takes the form of a simple sign change. In the non-linear sigma model we choose a random unit vector $\vec r$ and consider the projection of the field on this vector. When the cluster flips, each site is flipped along this direction.\citeneeded To identify the cluster, the algorithm uses a recursive algorithm defined by the probability of adding a new site, growing the cluster from a single, randomly selected ``seed''. Starting with the seed, the probability of adding each neighboring site is given by the source site $x$ and the proposed site $x'$. Wolff defines this probability for arbitrary sigma models as 
 \begin{equation}
-    \label{eq:wolff padd}
+    \label{eq:phi4 wolff padd}
     P_{add}(\e(x),\e(x')) = \begin{cases} 
         1 - e^{2\beta [\vec{r} \cdot \e(x)][\vec{r} \cdot \e(x')]} & \mathrm{sgn}[\vec{r}\cdot\e(x)]=\mathrm{sgn}[\vec{r}\cdot\e(x')]\\
         0 & \mathrm{otherwise} \\
@@ -618,7 +675,7 @@ we can simplify the equation to be
 \begin{equation}
     \prod_{\langle x,x'\rangle \in \partial C}  \frac{ 1 - P_{add}\big(\e(x),\e(x')\big)}{ 1 - P_{add}\big(\e(x),R\;\e(x')\big)}  = \prod_{\langle x,x'\rangle \in \partial C}\mathrm{exp}\big\{2\beta[r\cdot\e(x)][r\cdot\e(x')]\big\}.
 \end{equation}
-By plugging in Eq.~\ref{eq:wolff padd}, it is clear to see this equation is satisfied.
+By plugging in Eq.~\ref{eq:phi4 wolff padd}, it is clear to see this equation is satisfied.
 
 Using this same reasoning, we can deduce an expression for $P_{add}$ in the $\phi^4$ model. Since this model is one dimensional, the reflection matrix $R$ is equivalent to $-1$. Adapting the NLSM detailed balance equation for the $\phi$ field, we find
 \begin{equation}
@@ -626,7 +683,7 @@ Using this same reasoning, we can deduce an expression for $P_{add}$ in the $\ph
 \end{equation}
 This equation is satisfied by the ansatz
 \begin{equation}
-    \label{eq:wolff padd}
+    \label{eq:nlsm wolff padd}
     P_{add}(\phi(x),\phi(x')) = \begin{cases} 
         1 - e^{-2\phi(x)\phi(x')]} & \mathrm{sgn}[\phi(x)]=\mathrm{sgn}[\phi(x')]\\
         0 & \mathrm{otherwise} \\
@@ -686,7 +743,7 @@ To increase the efficiency of this algorithm, we implement the step-doubling alg
 
 
 \chapter{Results}
-\section{$\phi^4$ model}
+\section{$\phi^4$ model results}
 
 We initially implemented the $\phi^4$ model using the Monte Carlo method described in Sec.~\ref{sec:methods} to verify the results of our system. According to previous studies (\cite{monahan2016}, \cite{schaich2006}), the $\phi^4$ model exhibits a symmetric and broken phase depending on its parameters $m_0^2$ and $\lambda$, specifically occurring at $m_0^2 = -0.72$ for $\lambda = 0.5$. We verify this result by plotting four observables: the lattice average $|\langle\bar\phi\rangle|$, the lattice variance $\chi$, the Binder cumulant $U$ and the bimodality $B$ in Fig.~\ref{fig:phi4}.
 \begin{figure}[h]
@@ -695,17 +752,25 @@ We initially implemented the $\phi^4$ model using the Monte Carlo method describ
       \caption{\label{fig:phi4} Simulation of the phase transition in the $\phi^4$ model: Magnetization $\langle |\bar\phi|\rangle$, magnetic susceptibility $\chi_m$, Binder cumulant $U$ and bimodality $B$ for various values of the mass squared $m_0^2$.}
 \end{figure}
 
-
+\section{Non-linear sigma model results}
+After confirming the phase transition 
 \begin{figure}[h]
     \centering
-      \includegraphics[width=\textwidth]{imgs/theta.png}
-      \caption{\label{fig:theta} Imaginary part of $\langle Q \rangle$ as a function of $\theta$.}
+      \includegraphics[width=\textwidth]{imgs/internal_energy.png}
+      \caption{\label{fig:bergluscher}}
 \end{figure}
 
 \begin{figure}[h]
     \centering
+      \includegraphics[width=\textwidth]{imgs/theta.png}
+      \caption{\label{fig:theta} Imaginary part of $\langle Q \rangle$ as a function of $\theta$. Note the different scaling of the $y$-axis.}
+\end{figure}
+
+
+\begin{figure}[h]
+    \centering
       \includegraphics[width=\textwidth]{imgs/bietenholz.png}
-      \caption{\label{fig:bietenholz} }
+      \caption{\label{fig:bietenholz} $\langle Q^2 \rangle=\chi_t L^2$ as a  }
 \end{figure}
 
 \begin{figure}[h]
@@ -717,7 +782,7 @@ We initially implemented the $\phi^4$ model using the Monte Carlo method describ
 
 
 
-\chapter{Statistical Analysis}
+%\chapter{Statistical Analysis}
 
 \chapter{Conclusion \& Outlook}
 
