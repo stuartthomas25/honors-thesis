@@ -38,12 +38,12 @@ We find that the flow time effectively decreases the topological susceptibility 
 \begin{figure}[h]
     \begin{center}
       \begin{subfigure}[b]{\textwidth}
-          \includegraphics[width=\textwidth]{imgs/divergence.png}
+          \includegraphics[width=0.8\textwidth]{imgs/divergence.png}
           \caption{$\tau = 0$}
       \end{subfigure}
 
       \begin{subfigure}[b]{\textwidth}
-          \includegraphics[width=\textwidth]{imgs/divergence_flowed.png}
+          \includegraphics[width=0.8\textwidth]{imgs/divergence_flowed.png}
           \caption{$\tau = 5t_0$}
       \end{subfigure}
       \caption{\label{fig:bietenholz} $\chi_t\xi_2^2$ as a function of $L$. The data is fit with both a log and power fit. Simulation run with 10,000 measurements, measurements very 50 sweeps, 1,000 sweep thermalization. In the $\tau=0$ case, we have compared our result with the curve fit found in \cite{bietenholz2018}.}
@@ -51,13 +51,13 @@ We find that the flow time effectively decreases the topological susceptibility 
 \end{figure}
 The data is fit with two options: a log fit
 \begin{equation}
-    \chi_t \xi_2^2 = A \mathrm{log}(B L) + C
+    \chi_t \xi_2^2 = A \mathrm{log}(B L + C)
 \end{equation}
 and a power fit
 \begin{equation}
     \chi_t \xi_2^2 = A B^L + C.
 \end{equation}
-The data fits these functions with $\chi^2/DOF$ of $31.3$ and $761.6$ respectively. Both of these function diverge as $L\rightarrow \infty$, indicating that the topological susceptibility does as well. This is still a slower divergence than the linear divergence featured in the $\tau=0$ case.
+When $\tau=5t_0$, the data fits these functions with $\chi^2/DOF$ of $28.3$ and $30.4$ respectively. Both of these function diverge as $L\rightarrow \infty$, indicating that the topological susceptibility does as well. This is still a slower divergence than the linear divergence featured in the $\tau=0$ case.
 
 \subsection{Topological charge when $\theta\neq 0$}
 Following the method explained in Sec.~\ref{sec:topotheta}, we calculate the imaginary part of $\langle Q \rangle$ for arbitrary $\theta$. We perform this calculation for four values of the flow time $\tau$, shown in Fig~\ref{fig:theta}.

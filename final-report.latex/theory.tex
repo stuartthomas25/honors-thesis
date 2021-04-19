@@ -79,13 +79,12 @@ The non-linear sigma model (NLSM) is a prototypical theory for a variety of unre
 
 Unlike the $\phi^4$ model, which consists of a real value at each point in spacetime, the $O(3)$ NLSM consists of a 3D unit vector at each point. For this reason, every transformation of the field must be ``norm preserving''. Per its name, the $O(3)$ NLSM features a global symmetry under the 3D orthogonal group $O(3)$. In other words, the theory remains the same if all vectors are rotated equivalently. To differentiate it from the $\phi^4$ model, we denote the NLSM field as $\e(x)$.
 
-The theory is defined by the Euclidean action 
+The theory is defined by the 1+1 dimensional Euclidean action 
 \begin{equation}
     \label{eq:nlsm euclidean action}
-    S_E = \frac{\beta}{2} \int d^Dx \; \partial^\mu \e \cdot \partial_\mu \e
+    S_E = \frac{\beta}{2} \int d^2x \; \partial^\mu \e \cdot \partial_\mu \e
 \end{equation}
-subject to the constraint that $\e\cdot\e = 1$. Here, $\beta$ is the inverse coupling and $D$ is the number of spacetime dimensions.
-
+subject to the constraint that $\e\cdot\e = 1$. Here, $\beta$ is the inverse coupling.
 
 \section{Markov Chain Monte Carlo}
 
@@ -134,6 +133,7 @@ This formula will provide the explicit transition probabilities for the Metropol
 To extract physics from Monte Carlo simulations, we define a set of ``observables''. These quantities manifest as expectation values of operators, calculated using the Euclidean path integral formula (Eq.~\ref{eq:pathintegraleuclidean}). We can classify these observables into two categories: primary and secondary observables. Primary observables are calculated as expectation values of global operators while secondary observables are derived from these quantities.
 
 \subsection{Primary Observables}
+\label{sec:primary observables}
 Each primary observable is defined on each configuration independently, meaning they do not encode ensemble statistics of the Markov Chain.\footnote{One slight exception is the magnetic susceptibility, which can be defined both ways.} In the $\phi^4$ model, we can develop an intuition around these quantities by visualizing the symmetric and broken phases. Fig~\ref{fig:primary observables} and Tab.~\ref{tab:primary observables} show examples of these quantities in three different configurations: one in the broken phase, one in the symmetric phase, and one at the transition. 
 
 There are two potential points of confusion here. The first lies in the definition of ``broken'' phase. Though the symmetric phase more closely resembles a pane of broken glass, it leaves $\phi\rightarrow-\phi$ symmetry \textit{un}-broken, thereby giving the title ``broken'' to the more visually uniform configuration. An additional potential pitfall is the distinction between the \textit{lattice average} and the \textit{ensemble average}. The first is a mean over all lattice sites while the second is a mean over all configurations in the Markov Chain.
@@ -170,17 +170,20 @@ There are two potential points of confusion here. The first lies in the definiti
 
     \end{center}
     \caption{\label{tab:primary observables} Average magnetization with average action per site corresponding to the particular configurations in Fig.~\ref{fig:primary observables}.}
+\end{table}
+
 \subsubsection{Average Magnetization}
 \label{sec:avg mag}
 The average magnetization quantifies the total alignment of the field. In both the $\phi^4$ model and the NLSM, a value of zero indicates the symmetric phase while a nonzero value indicates broken symmetry. In the NLSM, a magnitude of one represents total alignment.
 
 Due to the $\phi\rightarrow-\phi$ symmetry of the $\phi^4$ model, the ensemble mean of the average magnetization $\langle \phi \rangle$ is $0$. Likewise, the $O(3)$ symmetry in the NLSM enforces $\langle \e \rangle$ = 0. To measure the alignment, we therefore use the magnitude of this quantity, defined in the $\phi^4$ model as 
 \begin{equation}
-|\bar\phi| \equiv \frac{1}{L^2}\left| \sum_i^{L^2} \phi(x_i)\right|.
+|\bar\phi| \equiv \frac{1}{V}\left| \int d^2x \phi(x)\right|.
 \end{equation}
 and in the NLSM as
 \begin{equation}
-    |\bar\e| \equiv \frac{1}{L^2}\left|\sum_i^{L^2} \e(x_i)\right|.
+    \label{eq:chim nlsm}
+    |\bar\e| \equiv \frac{1}{V}\left|\int d^2x \e(x)\right|.
 \end{equation}
 
 In the symmetric phase, both $\langle \bar\e\, \rangle$ and $\langle \bar\phi \rangle = 0$ while in the broken phase they are both nonzero.
@@ -188,7 +191,7 @@ In the symmetric phase, both $\langle \bar\e\, \rangle$ and $\langle \bar\phi \r
 \subsubsection{Internal Energy}
 The internal energy is defined as \cite{berg1981}
 \begin{equation}
-    E = \frac{2}{\beta L^2} \langle S \rangle
+    E = \frac{2}{\beta V} \langle S \rangle
 \end{equation}
 in the NLSM.
 
@@ -201,26 +204,13 @@ Though the magnitude of the average magnetization is the main phase transition i
 
 Mathematically, this value is defined as 
 \begin{equation}
-    \chi_m \equiv L^2 \big(\langle {\bar\e\,}^2 \rangle - \langle \bar\e\, \rangle^2\big)
+    \chi_m \equiv V \big(\langle {\bar\e\,}^2 \rangle - \langle \bar\e\, \rangle^2\big)
 \end{equation}
 in the NLSM and
 \begin{equation}
-    \chi_m \equiv L^2 \big(\langle {\bar\phi}^2 \rangle - \langle \bar\phi \rangle^2\big)
+    \chi_m \equiv V \big(\langle {\bar\phi}^2 \rangle - \langle \bar\phi \rangle^2\big)
 \end{equation}
-in the $\phi^4$ model. Manifestly, this expression appears as a secondary observable since it is not defined for each lattice configuration. However, due to the rotation invariance of both fields, the second term disappears (see Sec.~\ref{sec:avg mag}), yielding
-\begin{align}
-    \chi_m &= L^2 \left\langle \left( \sum_x e(x) \right)^2\right\rangle  \\
-           &= L^2 \left\langle \sum_{x,y}\e(x)\cdot \e(y) \right\rangle. 
-\end{align}
-Due to translational invariance from the periodic boundary conditions, this expression becomes
-\begin{equation}
-    \chi_m = \left\langle \sum_x \e(0)\cdot\e(x) \right\rangle
-\end{equation}
-for the NLSM. Following the same logic, we derive 
-\begin{equation}
-    \chi_m = \left\langle \sum_x \phi(0)\phi(x) \right\rangle
-\end{equation}
-for the $\phi^4$ model.
+in the $\phi^4$ model. Manifestly, this expression appears as a secondary observable since it is not defined for each lattice configuration. 
 
 \subsubsection{Binder Cumulant}
 We define the Binder cumulant $U$ as \cite{binder1981}
@@ -277,38 +267,41 @@ we can construct a topologically nontrivial model (that is, $\langle Q \rangle \
 In Section~\ref{sec:pathintegral},  we defined a fundamental equation of quantum fields using a ``path integral'' which encompasses an uncountably infinite configuration space. However, we said nothing of the integral's convergence. In fact, many fundamental processes in QFT have divergent amplitudes, yielding nonsensical results. The most common type of divergence stems from high-momentum states, giving them the name ``ultraviolet divergences''. The remedy to this catastrophe is unintuitive. Essentially, we adopt infinite values for the parameters of the Lagrangian ($m_0^2$ and $\lambda$ in $\phi^4$ theory). Since neither of these two quantities is ever measured directly, we do not have to assume that their values are finite. In practice, this technique is involved and consists of two steps: regularization and renormalization.
 
 
-\subsection{Regularization: fields on the lattice}
+\subsection{Regularization}
 Regularization is a process which introduces a new parameter into calculations. One example is a momentum cutoff. This technique transforms infinite momentum integrals as follows:  
 \begin{equation*}
     \int_0^\infty dk \rightarrow \int_0^\Lambda dk,
 \end{equation*}
 introducing $\Lambda$ as a regularization parameter. This process makes results $\Lambda$-dependent, but finite. Another example is dimensional regularization, which calculates results in terms of the spacetime dimension $D$ and analytically continues this parameter from just the integers into the real numbers. 
 
-In this study, we employ lattice regularization. This process discretizes the field, modeling the field $\phi(x)$ as a lattice $\phi_i$ where $i$ indexes lattice sites. The inherent parameter in this case is the lattice spacing $a$ which measures the width of each lattice chunk. 
+In this study, we employ lattice regularization. This process discretizes the field, modeling the field $\phi(x)$ as a lattice $\phi_i$ where $i$ indexes lattice sites. The inherent parameter in this case is the lattice spacing $a$ which measures the width of each lattice chunk. This discretization effectively imposes a hard momentum cutoff of $k=\pi/a$. According to Bloch's theorem, any mode above this cutoff is equivalent to a lower-momentum mode since the high frequency information disappears on a discrete lattice.
 
-% TODO: Mention what was summer work
+We can view this cutoff in momentum space by considering a square with side length $2\pi/a$ centered at the origin. On the lattice, any mode outside this zone contains no more information than a corresponding mode inside. This area is known as a ``Brillouin zone'' and contains all possible momentum modes on the lattice, effectively imposing a hard cutoff. One of the main strengths of lattice regularization is preservation of gauge invariance, a property that makes lattice methods useful for QCD.
+
 
 \subsection{Renormalization}
-After regularization, we redefine the Lagrangian parameters in terms of the regularization parameter, following a handful of boundary conditions. In this study, we assert that $L/\xi$ remains constant, where $L$ is the side length of the system and $\xi$ is the coherence length. In perturbation theory, this process is arduous and includes the introduction of counter-terms into the Lagrangian. In the case of the non-linear sigma model, it is impossible using counterterms\citeneeded but can be performed numerically. In this study, we use predetermined values from \cite{bietenholz2018}.
+After regularization, we redefine the Lagrangian parameters in terms of the regularization parameter using a handful of boundary conditions. Following \cite{bietenholz2018}, we require that $L/\xi$ remains constant, where $L$ is the side length of the system and $\xi$ is the coherence length. In perturbation theory, the renormalization process is arduous and includes the introduction of counter-terms into the Lagrangian. In the case of the NLSM it is impossible using counter-terms but can be performed numerically. In this study, we use predetermined values from \cite{bietenholz2018}.
+% TODO: cite this
 
-At this point, we can calculate observables as functions of regularization parameters. To achieve physical values, we take the limit as the regularization parameters approach their physical values. With a momentum cutoff, we take $\Lambda \rightarrow \infty$ and with dimensional regularization we usually take $d\rightarrow 4$. With lattice regularization, we approach the continuum, taking the lattice spacing $a\rightarrow 0$. 
+At this point, we can calculate renormalized parameters of the Lagrangian. To achieve a physical theory, we take the limit as the regularization parameters approach their physical values. With a momentum cutoff, we take $\Lambda \rightarrow \infty$ and with dimensional regularization we usually take $d\rightarrow 4$. With lattice regularization, we approach the continuum, taking the lattice spacing $a\rightarrow 0$. 
 
-At this point, we have surely eliminated all divergences, right? Unfortunately, this is not always the case. The topological susceptibility $\chi_t$ is one such value that diverges in the continuum limit. As we decrease the width of each lattice site, high frequency modes become more significant, leading to an ultraviolet divergence in the operator. 
+At this point, we have surely eliminated all divergences, right? Unfortunately, this is not always the case. External operators may also diverge due to regularization procedures. A prototypical example is the angular momentum operator on the lattice. Since a square lattice breaks continuous rotational symmetry, orthogonal angular momentum operators mix on the lattice and can cause divergences \cite{monahan2016}. 
+
+The topological susceptibility $\chi_t$ is one such value that diverges in the continuum limit. As we decrease the width of each lattice site, high frequency modes become more significant, leading to an ultraviolet divergence in the operator. 
 
 \subsection{The Gradient Flow}
 \label{sec:gradflow}
-To remove this ultraviolet divergence, we adopt a technique is ``smearing'', a local averaging of the field.\cite{solbrig2007} Specifically, we use a technique known as the ``gradient flow'' \cite{monahan2015} which introduces a new half-dimension called ``flow time'', or $\tau$.\footnote{The term ``half-dimension'' indicates that $\tau>0$.}  The flow time parameterizes the smearing such that an evolution in flow time corresponds to suppressing ultraviolet divergences. 
+To remove this ultraviolet divergence, we adopt a technique is ``smearing'', a local averaging of the field \cite{solbrig2007}. Specifically, we use a technique known as the ``gradient flow'' \cite{monahan2015} which introduces a new half-dimension called ``flow time'', or $\tau$.\footnote{The term ``half-dimension'' indicates that $\tau>0$.}  The flow time parameterizes the smearing such that an evolution in flow time corresponds to suppressing ultraviolet divergences. 
 
-Specifically, the gradient flow pushes field configuration toward classical minima of the action. Additionally, renormalized correlation functions remain renormalized at nonzero flow time.\cite{luscher2013} In 2D $\phi^4$ scalar field theory, the gradient flow is defined by the differential equation 
+Specifically, the gradient flow pushes field configurations toward classical minima of the action. Additionally, renormalized correlation functions remain renormalized at nonzero flow time for gauge theories such as QCD \cite{luscher2013}. In 2D $\phi^4$ scalar field theory, the gradient flow is defined by the differential equation 
 \begin{equation}
     \frac{\partial \rho(\tau, x)}{\partial \tau} = \partial^2 \rho(\tau,x)
 \end{equation}
-where $\partial^2$ is the Laplacian in 4-D Euclidean spacetime and $\tau$ is the flow time. Here, $\rho$ is the field evolved into a nonzero flow time, bounded by the condition $\rho(\tau=0,x) = \phi(x)$. In the $\phi^4$ theory, we can solve this equation exactly to find \cite{monahan2016}
+where $\partial^2$ is the Laplacian in 4-D Euclidean spacetime and $\tau$ is the flow time. Here, $\rho$ is the field flowed into a nonzero flow time, bounded by the condition $\rho(\tau=0,x) = \phi(x)$. In the $\phi^4$ theory, we can solve this equation exactly to find \cite{monahan2016}
 \begin{equation}
     \rho(\tau, x) = \frac{1}{4 \pi \tau} \int d^2 y e^{-(x-y)^2/4\tau} \phi(y).
 \end{equation}
-This function forms a Gaussian, smoothly dampening high-momentum modes and removing ultraviolet divergences from evolved correlation functions.\cite{makino2015a} We can visualize this by plotting the $\phi$ field, shown in Fig.~\ref{fig:flow}. These plots demonstrate the reduction of high momentum modes.
-
+This function forms a Gaussian, smoothly dampening high-momentum modes and removing ultraviolet divergences from evolved correlation functions \cite{makino2015a}. We can visualize this by plotting the $\phi$ field, shown in Fig.~\ref{fig:flow}. These plots demonstrate the reduction of high momentum modes.
 \begin{figure}[h]
   \centering
       \begin{subfigure}[b]{0.2\textwidth}\centering
@@ -330,13 +323,10 @@ This function forms a Gaussian, smoothly dampening high-momentum modes and remov
       \caption{\label{fig:flow} Effect of flow time evolution on a random lattice in the symmetric phase. White represents positive values of $\phi$ while black represents negative.}
 \end{figure}
 
-Generally, we can choose any flow time equation that drives the field towards a classical minimum. Beyond the $\phi^4$ model, we need flow equations that incorporate different types of fields. In the non-linear sigma model, it has been shown that an appropriate manifestation of the flow time can resolve divergences \cite{makino2015a}. Therefore, it is possible to define a different flow equation for this model as well. Following \cite{bietenholz2018}, we can define the gradient flow in this model via the differential equation
+Generally, we can choose any flow time equation that drives the field towards a classical minimum. Following \cite{bietenholz2018}, we can define the gradient flow for the NLSM via the differential equation
 \begin{equation}
     \label{eq:nsm_gradflow}
     \partial_\tau \vec\rho (\tau,x) = \left( 1 - \vec\rho(\tau,x) \vec\rho(\tau,x)^T \right) \partial^2 \vec\rho(\tau,x),
 \end{equation}
 where $\partial^2$ is the Laplacian operator in Euclidean space\footnote{Explicitly, $\partial^2 = \frac{\partial^2}{\partial t^2} + \nabla^2$}. We solve this equation numerically using the boundary condition $\vec\rho(0,x) = \e(x)$.
-
-
-
 
