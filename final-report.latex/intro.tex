@@ -1,0 +1,33 @@
+Quantum field theory (QFT) is an extraordinarily successful framework which describes a range of physical phenomena. Paired with the Standard Model, QFT provides the prevailing basis for all small-scale physics (that is, where general relativity does not apply) and is the fundamental tool for studying particle physics. In condensed matter physics, effective field theories model emergent effects such as phonons and quasiparticles. Compared to experiment, QFT is remarkably accurate, famously matching the experimental value for the electron $g$-factor to eight significant figures.\cite{weisskopf1981} 
+
+However, this power comes at a cost: the study of quantum fields is rife with infinities. A na\"ive treatment of quantum field theory produces divergent values for physical quantities, a clearly impossible result. Since the 1950s, this issue has been resolved for a large number of models--- most notably quantum electrodynamics--- through perturbation theory and the so-called \textit{renormalization group}. However, the technique fails with perturbatively nonrenormalizable theories. 
+
+One such example is the \textit{non-linear sigma model}, a prototypical theory in both condensed matter and particle physics. In solid-state systems, this model describes Heisenberg ferromagnets and in nuclear physics, it acts as a prototype for quantum chromodynamics (QCD), exhibiting characteristic features such as a mass gap and asymptotic freedom. \citeneeded
+
+In this study, we specifically consider the $O(3)$ non-linear sigma model in $1+1$ dimensions one dimension of space, one dimension of time). This theory exhibits topological properties such as \textit{instantons}, or classical field solutions at local minima of the action.
+
+
+
+Since the non-linear sigma model cannot be renormalized perturbatively, we cannot study these topological effects with normal perturbative techniques. An alternative solution is placing the field on a discretized lattice, a technique originally used for quantum chromodynamics. In this scenario, field configurations become computationally calculable. This process introduces an nonphysical length scale $a$, the lattice spacing. Therefore, we expect any physical result to converge in the continuum limit, i.e. when $a\rightarrow 0$. However, this is not always the case as observables mix on the lattice, leading to divergences. As an example, states of definite angular momentum mix when discretized, a clear violation of the angular momentum commutation relations. 
+
+
+The gradient flow is a technique designed to remove these divergences. By dampening high-momentum fluctuations, the gradient flow reduces power-divergent mixing and make observables finite on the lattice.\cite{monahan2016} In quantum chromodynamics, previous studies have verified the ability of the gradient flow to make observables finite\citeneeded. Due to its success in QCD, there has been interest in using the gradient flow to finitize the topological susceptibility in the 1+1 $O(3)$ non-linear sigma model.\cite{bietenholz2018}.
+
+%goals here
+
+\section{Method Overview}
+
+To numerically study the topological qualities of the non-linear sigma model, we first implement a Markov Chain Monte Carlo simulation. We initially construct a proof-of-concept Python program that models the simpler $\phi^4$ model (see Sec.~\ref{sec:phi4}). After comparing with existing literature, we transition to a C++ simulation for efficiency, implementing the non-linear sigma model in larger lattices. Since the gradient flow has no exact solution in the non-linear sigma model, we implement a numerical solution using a fourth-order Runge-Kutta approximation. By applying the gradient flow to every configuration in the sample, we can measure its effect on the topological charge and susceptibility.
+
+\section{Conventions}
+\begin{itemize}
+    \item Throughout this paper, we use natural units, i.e. $\hbar = 1$ and $c=1$.
+    \item We use Einstein summation notation, an implicit sum over repeated spacetime indices. For example, if $x^\mu$ is a spacetime four-vector and $x_\mu$ is its covariant form, the term
+        \begin{align*}
+            x^\mu x_\mu &= \sum^4_{\mu=0} x^\mu x_\mu \\
+            &= x_0^2-x_1^2-x_2^2-x_3^2.
+        \end{align*}
+\end{itemize}
+
+%\section{Main Experimental Goal}
+

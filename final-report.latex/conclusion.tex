@@ -1,0 +1,20 @@
+Using a Monte Carlo simulation, we have analyzed two main quantum field theories: the $\phi^4$ model and the $O(3)$ non-linear sigma model. To perform the calculation, we run a series of Metropolis sweeps interspersed with Wolff cluster algorithms, creating a Markov chain of samples. We use these field configurations to calculate operators using a Wick-rotated path integral.
+
+In the $\phi^4$ model, we verified a phase transition at $m_0^2=-0.72$ using the magnitude of the average magnetization, the magnetic susceptibility, the Binder cumulant and the bimodality. This process verified the effectiveness of the Monte Carlo computational system. We then generalized our system to the $O(3)$ non-linear sigma model, confirming our calculations with known results. We calculated the topological susceptibility $\chi_t$ to analyze its divergence in the continuum limit, confirming that this is indeed the case even at finite flow time. Specifically, the gradient flow reduces the linear divergence of the susceptibility to either a power-law relationship or a logarithmic relationship with $\chi^2/DOF$ of $31.3$ and $761.6$ respectively. 
+
+
+Finally, we produced a plot demonstrating the relationship between the topological charge and the $\theta$ in the topological action. This plot demonstrates qualitatively the different divergences of the topological susceptibility, which is equivalent to the slope at $\theta=0$. In the $\tau=0$ case, this slope became vertical rapidly for higher lattice sizes while this process occurred more slowly at nonzero flow time. 
+
+Though the logarithmic and power-law functions visually fit the susceptibility data well, the $\chi_2$ values are high. This imprecision can be attributed to errors that are too small. Future work could include more independent simulations which may reduce the variance between points or increase the statistical errors. Furthermore, more and larger lattices may help reduce the $\chi^2$ value.
+
+Procedurally, we found that the MPI parallelization and checkerboard algorithm was unnecessary in this calculation. The computation time of the Runge-Kutta algorithm for computing the gradient flow far outweighed that of the Monte Carlo simulation. A possible improvement could be a parallelization of the Runge-Kutta algorithm or a more accurate approximation to the gradient flow.
+
+Generally, this study has implications in both condensed matter and nuclear physics as the NLSM is used in both. Though the calculation of the $\chi_t$ divergence confirms existing literature, the relationship between the topological charge and $\theta$ in the flow time was previously unexplored. 
+
+Other future work may include explorations of higher order non-linear sigma models or other topological effective field theories. The latter of these models has applications in topological quantum computing and other technologies.
+
+% MPI is unnecessary in this case
+
+
+\appendix
+

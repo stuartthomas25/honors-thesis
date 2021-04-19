@@ -37,6 +37,24 @@ Richard~P. Feynman, Robert~B. Leighton, and Matthew~L. Sands.
 \newblock In {\em The {{Feynman Lectures}} on {{Physics}}}, volume~II of {\em
   World Student Series}. {Addison-Wesley Pub. Co.}, {Reading, Mass.}, 1963.
 
+\bibitem{callan1985}
+C.G. Callan, D.~Friedan, E.J. Martinec, and M.J. Perry.
+\newblock Strings in background fields.
+\newblock {\em Nuclear Physics B}, 262(4):593--609, 1985.
+
+\bibitem{polyakov1975}
+A.M. Polyakov.
+\newblock Interaction of goldstone particles in two dimensions.
+  {{Applications}} to ferromagnets and massive {{Yang}}-{{Mills}} fields.
+\newblock {\em Physics Letters B}, 59(1):79--81, 1975.
+
+\bibitem{binder1981}
+K.~Binder.
+\newblock Finite size scaling analysis of ising model block distribution
+  functions.
+\newblock {\em Zeitschrift f\"ur Physik B Condensed Matter}, 43(2):119--140,
+  June 1981.
+
 \bibitem{landau2000}
 David~P Landau and Kurt Binder.
 \newblock {\em A Guide to Monte Carlo Simulations in Statistical Physics David
