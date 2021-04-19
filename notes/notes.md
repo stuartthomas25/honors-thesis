@@ -973,6 +973,8 @@ x Technical points:
 ### Writing
 
 - Almost finished with theory and methods sections.
+- Finish writing with plot goal
+* Priority: derive $\langle Qe^{i\theta Q}\rangle$.
 
 ### Theory
 
@@ -987,5 +989,20 @@ x Technical points:
 ### Calculation
 
 - Looked at expression for $\xi_2$, looks right.
+
+# April 12
+
+### Writing Questions
+
+- Not clear where GF exact solution comes from
+
+
+# April 19
+
+### Writing questions
+
+- Case for headings?
+- Should the theta plot be greyscale viewable?
+- How much implication goes into Conclusion vs. Results
 
 # References
