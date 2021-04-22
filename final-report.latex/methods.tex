@@ -1,6 +1,6 @@
 Our study of the gradient flow in the non-linear sigma model consists of computational system to simulate quantum fields numerically. We begin by outlining a numerical Monte Carlo method to simulate the lattice in two and three dimensions. We verify our program with the well-studied $\phi^4$ scalar field theory. We then generalize our model to a vector field to simulate the non-linear sigma model. This simulation system provides data on vacuum states with which we study the gradient flow's effect on topology.
 
-We implement these two algorithms first in Python for the $\phi^4$ model. Afterwards, we transition to C/C++ code due to the increased speed for more complicated theories. 
+We implement these two algorithms first in Python for the $\phi^4$ model. Afterwards, we transition to C/C++ code due to the increased speed for more complicated theories. For the C++ simulation, we use the \texttt{gcc} compiler with the highest level of optimization.
 
 
 
@@ -15,13 +15,13 @@ Here, $a$ is the lattice constant and $\hat{\mu}_0$ and $\hat{\mu}_1$ are unit v
 \end{equation}
 where $L$ is the side length (in units of the lattice spacing $a$) of the system. In this study we focus solely on square geometries and thus the side length $L$ is unambiguous.
 
-In the $\phi^4$ model, we can specify a discrete action using the Euclidean action from Eq. \ref{eq:phi4 euclidean action}. We begin by redefining the derivative operator as a difference:
+In the $\phi^4$ model, we can specify a discrete action using the Euclidean action from Eq. \ref{eq:phi4 euclidean action}. We begin by redefining the derivative operator as a finite difference:
 \begin{align}
     \partial_\mu \phi = \frac{\phi\left(x + a \hat{\mu}\right) - \phi(x)}{a}
 \end{align}
 We can then define the kinetic term
 \begin{align}
-    \half \left(\partial_t\phi\right)^2 + \half \left(\partial_x\phi\right)^2 \rightarrow& \frac{1}{2a^2}\left[ \left(\phi(x+a \hat{t}) -\phi(x)\right)^2 + \left(\phi(x+a \hat{x}) -\phi(x)\right)^2\right] \\
+    \half \left(\partial_t\phi\right)^2 + \half \left(\partial_x\phi\right)^2 \rightarrow& \frac{1}{2a^2}\left[ \left(\phi(x+a \hat{t}) -\phi(x)\right)^2 + \left(\phi(x+a \hat{x}) -\phi(x)\right)^2\right]\nonumber \\
     \begin{split} \rightarrow& \frac{1}{2a^2}\left[ \phi^2(x+a\hat{t}) + \phi^2(x+a\hat{x}) + 2\phi^2(x)\right.\\ &\qquad \left.- 2\phi(x+a\hat{t})\phi(x) - 2\phi(x+a\hat{x})\phi(x) \right]\hfilneg\end{split}
 \end{align}
 Since we will eventually sum over all sites $x$, the periodic boundary conditions imply that an overall shift in $x$ does not effect the final action. Therefore, we can combine the first two terms with the third term to produce 
@@ -49,7 +49,7 @@ Note that we have used the identity $\e\cdot\e = 1$. Inserting this into Eq.~\re
     S_\mathrm{lat}[\e] = \sum_i \left[ 2 - \e(x+a\hat{t})\cdot\e(x) - \e(x+a\hat{x})\cdot\e(x) \right].
 \end{equation}
 
-Finally, we redefine the gradient flow in on the lattice. Since the gradient flow is solved exactly in the $\phi^4$ model, we rely on a discrete Fourier Transform. This method isolates the momentum modes of the field and dampens them by a factor of $e^-{\tau p^2}$ where $\tau$ is the flow time and $p$ is the momentum. In the NLSM, the definition of the gradient flow (Eq.~\ref{eq:nsm_gradflow}) becomes 
+Finally, we redefine the gradient flow in on the lattice. Since the gradient flow is solved exactly in the $\phi^4$ model, we rely on a discrete Fourier Transform. This method isolates the momentum modes of the field and dampens them by a factor of $e^{-\tau p^2}$ where $\tau$ is the flow time and $p$ is the momentum. In the NLSM, the definition of the gradient flow (Eq.~\ref{eq:nsm_gradflow}) becomes 
 \begin{equation}
     \label{eq:nsm_gradflow_disc}
     \partial_\tau \e (\tau, x) = \left( 1 - \e(\tau,x) \e(\tau,x)^T\right) \partial^2 \e(\tau,x),
@@ -58,7 +58,7 @@ Finally, we redefine the gradient flow in on the lattice. Since the gradient flo
 \begin{equation*}
     \partial^2 \e(\tau,x) = \e(\tau, x+a \hat{t}) + \e(\tau,x-a\hat t) + \e(\tau, x+a \hat{x}) + \e(\tau,x-a\hat x) - 4 \e(t)_x.
 \end{equation*}
-Unlike the $\phi^4$ gradient flow, this differential equation has no analytic solution. Therefore, we numerically solve for the gradient flow using a fourth-order Runge-Kutta approximation (see Sec.~\label{sec:runga-kutta}).
+Unlike the $\phi^4$ gradient flow, this differential equation has no analytic solution. Therefore, we numerically solve for the gradient flow using a fourth-order Runge-Kutta approximation (see Sec.~\ref{sec:runga-kutta}).
 
 \subsection{Discretized Observables}
 Following the definitions in Sec.~\ref{sec:primary observables}, we redefine the primary and secondary observables on the discretized lattice. Using the discretization definition in Eq.~\ref{eq:disc def}, we express the average magnetization as 
@@ -71,7 +71,7 @@ in the $\phi^4$ model and
 \end{equation}
 in the NLSM, where $L^2 = V/a^2$.
 
-We can also simplify the expression for the magnetic susceptibility. Due to the rotation invariance of both fields, the second terms in Eq.~\ref{eq:chim nlsm} and Eq.~\ref{eq:chim phi4} disappear (see Sec.~\ref{sec:avg mag}). In the NLSM, the susceptibility therefore becomes
+We can also simplify the expression for the magnetic susceptibility. Due to the spin-flip invariance of both fields, the second terms in Eq.~\ref{eq:chim nlsm} and Eq.~\ref{eq:chim phi4} disappear (see Sec.~\ref{sec:avg mag}). In the NLSM, the susceptibility therefore becomes
 \begin{align}
     \chi_m &= L^2 \left\langle \left( \sum_x e(x) \right)^2\right\rangle  \\
            &= L^2 \left\langle \sum_{x,y}\e(x)\cdot \e(y) \right\rangle. 
@@ -130,7 +130,7 @@ Following \cite{berg1981}, this yields an expression for the signed area
 \begin{equation}
     A(\e_1, \e_2, \e_1) = 2 \:\mathrm{arg}\Big(1+\e_1\cdot\e_2 + \e_2\cdot\e_3 + \e_3\cdot\e_1 + i\e_1 \cdot (\e_2\times\e_3)\Big).
 \end{equation}
-Under periodic boundary conditions, these triangles on the sphere necessarily wrap $S^2$ an integer number of times, ensuring $Q$ is an integer. In the continuum limit, the eff\ref{sec:topological charge}
+Under periodic boundary conditions, these triangles on the sphere necessarily wrap $S^2$ an integer number of times, ensuring $Q$ is an integer. In the continuum limit, field must be uniform at $x\rightarrow\infty$ and therefore effectively forms a sphere (see Sec.~\ref{sec:topological charge}).
 \begin{figure}[h]
 \centering
 \begin{tikzpicture}
@@ -182,7 +182,7 @@ Under periodic boundary conditions, these triangles on the sphere necessarily wr
 \end{tikzpicture}
 \caption{\label{fig:sphere} Visualization of signed area $A$ on the sphere $S^2$ traced out by field at points $x_1$, $x_2$ and $x_3$.}
 \end{figure}
-In the NLSM described by Eq.~\ref{eq:nlsm discrete action}, the values of $Q$ are roughly Gaussian around $Q=0$, as shown in Fig.~\ref{fig:hist}.
+In the NLSM described by Eq.~\ref{eq:nlsm discretized action}, the values of $Q$ are roughly Gaussian around $Q=0$, as shown in Fig.~\ref{fig:hist}.
 \begin{figure}[h]
     \centering
       \includegraphics[width=0.6\textwidth]{imgs/hist.png}
@@ -202,14 +202,14 @@ Assuming periodic boundary conditions and therefore translational symmetry, this
     \chi_t = \frac{1}{L^2} \sum_{x} \langle q(x)q(0)\rangle.
 \end{equation}
 
-On the lattice, this quantity is known to diverge in the continuum limit \cite{bietenholz2018}. % TODO: highlight that this is true for QCD and the NLSM.
+On the lattice, this quantity is known to diverge in the continuum limit owing solely to the $x=0$ term \cite{bietenholz2018}. This divergence exists in QCD as well \cite{bruno2014}.
 
 
 \section{Monte Carlo Simulations}
 \label{sec:mc}
 We implement a Markov Chain Monte Carlo method following Schaich's thesis \cite{schaich2006}. This implementation utilizes a ``random walk,'' i.e. a set of random steps through phase space, to determine statistical values such as correlation functions across the lattice. By the definition of the Markov chain, the probability of adoption of each state, and therefore its inclusion in the Monte Carlo calculation, depends only on the current state and the proposed state. This probability is denoted as $P(\mu\rightarrow\nu)$ where $\mu$ and $\nu$ are the existing and proposed lattice configurations respectively.
 
-We begin this random walk with a so-called ``hot start'' where each field value at each lattice site is randomly selected. As an alternative to the hot start, we could use a ``cold start'' where the field begins completely aligned. With an appropriate thermalization, these initial configurations have no effect on the Monte Carlo statistics, a fact we verify in Sec.~\ref{thermalization}. 
+We begin this random walk with a so-called ``hot start'' where each field value at each lattice site is randomly selected. As an alternative to the hot start, we could use a ``cold start'' where the field begins completely aligned. With an appropriate thermalization, these initial configurations have no effect on the Monte Carlo statistics, a fact we verify in Sec.~\ref{sec:thermalization}. 
 
 \subsection{Metropolis Algorithm}
 We primarily use the Metropolis algorithm for the calculation of new Markov chain configurations. The method begins with proposing a new value for a single lattice point, which is accepted with a probability
@@ -298,12 +298,12 @@ In order to determine the necessary thermalization, we plot the action as a func
 \begin{figure}[h]
   \centering
       \begin{subfigure}[b]{0.5\textwidth}\centering
-        \includegraphics[width=0.9\textwidth]{imgs/therm24.png}
+        \includegraphics[width=\textwidth]{imgs/therm24.png}
         \caption{$L=24$}
       \end{subfigure}%
       \hfill
       \begin{subfigure}[b]{0.5\textwidth}\centering
-        \includegraphics[width=0.9\textwidth]{imgs/therm404.png}
+        \includegraphics[width=\textwidth]{imgs/therm404.png}
         \caption{$L=404$}
       \end{subfigure}
       \hfill
@@ -315,7 +315,7 @@ We also compare the hot and cold starts by plotting a histogram of the actions i
 \begin{figure}[h]
   \centering
     \includegraphics[width=0.6\textwidth]{imgs/coldstart.png}
-  \caption{\label{fig:coldstart} Comparison of cold and hot starts after 1000 sweep thermalization in $L=404$ lattice. 1000 measurements taken every 50 sweeps.}
+  \caption{\label{fig:coldstart} Histogram of lattice-averaged actions $S/L^2$ with hot and cold starts. 1,000 sweep thermalization in $L=404$ lattice, 1,000 measurements taken every 50 sweeps.}
 \end{figure}
 
 \subsection{Autocorrelation}

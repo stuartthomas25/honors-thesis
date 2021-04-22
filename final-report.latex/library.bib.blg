@@ -1,0 +1,71 @@
+[0] Config.pm:304> INFO - This is Biber 2.14 running in TOOL mode
+[0] Config.pm:307> INFO - Logfile is 'library.bib.blg'
+[59] biber-darwin:322> INFO - === Thu Apr 22, 2021, 13:20:31
+[74] Utils.pm:75> INFO - Globbing data source 'library.bib'
+[74] Utils.pm:91> INFO - Globbed data source 'library.bib' to library.bib
+[83] Biber.pm:4451> INFO - Looking for bibtex format file 'library.bib'
+[87] bibtex.pm:1653> INFO - LaTeX decoding ...
+[175] bibtex.pm:1471> INFO - Found BibTeX data source 'library.bib'
+[201] Utils.pm:304> WARN - Datamodel: Entry 'makino2015a' (library.bib): Field 'archiveprefix' invalid in data model - ignoring
+[206] Utils.pm:304> WARN - Datamodel: Entry 'bietenholz2018' (library.bib): Field 'archiveprefix' invalid in data model - ignoring
+[212] Utils.pm:304> WARN - Datamodel: Entry 'morningstar2007' (library.bib): Field 'archiveprefix' invalid in data model - ignoring
+[231] Utils.pm:304> WARN - Datamodel: Entry 'landau2000' (library.bib): Field 'lccn' invalid in data model - ignoring
+[247] Utils.pm:304> WARN - Datamodel: Entry 'mejia-diaz2018' (library.bib): Field 'archiveprefix' invalid in data model - ignoring
+[281] Utils.pm:304> WARN - Datamodel: Entry 'virtanen2020' (library.bib): Field 'adsurl' invalid in data model - ignoring
+[283] Utils.pm:304> WARN - Datamodel: Entry 'luscher2010' (library.bib): Field 'archiveprefix' invalid in data model - ignoring
+[296] Utils.pm:304> WARN - Datamodel: Entry 'loinaz1998' (library.bib): Field 'archiveprefix' invalid in data model - ignoring
+[313] Utils.pm:304> WARN - Datamodel: Entry 'alles2007' (library.bib): Field 'archiveprefix' invalid in data model - ignoring
+[317] Utils.pm:304> WARN - Datamodel: Entry 'wolff2007' (library.bib): Field 'archiveprefix' invalid in data model - ignoring
+[328] Utils.pm:304> WARN - ISBN '0-201-02010-6 978-0-201-02010-6 0-201-02116-1 978-0-201-02116-5 0-201-02011-4 978-0-201-02011-3 0-201-02117-X 978-0-201-02117-2 0-201-02118-8 978-0-201-02118-9 0-8053-9045-6 978-0-8053-9045-2 0-8053-9046-4 978-0-8053-9046-9 0-8053-9047-2 978-0-8053-9047-6 0-8053-9049-9 978-0-8053-9049-0 0-8053-9063-4 978-0-8053-9063-6 81-85015-82-1 978-81-85015-82-8 0-201-51003-0 978-0-201-51003-4' in entry 'feynman1963a' is invalid - run biber with '--validate_datamodel' for details.
+[331] Utils.pm:304> WARN - Datamodel: Entry 'aoki2015' (library.bib): Field 'archiveprefix' invalid in data model - ignoring
+[339] Utils.pm:304> WARN - Datamodel: Entry 'luscher2013' (library.bib): Field 'archiveprefix' invalid in data model - ignoring
+[348] Utils.pm:304> WARN - Datamodel: Entry 'azcoiti2012' (library.bib): Field 'archiveprefix' invalid in data model - ignoring
+[351] Utils.pm:304> WARN - Datamodel: Entry 'deldebbio2005' (library.bib): Field 'archiveprefix' invalid in data model - ignoring
+[356] Utils.pm:304> WARN - Datamodel: Entry 'bietenholz2010' (library.bib): Field 'archiveprefix' invalid in data model - ignoring
+[384] Utils.pm:304> WARN - Datamodel: Entry 'balog2012' (library.bib): Field 'archiveprefix' invalid in data model - ignoring
+[388] Biber.pm:1566> INFO - Datamodel validation starting
+[388] Utils.pm:304> WARN - Datamodel: Entry 'alles2007' (library.bib): Invalid field 'day' for entrytype 'online'
+[389] Utils.pm:304> WARN - Datamodel: Entry 'alles2007' (library.bib): Invalid field 'eprint' for entrytype 'online'
+[389] Utils.pm:304> WARN - Datamodel: Entry 'alles2007' (library.bib): Invalid field 'eprintclass' for entrytype 'online'
+[389] Utils.pm:304> WARN - Datamodel: Entry 'alles2007' (library.bib): Invalid field 'eprinttype' for entrytype 'online'
+[390] Utils.pm:304> WARN - Datamodel: Entry 'azcoiti2012' (library.bib): Invalid ISSN in value of field 'issn'
+[390] Utils.pm:304> WARN - Datamodel: Entry 'berg1981' (library.bib): Invalid field 'publisher' for entrytype 'article'
+[390] Utils.pm:304> WARN - Datamodel: Entry 'bietenholz2018' (library.bib): Invalid ISSN in value of field 'issn'
+[391] Utils.pm:304> WARN - Datamodel: Entry 'chang1976' (library.bib): Invalid field 'pagetotal' for entrytype 'article'
+[391] Utils.pm:304> WARN - Datamodel: Entry 'chang1976' (library.bib): Invalid field 'publisher' for entrytype 'article'
+[391] Utils.pm:304> WARN - Datamodel: Entry 'deldebbio2005' (library.bib): Invalid ISSN in value of field 'issn'
+[391] Utils.pm:304> WARN - Datamodel: Entry 'feynman1963a' (library.bib): Missing mandatory field 'editor'
+[391] Utils.pm:304> WARN - Datamodel: Entry 'feynman1963a' (library.bib): Invalid ISBN in value of field 'isbn'
+[391] Utils.pm:304> WARN - Datamodel: Entry 'goddard1986' (library.bib): Invalid ISSN in value of field 'issn'
+[391] Utils.pm:304> WARN - Datamodel: Entry 'ioffe2003' (library.bib): Invalid ISSN in value of field 'issn'
+[392] Utils.pm:304> WARN - Datamodel: Entry 'kitaev1997' (library.bib): Invalid ISSN in value of field 'issn'
+[392] Utils.pm:304> WARN - Datamodel: Entry 'koerner' (library.bib): Missing mandatory field - one of 'date, year' must be defined
+[392] Utils.pm:304> WARN - Datamodel: Entry 'koerner' (library.bib): Missing mandatory field 'journaltitle'
+[392] Utils.pm:304> WARN - Datamodel: Entry 'loinaz1998' (library.bib): Invalid ISSN in value of field 'issn'
+[393] Utils.pm:304> WARN - Datamodel: Entry 'monahan2015' (library.bib): Invalid ISSN in value of field 'issn'
+[393] Utils.pm:304> WARN - Datamodel: Entry 'monahan2016' (library.bib): Missing mandatory field 'editor'
+[393] Utils.pm:304> WARN - Datamodel: Entry 'morningstar2007' (library.bib): Invalid field 'day' for entrytype 'online'
+[393] Utils.pm:304> WARN - Datamodel: Entry 'morningstar2007' (library.bib): Invalid field 'eprint' for entrytype 'online'
+[393] Utils.pm:304> WARN - Datamodel: Entry 'morningstar2007' (library.bib): Invalid field 'eprinttype' for entrytype 'online'
+[393] Utils.pm:304> WARN - Datamodel: Entry 'odom2006' (library.bib): Invalid field 'pagetotal' for entrytype 'article'
+[393] Utils.pm:304> WARN - Datamodel: Entry 'odom2006' (library.bib): Invalid field 'publisher' for entrytype 'article'
+[393] Utils.pm:304> WARN - Datamodel: Entry 'schaich2006' (library.bib): Missing mandatory field 'type'
+[393] Utils.pm:304> WARN - Datamodel: Entry 'toussaint1989' (library.bib): Missing mandatory field 'journaltitle'
+[394] Utils.pm:304> WARN - Datamodel: Entry 'weisskopf1981' (library.bib): Invalid field 'location' for entrytype 'article'
+[394] Utils.pm:304> WARN - Datamodel: Entry 'weisskopf1981' (library.bib): Invalid field 'publisher' for entrytype 'article'
+[394] Utils.pm:304> WARN - Datamodel: Entry 'wilson' (library.bib): Missing mandatory field - one of 'date, year' must be defined
+[394] Utils.pm:304> WARN - Datamodel: Entry 'wilson' (library.bib): Missing mandatory field 'journaltitle'
+[394] Utils.pm:304> WARN - Datamodel: Entry 'wilson1974' (library.bib): Invalid field 'pagetotal' for entrytype 'article'
+[394] Utils.pm:304> WARN - Datamodel: Entry 'wilson1974' (library.bib): Invalid field 'publisher' for entrytype 'article'
+[394] Utils.pm:304> WARN - Datamodel: Entry 'wolff1989' (library.bib): Invalid field 'pagetotal' for entrytype 'article'
+[394] Utils.pm:304> WARN - Datamodel: Entry 'wolff1989' (library.bib): Invalid field 'publisher' for entrytype 'article'
+[394] Utils.pm:304> WARN - Datamodel: Entry 'zotero-56' (library.bib): Missing mandatory field - one of 'date, year' must be defined
+[394] Utils.pm:304> WARN - Datamodel: Entry 'zotero-56' (library.bib): Missing mandatory field 'author'
+[394] Biber.pm:1609> INFO - Datamodel validation complete
+[403] UCollate.pm:68> INFO - Overriding locale 'en_US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[403] UCollate.pm:68> INFO - Overriding locale 'en_US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[403] Biber.pm:4084> INFO - Sorting list 'tool/global//global/global' of type 'entry' with template 'tool' and locale 'en_US'
+[403] Biber.pm:4090> INFO - No sort tailoring available for locale 'en_US'
+[436] bibtex.pm:384> INFO - Writing 'library_bibertool.bib' with encoding 'UTF-8'
+[438] bibtex.pm:414> INFO - Output to library_bibertool.bib
+[438] Biber.pm:128> INFO - WARNINGS: 54

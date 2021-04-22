@@ -9,14 +9,35 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{listings}
+%\usepackage[%
+    %style=numeric, 
+    %sorting=none,
+    %doi=false,
+    %url=false,
+    %giveninits=true,
+    %eprint=false,
+    %isbn=false,
+    %clearlang=true,
+    %date=year,
+    %hyperref]{biblatex}
+\usepackage[style=phys,biblabel=brackets,maxbibnames=3]{biblatex}
+%\renewbibmacro{in:}{%
+  %\ifentrytype{article}{}{\printtext{\bibstring{in}\intitlepunct}}}
+
+
+
 \setlength{\oddsidemargin}{0.5in}
 \setlength{\evensidemargin}{0.5in}
 \setlength{\textwidth}{6.0in}
 \setlength{\topmargin}{.75in}
 \setlength{\textheight}{8.6in}
 
+\newcommand{\logchi}{7.4 }
+\newcommand{\powchi}{8.8 }
+
+\addbibresource{library.bib}
+
 \newcommand{\e}{\vec e}
-\newcommand{\citeneeded}{\footnote{\textit{citation needed}}}
 \newcommand{\half}{\frac{1}{2}}
 \newcommand{\codeexample}[1]{
     \section{\texttt{#1}}
@@ -82,7 +103,7 @@ May 2021
 \paragraph
 \indent I would like to thank my advisor, Prof. Christopher Monahan. His constant helpfulness has made this research possible and enjoyable. I would also like to thank the entire faculty of the William \& Mary Physics Department. The amount of knowledge and wisdom they have bestowed upon me has been beyond my imagination.
 
-I also acknowledge the help the High Performance Computing group at William \& Mary, whose cluster performed many of these simulations. And finally, I would like to acknowledge the financial help of the 1693 Scholars Program which funded the summer portion of this research.
+I also acknowledge the help the High Performance Computing group at William \& Mary, whose cluster performed many of these simulations. And finally, I would like to acknowledge the financial help of the 1693 Scholars Program which funded preliminary research over the summer.
 
 
 \listoffigures
@@ -94,11 +115,12 @@ I also acknowledge the help the High Performance Computing group at William \& M
 \setcounter{page}{5}
 \addcontentsline{toc}{chapter}{Abstract}
 \paragraph
-\indent The $O(3)$ non-linear model features topological effects such as instantons but cannot be perturbatively renormalized. Other nonperturbative theories such as QCD have motivated the development of lattice quantum field theory, where fields are simulated as discrete arrays and extrapolated to the continuum limit. Unfortunately, operators such as the topological susceptibility diverge in this limit. The gradient flow is a strong contender to remove these infinites, having prior success in QCD. We confirm a previous result\cite{bietenholz2018} that the gradient flow does not make the topological susceptibility infinite. We also study the nontrivial field theory by introducing a $\theta$ term into the action and plot the topological charge as a function of $\theta$.
+\indent Quantum field theory is an extraordinarily successful framework that describes phenomena in particle physics and condensed matter. The $O(3)$ non-linear sigma model (NLSM) is a specific theory used in both of these fields, describing ferromagnets and acting as a prototype for the strong nuclear force. It features topologically stable configurations known as instantons which cannot continuously evolve to the ground state. The topological susceptibility is a parameter that describes this stability and is predicted to vanish in physical theories, however numerical simulations find that the topological susceptibility diverges in the continuum limit \cite{berg1981}. This issue has motivated the application of the ``gradient flow'', a smoothing of high-frequency modes. We study the effect of the gradient flow on this divergence, finding that it persists as a logarithmic divergence. This result supports a previous study \cite{bietenholz2018} and indicates that either the definition of topological charge is problematic or the NLSM has no well-defined continuum limit. We also study the nontrivial field theory by introducing a $\theta$-term into the action and analyze the topological charge as a function of $\theta$ under the gradient flow.
 
 \end{abstract}
 
 \pagenumbering{arabic}
+
 \chapter{Introduction}
 \input{intro.tex}
 \chapter{Theory}
@@ -131,7 +153,11 @@ I also acknowledge the help the High Performance Computing group at William \& M
 \codeexample{observables.h}
 \codeexample{constants.h}
 
-\bibliographystyle{unsrt}
-\bibliography{library}
+%\bibliographystyle{unsrt}
+%\bibliography{library}
+
+\printbibliography
+
 
 \end{document}
+
