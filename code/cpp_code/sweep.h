@@ -93,7 +93,6 @@ class Sweeper {
         const int DIM;
         Lattice2D lat;
 
-
         Sweeper();
         ~Sweeper();
         Sweeper(int DIM, MPI_Comm c);
@@ -121,13 +120,9 @@ class Sweeper {
 
 };
 
-
 double randf();
 int randint(int n);
 Phi sign(Phi x);
 double sign(double x);
-
-
-
 
 #endif

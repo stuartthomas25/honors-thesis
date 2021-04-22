@@ -1,0 +1,3 @@
+cd profiling
+xcrun xctrace record --template 'Allocations' --target-stdout - --launch -- ../bin/sweep -i ../../inputs/profile.yml -o /dev/null
+

@@ -10,9 +10,6 @@ Phi::Phi(array<double, N> phi){
 
 void Phi::init_as_zero(){
     phi = {0,0,0};
-    //for (int i=0; i<N; i++) {
-        //phi[i] = 0;
-    //}
 }
 
 double Phi::norm_sq() const {
@@ -47,9 +44,6 @@ Phi& Phi::operator/=(const double & a) {
 
 Phi Phi::operator+ (const Phi & aPhi) const {
     Phi new_phi(phi);
-    //for (int i=0; i<N; i++) {
-        //new_phi[i] = phi[i] + aPhi[i];
-    //}
     new_phi += aPhi;
     return new_phi;
 }

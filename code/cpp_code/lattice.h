@@ -34,9 +34,8 @@ class Lattice2D {
         Lattice2D& operator*=(const double & factor);
         Lattice2D& operator/=(const double & factor);
         Lattice2D operator+ (const Lattice2D & other) const;
-        //Lattice2D operator+ (const Lattice2D & other) const;
 
-        // Iterator stuff
+        // Iterators 
         typedef datatype::iterator iterator;
         typedef datatype::const_iterator const_iterator;
 

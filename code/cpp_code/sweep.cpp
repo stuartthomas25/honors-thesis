@@ -166,34 +166,11 @@ double Sweeper::rand_dist(double r) {
     return 3 * r - 1.5;
 }
 
-/*    Phi Sweeper::new_value(Phi old_phi) {*/
-
-
-    //Phi dphi;
-    //double sum_of_squares = 0;
-    //for (int i = 0; i<N-1; i++) {
-        //dphi[i] = rand_dist(randf());
-
-        //sum_of_squares += pow(old_phi[i] + dphi[i], 2);
-    //}
-    //dphi[N-1] = (2*randint(2) - 1) * sqrt(1-sum_of_squares) - old_phi[N-1]; //the first term randomizes the sign
-
-    //// test?
-    //cout << "Dot: " << (old_phi + dphi) * (old_phi + dphi) << endl;
-    //return dphi;
-/*}*/
-
 Phi Sweeper::new_value(Phi old_phi) {
-    //Phi dphi;
-    //dphi[0] = rand_dist(randf());
-    //return dphi;
     return random_phi();
 }
 
 Phi Sweeper::proj_vec () {
-    //for (int i = 0; i<N-1; i++) {
-        //r[i] = 
-    //}
     return Phi();
 }
 
@@ -222,7 +199,6 @@ void write_gif_frame(Lattice2D& lat, GifWriter* gif_writer, int delay, double ra
             vec[4*i + j] = static_cast<uint8_t>((aPhi[j]+1)*128);
         }
         vec[4*i + 3] = 255;
-        //cout << vec[0] <<" "<< vec[1] <<" "<< vec[2] <<" "<< vec[3] <<" "<< endl;
     }
     GifWriteFrame(gif_writer, vec.data(), DIM, DIM, delay);
 }
@@ -241,7 +217,6 @@ void Sweeper::assert_action(double tol) {
 
 void Sweeper::full_sweep(Recorder* recorder, const sweep_args& args = sweep_args()) {
    
-    //if (args.cluster_algorithm != WOLFF) throw invalid_argument("Currently, Wolff is the only allowed algorithm");
 
     shared_ptr<progress_bar> progress;
     progress = args.progress ? make_shared<progress_bar>(cout, 70u, "Working") :  nullptr; 
@@ -270,25 +245,18 @@ void Sweeper::full_sweep(Recorder* recorder, const sweep_args& args = sweep_args
             }
             broadcast_lattice();
 
-            //cout << "Met: " << action << " vs " << full_action() << endl;
             dS = sweep(color);
             collect_changes(dS, color);
         }
-        //cout << "Met: " << action << " vs " << full_action() << endl;
-
-        //if (i==args.thermalization && gif)
-            //GifWriteFrame(&gif_writer, white_vec.data(), DIM, DIM, gif_delay); // add one white frame after thermalization
 
         if (i%args.record_rate==0 && i>=args.thermalization) {
             flow(args.ts, recorder);
             #ifdef GIF
                 write_gif_frame(lat, &gif_writer, gif_delay);
             #endif
-            //if (gif) write_gif_frame(lat, &gif_writer, gif_delay);
         }
 
         if (i%args.cluster_rate==0 && args.cluster_algorithm == WOLFF) {
-            //cout << "Wolff: " << action << " vs " << full_action() << endl;
             #ifdef GIF
                 write_gif_frame(lat, &gif_writer, gif_delay);
             #endif
@@ -296,8 +264,6 @@ void Sweeper::full_sweep(Recorder* recorder, const sweep_args& args = sweep_args
             #ifdef GIF
                 write_gif_frame(lat, &gif_writer, gif_delay);
             #endif
-            //if (gif) write_gif_frame(this, &gif_writer, gif_delay);
-            //cout << "Wolff: " << action << " vs " << full_action() << endl;
             
         }
 
@@ -339,7 +305,6 @@ double Sweeper::sweep(COLOR color){
         dphi = newphi - phi;
         dS = (new_L - old_L) - lat.beta * backward_nphi_sum * dphi;
        
-        //cout << old_L << " " << new_L << " " << backward_nphi_sum << endl;
         A = exp(-dS);
         r = randf();
 
@@ -360,14 +325,14 @@ double randf() {
 }
 
 int randint(int n) {
-    return rand() % n; // may want to replace this with something better later    
+    return rand() % n; 
 }
 
 
 double Sweeper::Padd(Phi dphi, Phi phi_b){
 
     double dS = -lat.beta * (dphi * phi_b); 
-    return 1 - exp(-dS); // Schaich Eq. 7.17, promoted for vectors
+    return 1 - exp(-dS); 
 }
 
 unordered_set <int> Sweeper::generate_cluster(int seed, Phi r, bool accept_all) {
@@ -377,7 +342,7 @@ unordered_set <int> Sweeper::generate_cluster(int seed, Phi r, bool accept_all) 
     double cumsum_dS = 0;
 
     double Padd_val;
-    stack <tuple<int, double>> to_test; // (site, previous r_proj
+    stack <tuple<int, double>> to_test; // (site, previous r_proj)
     unordered_set <int> cluster;
 
     phi_a = lat[seed];
@@ -386,7 +351,6 @@ unordered_set <int> Sweeper::generate_cluster(int seed, Phi r, bool accept_all) 
     double r_proj_b;
     double proj_sign = sign(r_proj_a);
 
-    //to_test.push(make_tuple(seed, phi_a * numeric_limits<double>::max() )); // site and phi value, using infinity to ensure Padd=1 for first addition
     to_test.push(make_tuple(seed, 0. )); // site and r_projection. r_projection is overridden for seed
     bool first = true;
     while (to_test.size()>0) {
@@ -406,18 +370,11 @@ unordered_set <int> Sweeper::generate_cluster(int seed, Phi r, bool accept_all) 
                 for (const int n : lat.neighbor_map[s]){
                     to_test.push( make_tuple(n, r_proj_b) );
                 }
-                //if (s == seed) {
-                    //cout << "SEED" << endl;
-                    //cumsum_dS += 2 * beta * (lat[seed] * phi_b);
-                //} else { 
-                    //cumsum_dS += 2 * beta * (phi_a * phi_b);
-                //}
             }
 
         }
         if (first) first = !first;
     }
-    //cout << "cumsum_dS: " << cumsum_dS << endl;
     return cluster;
 }
 
@@ -445,7 +402,6 @@ void Sweeper::wolff() {
     }
 
     lat.action+=dS;
-    //cout << "dS: " << dS << endl;
 #ifdef VERIFY_ACTION
     assert_action();
 #endif
@@ -508,7 +464,7 @@ void Sweeper::collect_changes(double dS, COLOR color){
     }
 }
 
-Phi sign(Phi x){ // temporary, should be eventually replaced with proj_vec
+Phi sign(Phi x){
     Phi phi_sign;
     phi_sign[0] = (x[0] > 0) - (x[0] < 0);
     return phi_sign;
@@ -517,11 +473,6 @@ Phi sign(Phi x){ // temporary, should be eventually replaced with proj_vec
 double sign(double x){
     return (x>0) - (x<0);
 }
-
-
-// GF
-//
-//
 
 inline void deriv(Lattice2D& f, double t, const Lattice2D& yn, double h, const Lattice2D* k = nullptr) {
 
@@ -545,21 +496,14 @@ inline void deriv(Lattice2D& f, double t, const Lattice2D& yn, double h, const L
                 neighbor_sum += yn[n];
         }
 
-        //if (s==0) cout << "Site: " << e << endl;
-
         for (int i=0; i<N; i++) {
             dte[i] = 0;
             for (int j=0; j<N; j++) {
                 Pij = (i==j) - e[i] * e[j];
                 laplacianj = neighbor_sum[j] - 2*D*e[j];
-                //if (s==0 && i==0 && j==0) cout << "Laplacian:    " << laplacianj << endl;
-                //if (s==0 && i==0 && j==0) cout << "Pij:          " << Pij << endl;
-                //if (s==0 && i==0 && j==0) cout << "Neighbor sum: " << neighbor_sum << endl;
                 dte[i] += Pij * laplacianj;
             }
         }
-        //if (s==0) cout << "deriv " << dte << endl;
-        //if (s==0) cout << "deriv " << h*dte << endl;
 
         f[s] = h*dte;
     }
@@ -629,7 +573,6 @@ void Sweeper::flow(vector<double> ts, Recorder* recorder) {
         if (t_ + h > measurement_t) {
             runge_kutta(t_, measurement_t-t_, flowed_lat);
             recorder->record(flowed_lat, measurement_t);
-            //cout << "took measurement at " << t_ << endl;
             t_ = measurement_t;
 
             measurement_iter++;
@@ -655,9 +598,7 @@ void Sweeper::flow(vector<double> ts, Recorder* recorder) {
             }
 
             error = sqrt(error)/15;
-            //cout << "t_: "<<t_<< "\terror: " << error << "\th: " << h << "\tmax_error: "<<MAXERROR<<endl;
             if (error>MAXERROR) {
-                //cout << "RERUN" << endl;
                 rerun=true;
                 h /= 2;
             } else if (error<MAXERROR/2) {

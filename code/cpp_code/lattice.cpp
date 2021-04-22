@@ -1,5 +1,3 @@
-// lattice.cpp
-
 #include <iostream>
 #include "lattice.h"
 #include <algorithm>
@@ -77,7 +75,6 @@ double Lattice2D::full_action() {
 
 
 double Lattice2D::lagrangian(const Phi phi, const Phi nphi_sum) {
-    // S[phi] = beta/2 int (dphi . dphi)
     return beta * (D - phi * nphi_sum); // note that the sum over dimension has already been made
 }
 

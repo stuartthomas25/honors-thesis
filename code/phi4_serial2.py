@@ -14,15 +14,6 @@ import multiprocessing as mp
 import pickle
 import inspect
 
-from matplotlib import rc, rcParams
-rc('text',usetex=True) #related to latex for the labels
-rcParams['font.size'] = 20.0
-rcParams['axes.titlesize'] = 22.0
-rcParams['xtick.labelsize'] = 20.0
-rcParams['ytick.labelsize'] = 20.0
-rcParams['legend.fontsize'] = 22.0
-letters = 24.0;
-
 if 'line_profiler' not in globals():
     def profile(f):
         return f
@@ -39,7 +30,7 @@ class Lattice(object):
         self.m = m
         self.l = l
 
-        self.__redefined_mass = 2 + 1/2 * self.m
+        self.__redefined_mass = 4 + 1/2 * self.m
         self.__quarter_lambda = 1/4 * self.l
 
         if data:
@@ -95,7 +86,6 @@ class Lattice(object):
         dphi = new_phi - phi
         self.data[i] = new_phi
         self._update_action(i, dphi)
-
 
     @profile
     def revert(self):
@@ -188,38 +178,14 @@ class Lattice(object):
         return sum(self) / self.size
 
     def susceptibility(self):
-        # m = self.magnetization()
-        # m2 = 1
-        # return (m2 - m**2)
-        cumsum = 0
-        for phia in self:
-            for phib in self:
-                cumsum += phia*phib
-
-        return cumsum / self.size
+        m = self.magnetization()
+        m2 = 1
+        return (m2 - m**2)
 
     def binder_cumulant(self):
         phi_sq = sum(phi**2 for phi in self)
         phi_qu = sum(phi**4 for phi in self)
         return 1 - phi_qu / (3 * phi_sq**2)
-
-    def flow_evolution(self, tau, action=False):
-        lat = np.resize(np.array(self.data), (self.dim, self.dim))
-        fft = np.fft.fft2(lat)
-        ps = np.concatenate([np.arange(self.dim//2), -np.arange(self.dim//2,0,-1)])
-        px, py = np.meshgrid(ps, ps)
-        new_lat = copy(self) # make shallow copy so as not to copy the entire field
-
-
-        p2 = px**2 + py**2
-
-        new_lat_np = np.real(np.fft.ifft2(np.exp(-tau*p2) * fft))
-        new_lat.data = np.resize(new_lat_np, (self.size,)).tolist()
-        if action:
-            new_lat.action = new_lat.calculate_action()
-        return new_lat
-
-
 
 class RandomWalk(object):
     def __init__(self, lat):
@@ -234,7 +200,7 @@ class RandomWalk(object):
     @profile
     def full_sweep(self):
         for _ in range(self.lattice.size):
-            self.metropolis()
+            r = self.metropolis()
 
 
     @profile
@@ -315,21 +281,21 @@ class GifProducer(object):
         imageio.mimwrite(fn, self.frames, fps=fps)
 
 if __name__=="__main__":
-    # seed(a=14231)
+    seed(a=14231)
     L = int(sys.argv[1])
-    m = -0.4
+    m = -0.9
     lam = 0.5
-    # timeout = 100
-    measurements = 1
-    thermalization = 1000
-    record_rate = 10
+    ncores = 6
+    timeout = 1
     wolff = True
     parallel = 'parallel' in sys.argv
     l = Lattice(dim=L, m=m, l=lam)
 
     rw = RandomWalk(l)
     wolff_rate = 5
+    stop_acceptance = 0.0
 
+    counter = 0
     magnetizations = []
     energies = []
     susceptibilities = []
@@ -337,6 +303,9 @@ if __name__=="__main__":
     states = []
     sweep_count = 0
     record = True
+    record_count = 0
+    record_rate = l.size
+    thermalization = 50
     iter_index = []
     gp = GifProducer()
 
@@ -348,7 +317,7 @@ if __name__=="__main__":
         energies.append(l.action()/l.size)
         gp.save_lat(l)
 
-    # gp.save_lat(l)
+    record_state(l)
 
     start = time()
     running = True
@@ -357,34 +326,30 @@ if __name__=="__main__":
         pool = mp.Pool(ncores)
         chunksize = (l.size//2) // ncores // 2 # roughly two chunks per core
 
-    while running and sweep_count<record_rate*measurements+thermalization:
+    while running and sweep_count<timeout:
         for _ in range(wolff_rate):
+            percent_accepted = 0
             rw.full_sweep()
+            print(l.action())
+            print("record")
+            record_state(l)
 
             sweep_count += 1
 
 
         if wolff:
             rw.wolff()
-            # if sweep_count > thermalization and sweep_count % record_rate == 0:
-                # record_state(l)
             pass
         else:
             rw.swendsen_wang()
 
     if parallel:
         pool.close()
-    taus = [0,0.001, 0.01, 0.1]
-
-    for tau in taus:
-        gp.save_lat(l.flow_evolution(tau))
-
-    print(magnetizations, susceptibilities, energies)
 
     exec_time = time() - start
     print(f"{exec_time}")
 
-    gp.save("test_serial.gif")
+    gp.save("test_serial2.gif")
 
     fig, (ax1, ax2, ax3, ax4) = plt.subplots(4,1, figsize=(18,12), sharex = True)
     ax1.plot(iter_index, magnetizations)
@@ -392,12 +357,13 @@ if __name__=="__main__":
     ax3.plot(iter_index, susceptibilities)
     ax4.plot(iter_index, binder_cums)
 
-    ax1.set_ylabel(r"$|\bar\phi|$")
-    ax2.set_ylabel(r"$S/L^2$")
-    ax3.set_ylabel(r"$\chi_m$")
-    ax4.set_ylabel(r"$U$")
-    ax4.set_xlabel("sweeps")
+    ax1.set_ylabel("Magnetization")
+    ax2.set_ylabel("Total Action")
+    ax3.set_ylabel("Susceptibility")
+    ax4.set_ylabel("Binder Cumulant")
+    ax4.set_xlabel("Sweep")
     ax1.set_title(f"Monte Carlo Simulation of $\phi^4$ Model using Metropolis and {'Wolff' if wolff else 'Swenson-Wang'} Algorithms, $L={L}$, $\\lambda={lam}$, $\\mu_0^2={m**2}$, $t={exec_time:.1f}s$")
     plt.savefig('plots/temp_serial.png')
     # plt.show()
+
 

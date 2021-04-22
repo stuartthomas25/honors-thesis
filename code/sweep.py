@@ -20,11 +20,11 @@ delay = 0.4
 cores = 1
 actions = []
 phibars = []
-# betas = [0.6, 0.8, 1.0,1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0]
+betas = [0.5, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.5]
 orig_betas = [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0]
-betas = [0.5, 1.0, 1.5, 2.0]
+# betas = [0.5, 1.0, 1.5, 2.0]
 # betas = [1.4, 1.5, 1.6, 2.0]
-def o_filename(beta): return f"outputs/data_{beta}.csv"
+def o_filename(beta): return f"outputs/bergluscher/params{beta:.1f}..csv"
 def i_filename(beta): return f"inputs/params_{beta}.yml"
 o_filenames = [o_filename(beta) for beta in betas]
 processes = []
@@ -43,6 +43,7 @@ def parse_file(beta):
     data = []
     with open(o_filename(beta), 'r') as datafile:
         csv_data = csv.reader(datafile)
+        next(csv_data)
         for lines in csv_data:
             data.append([float(l) for l in lines])
     return np.array(data).T
@@ -69,12 +70,12 @@ class Observable(object):
 
 global_observables = dict(
     # magnetization =     Observable(r"\langle|\bar\phi|\rangle", lambda data: np.mean(np.abs(data[0])) ),
-    action          =   Observable(r"S", lambda data,beta: np.mean(data[0])/(beta*L**2) ),
-    internal_energy =   Observable(r"E", lambda data,beta: np.mean(data[0])/(0.5*beta*L**2) ),
-    chi_m           =   Observable(r"\chi_m", lambda data,beta: np.mean(data[1])/L**2, scale='log'),
+    action          =   Observable(r"S", lambda data,beta: np.mean(data[3])/(beta*L**2) ),
+    internal_energy =   Observable(r"E", lambda data,beta: np.mean(data[3])/(0.5*beta*L**2) ),
+    chi_m           =   Observable(r"\chi_m", lambda data,beta: np.mean(data[5])/L**2, scale='log'),
     delta_m         =   Observable(r"\delta_m",
                             lambda data,beta:
-                                2 * 10**5 * beta**4 * np.exp(-4*np.pi*beta) * np.mean(data[1])/(L**2),
+                                2 * 10**5 * beta**4 * np.exp(-4*np.pi*beta) * np.mean(data[5])/(L**2),
                             scale = 'log')
 )
 
@@ -107,7 +108,8 @@ def run(quiet):
                 'L':    L,
                 'measurements': measurements,
                 'thermalization': thermalization,
-                'record_rate': record_rate
+                'record_rate': record_rate,
+                'taus': [0.]
                 }
         with open(i_filename(beta), 'w') as yaml_file:
             yaml.dump(yaml_data, yaml_file)
