@@ -1,5 +1,6 @@
 \documentclass[12pt]{report}
 \usepackage{amsmath}
+\usepackage{bbm}
 \usepackage{tabularx}
 \usepackage{amsfonts}
 \usepackage{hyperref}
@@ -23,6 +24,9 @@
 \usepackage[style=phys,biblabel=brackets,maxbibnames=3]{biblatex}
 %\renewbibmacro{in:}{%
   %\ifentrytype{article}{}{\printtext{\bibstring{in}\intitlepunct}}}
+\DefineBibliographyStrings{english}{%
+  bibliography = {References},
+}
 
 
 
@@ -101,9 +105,11 @@ May 2021
 \chapter*{Acknowledgments}
 \addcontentsline{toc}{chapter}{Acknowledgments}
 \paragraph
-\indent I would like to thank my advisor, Prof. Christopher Monahan. His constant helpfulness has made this research possible and enjoyable. I would also like to thank the entire faculty of the William \& Mary Physics Department. The amount of knowledge and wisdom they have bestowed upon me has been beyond my imagination.
+\indent I would like to thank my advisor, Professor Christopher Monahan. His constant helpfulness has made this research possible and enjoyable. I would also like to thank the entire faculty of the William \& Mary Physics Department. The amount of knowledge and wisdom they have given me has been beyond my imagination.
 
-I also acknowledge the help the High Performance Computing group at William \& Mary, whose cluster performed many of these simulations. And finally, I would like to acknowledge the financial help of the 1693 Scholars Program which funded preliminary research over the summer.
+I would like to acknowledge the help of the High Performance Computing group at William \& Mary, whose cluster performed many of these simulations. I also want to acknowledge the financial help of the 1693 Scholars Program which funded preliminary research over the summer.
+
+Finally, I would like to thank my friends and family who helped me reach this point in my academic and personal journey.
 
 
 \listoffigures
@@ -156,7 +162,7 @@ I also acknowledge the help the High Performance Computing group at William \& M
 %\bibliographystyle{unsrt}
 %\bibliography{library}
 
-\printbibliography
+\printbibliography[heading=bibintoc]
 
 
 \end{document}

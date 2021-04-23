@@ -5,7 +5,7 @@ This thesis incorporates two main bodies of knowledge: quantum field theory and 
 
 In this section we outline a rough description of quantum field theory. A full introduction is beyond the scope of this paper, however we do assume knowledge of nonrelativistic quantum mechanics and classical field theory.
 
-The fundamental hypothesis of quantum field theory (QFT) describes particles as discrete packets of energy on a quantum field. But what is a quantum field? Like in classical mechanics, a field is a function of spacetime with some mathematical object assigned to each point in space and time. In the case of the electric field, this object is a three-dimensional vector, while the electric potential is a scalar field. Classical and quantum fields have Lagrangians which define how they evolve in space and time. What differentiates a quantum field from a classical field is superposition: where classical fields have a definite configuration, quantum fields exist in a superposition of all possible configurations. It is possible---though nontrivial and outside the scope of this description--- to motivate the appearance of discrete particles from this superposition \cite{zee2010}. This formulation of QFT is known as the ``path integral formulation'', which differs from the ``second quantization'' used by most textbooks.
+The fundamental hypothesis of quantum field theory (QFT) describes particles as discrete packets of energy on a quantum field. But what is a quantum field? Like in classical mechanics, a field is a function of spacetime with some mathematical object assigned to each point in space and time. In the case of the electric field, this object is a three-dimensional vector, while the electric potential is a scalar field. Classical and quantum fields have Lagrangians which define how they evolve in space and time. What differentiates a quantum field from a classical field is superposition: where classical fields have a definite configuration, quantum fields exist in a superposition of all possible configurations. It is possible---though nontrivial and outside the scope of this description--- to motivate the appearance of discrete particles from this superposition (see \cite{zee2010}). This formulation of QFT is known as the ``path integral formulation'', which differs from the ``second quantization'' used by many textbooks.
 
 This general description allows QFT to easily incorporate special relativity. By ensuring that the Lagrangian of a theory is invariant under Lorentz transformations, we can ensure that the theory itself is Lorentz invariant. This is a necessary condition of physical theories. 
 
@@ -13,7 +13,7 @@ This general description allows QFT to easily incorporate special relativity. By
 \subsection{Path Integral Formulation}
 \label{sec:pathintegral}
 
-We can model a quantum field theory as a superposition of all possible classical fields. Like single-particle quantum mechanics, each configuration has a probability amplitude. To measure expectation values of observables, we simply take an average over all configurations weighted by this complex amplitude. We can formalize this notion using the fundamental formula\footnote{Since this study concerns vacua, we do not include a source term.}
+We can model a quantum field as a superposition of all possible classical fields. Like single-particle quantum mechanics, each configuration has a complex probability amplitude. To measure expectation values of observables, we simply take an average over all configurations weighted by this complex amplitude. We can formalize this notion using the fundamental formula\footnote{Since this study concerns vacua, we do not include a source term.}
 \begin{equation}
     \label{eq:pathintegral}
     \langle \hat O \rangle = \frac{1}{Z} \int \mathcal{D}\phi \: \hat O [\phi]\; e^{iS[\phi]}
@@ -21,7 +21,7 @@ We can model a quantum field theory as a superposition of all possible classical
 % not sure if the semicolons is good form
 where $\langle \hat O \rangle$ is the expectation value of an arbitrary operator $\hat O$; $Z$ is a normalization constant; $S$ is the action functional, defined from the theory's Lagrangian; and $\int \mathcal{D}\phi$ represents the eponymous path integral. Though it is possible to define this integral rigorously, for our purposes we can equate it to a sum over all possible configurations. This form is the quantum analog of the classical principle of least action and reduces to such for large values of the action. For a more pedagogical explanation, see Richard Feynman's lectures on physics \cite{feynman1963a}.
 
-At first glance, Eq.~\ref{eq:pathintegral} is remarkably similar to the statistics of the canonical ensemble. Through this similarity, we will be able to use mathematical tools from statistical mechanics to study quantum field theories. However, the factor of $i$ in the exponent currently prohibits us from making this jump. To remedy this issue, we perform a ``Wick rotation'' which shifts spacetime into Euclidean coordinates. In normal spacetime, defined by the Minkowski metric, the Lorentz-invariant distance is given as
+At first glance, Eq.~\ref{eq:pathintegral} is remarkably similar to the statistics of the canonical ensemble. Through this similarity, we will be able to use mathematical tools from statistical mechanics to study quantum field theories. However, the factor of $i$ in the exponent currently prohibits us from making this jump. To remedy this issue, we perform a ``Wick rotation'' which shifts spacetime into Euclidean coordinates. In physical spacetime, defined by the Minkowski metric, the Lorentz-invariant distance is given as
 \begin{equation}
     s^2 = x^2_0 - x^2_1- x^2_3- x^2_3
 \end{equation}
@@ -29,27 +29,28 @@ where $x_0=ct$ and $\vec{x} = (x_1, x_2, x_3)^T$. By redefining the time coordin
 \begin{equation}
     s_E^2 = x^2_1+ x^2_3+ x^2_3 + x^2_4,
 \end{equation}
-is therefore invariant under $SO(4)$ transformations, which is representative of a four-dimensional Euclidean space. Furthermore, we find that
+is invariant under $SO(4)$ transformations and is therefore representative of a four-dimensional Euclidean space. Furthermore, we find that
 \begin{align}
     d^4x_E &= d^3\vec{x}dx_4\nonumber \\
     &= i d^3\vec{x}dx_0 \nonumber \\
-    &= i d^4x. \label{eq:wickdifferential} % TODO: is this better?
+    &= i d^4x. \label{eq:wickdifferential} 
 \end{align}
 
-We can use this transformation to redefine the Lagrangian $\mathcal{L}$ in Euclidean space as $\mathcal{L}_E$, replacing all $x_0$ with $ix_0$. Since a Lorentz-invariant Lagrangian must only include even powers and derivatives of $x$, the Euclidean Lagrangian remains real. Subsequently, we can define a Euclidean action based on the differential in Eq.~\ref{eq:wickdifferential}:
+We can use this transformation to redefine the Lagrangian $\mathcal{L}$ in Euclidean space as $\mathcal{L}_E$, replacing all $x_0$ with $-ix_4$ and flipping the overall sign. Since a Lorentz-invariant Lagrangian must only include even powers and derivatives of $x$, the Euclidean Lagrangian remains real. Subsequently, we can define a Euclidean action based on the differential in Eq.~\ref{eq:wickdifferential}:
 \begin{align}
-    S_E &= \int d^4x_E \mathcal{L}_E \\
-    &= i \int d^4x \mathcal{L}_E,
+    S_E &= \int d^4x_E \mathcal{L}_E \nonumber\\
+        &= i \int d^4x \left(-\mathcal{L}\right) \nonumber \\
+    &= -i S
 \end{align}
 allowing us to redefine the path integral as 
 \begin{equation}
     \label{eq:pathintegraleuclidean}
-    \langle \hat O \rangle = \frac{1}{Z} \int \mathcal{D}\phi \: \hat O (\phi)\; e^{-S_E[\phi]}.
+    \langle \hat O \rangle = \frac{1}{Z} \int \mathcal{D}\phi \: \hat O [\phi]\; e^{-S_E[\phi]}.
 \end{equation}
 
 By replacing the Minkowski action $S$ with a Euclidean action $S_E$, we have transformed the amplitude $e^{iS}$ to a statistical Boltzmann factor $e^{-S_E}$. This new form will allow us to use statistical techniques to simulate quantum fields.
 
-\subsection{$\phi^4$ model}
+\subsection{$\phi^4$ Model}
 \label{sec:phi4}
 
 One of the simplest interacting field theories is known as the $\phi^4$ model. This theory describes a spin-0 boson and consists of a real scalar field given by the four-dimensional Minkowski action
@@ -63,47 +64,49 @@ The first two terms describe a free relativistic particle of mass $m_0$ while th
     \partial_\mu &= \left( \frac{\partial}{\partial t}, -\frac{\partial}{\partial x}, -\frac{\partial}{\partial y}, -\frac{\partial}{\partial z} \right).
 \end{align}
 
-In this study, we specifically consider fields in 1+1 spacetime dimensions. Following Sec.~\ref{sec:pathintegral}, we convert Eq.~\ref{eq:phi4 action} from 3+1 Minkowski spacetime to 1+1 Euclidean spacetime, yielding
+In this study, we specifically consider fields in $1+1$ spacetime dimensions. Following Sec.~\ref{sec:pathintegral}, we convert Eq.~\ref{eq:phi4 action} from 3+1 Minkowski spacetime to $1+1$ Euclidean spacetime, yielding
 \begin{equation}
     \label{eq:phi4 euclidean action}
     S_E[\phi] = \int d^2 x_E \left[\frac{1}{2}\left(\partial_t \phi\right)^2 + \frac{1}{2} \left(\partial_x \phi \right)^2 + \frac{1}{2} m_0^2 \phi^2 + \frac{\lambda}{4}\phi^4\right].
 \end{equation}
-where $\partial_t$ and $\partial_x$ are the two partial derivatives in 1+1 Euclidean spacetime. 
+where $\partial_t$ and $\partial_x$ are the two partial derivatives in $1+1$ Euclidean spacetime. 
 
-This field features spontaneous symmetry breaking at a critical value of $m_0^2$. In practice this property causes the field to spontaneously align, similarly to spins aligning in a ferromagnet. The name ``symmetry breaking'' refers to the transformation $\phi\rightarrow-\phi$, which changes the values of observables in the aligned regime but not the disordered regime. These two phases are known as the ``broken'' and ``symmetric'' phases and their transition is well understood.
+This field features spontaneous symmetry breaking at a critical value of $m_0^2$ \cite{chang1976}. This property causes the field to spontaneously align, similarly to spins aligning in a ferromagnet. The name ``symmetry breaking'' refers to the transformation $\phi\rightarrow-\phi$, which changes the values of observables in the aligned regime but not the disordered regime. These two phases are known as the ``broken'' and ``symmetric'' phases and their transition is well understood.
 
 
-\subsection{Non-linear sigma model}
-The non-linear sigma model (NLSM) is a prototypical theory for a variety of unrelated physical phenomena, including applications in string theory \cite{callan1985} and ferromagnetism \cite{polyakov1975}. As a simple nonperturbative model, it also provides an ideal starting point for lattice QCD studies. Specifically, the NLSM exhibits many properties shared by Yang-Mills gauge theories, such as a mass gap, asymptotic freedom and $O(2)$ renormalizability. 
+\subsection{Non-linear Sigma Model}
+The non-linear sigma model (NLSM) is a prototypical theory for a variety of physical phenomena including applications in string theory \cite{callan1985} and ferromagnetism \cite{polyakov1975}. As a simple nonperturbative model, it also provides an ideal starting point for lattice QCD studies. Specifically, the NLSM exhibits many properties shared by Yang-Mills gauge theories, such as a mass gap, asymptotic freedom and $O(2)$ renormalizability \cite{polyakov1975}. 
 
-Unlike the $\phi^4$ model, which consists of a real value at each point in spacetime, the $O(3)$ NLSM consists of a 3D unit vector at each point. For this reason, every transformation of the field must be ``norm preserving''. Per its name, the $O(3)$ NLSM features a global symmetry under the 3D orthogonal group $O(3)$. In other words, the theory remains the same if all vectors are rotated equivalently. To differentiate it from the $\phi^4$ model, we denote the NLSM field as $\e(x)$.
+Unlike the $\phi^4$ model, which consists of a real value at each point in spacetime, the $O(3)$ NLSM consists of a 3D unit vector at each point. For this reason, every transformation of the field must be norm preserving. Per its name, the $O(3)$ NLSM features a global symmetry under the 3D orthogonal group $O(3)$; in other words, the theory remains the same if all vectors are rotated equivalently. To differentiate it from the $\phi^4$ model, we denote the NLSM field as $\e(x)$.
 
-The theory is defined by the 1+1 dimensional Euclidean action 
+The theory is defined by the $1+1$ dimensional Euclidean action 
 \begin{equation}
     \label{eq:nlsm euclidean action}
-    S_E = \frac{\beta}{2} \int d^2x \; \partial^\mu \e \cdot \partial_\mu \e
+    % S_E = \frac{\beta}{2} \int d^2x \; \partial^\mu \e \cdot \partial_\mu \e
+    S_E = \frac{\beta}{2} \int d^2x \; \left[ \left(\partial_t \e\, \right)^2+ \left( \partial_x \e\,\right)^2 \right]
 \end{equation}
 subject to the constraint that $\e\cdot\e = 1$. Here, $\beta$ is the inverse coupling.
 
+
 \section{Markov Chain Monte Carlo}
 
-To accomplish a statistical analysis of quantum fields, we use a Monte Carlo simulation. This method amounts to producing a large number of configurations and calculating statistics on the sample. A brute-force calculation over all possible configurations---as Eq.~\ref{eq:pathintegraleuclidean} suggests--- is clearly infinite and computationally infeasible. However, the exponential nature of the Boltzmann factor dictates that only configurations near the action minima contribute to observable statistics. Therefore, by selecting a sample of configurations near this minimum, we are able to extract meaningful results with a finite computation.
+To accomplish a statistical analysis of quantum fields, we use a Monte Carlo simulation which produces a large number of configurations and calculates statistics on the sample. A brute-force calculation over all possible configurations, as Eq.~\ref{eq:pathintegraleuclidean} suggests, is clearly infinite and computationally infeasible. However, the exponential nature of the Boltzmann factor dictates that only configurations near the action minima contribute to observable statistics. Therefore, by selecting a sample of configurations near this minimum, we are able to extract meaningful results with a finite computation. 
 
 \subsection{The Markov Chain}
-The Markov chain is an effective method to identity field configurations that minimize the action. Essentially, we begin with a predetermined configuration and then make small adjustments, gradually lowering the action. By measuring states after a certain amount of time has passed, called the ``thermalization'', we can form a set of configurations near the action minima and approximate the observables of the system. 
+In order to determine this subset of configurations, we use a Markov chain. This method identities field configurations that minimize the action using a random walk through phase space. Essentially, we begin with a predetermined configuration and then make small adjustments, gradually lowering the action. By measuring states after a certain amount of time has passed, called the ``thermalization'', we can form a set of configurations near the action minima and approximate the observables of the system. 
 
-Each step consists of two parts: proposing a change and accepting the new configuration. The proposal creates a new configuration $\phi_b$ based on the current configuration $\phi_a$. In order to direct the Markov chain towards the action minima, we do not immediately accept this change. We calculate a probability
+Each step consists of two parts: proposing a change and accepting the new configuration. The proposal creates a new configuration $\phi_b$ based on the current configuration $\phi_a$, a change that we accept with probability
 \begin{equation}
-P(\phi_a \rightarrow \phi_b)
+P(\phi_a \rightarrow \phi_b).
 \end{equation}
-of adding $\phi_b$ to the Markov chain, depending only on the actions of each configuration. This stochastic process ensures the chain will seek action minima. 
+This probability determines if $\phi_b$ should be added to the Markov chain and depends on the change in action, stochastically ensuring that the chain will seek the action minima. 
 
 There are four requirements that this function must obey to produce a Boltzmann distribution of samples:
 \begin{enumerate}
     \item $P(\phi_a \rightarrow \phi_b)$ must depend only on the configurations $\phi_a$ and $\phi_b$.
     \item The probability must be properly normalized, i.e. $\sum_{\phi} P(\phi_a \rightarrow \phi) = 1$.
     \item Every configuration must be reachable in a finite number of steps. In other words, the chain must be ergodic.
-    \item In order to reach equilibrium, the chain must be reversible. In other words, the probability of a $\phi_a\rightarrow\phi_b$ transition must be equal to the probability of a $\phi_b\rightarrow\phi_a$ transition. Mathematically, this condition takes the form of \textit{detailed balance equations}:
+    \item In order to reach equilibrium, the chain must be reversible. In other words, the probability of a $\phi_a\rightarrow\phi_b$ transition must be equal to the probability of a $\phi_b\rightarrow\phi_a$ transition. Mathematically, this condition takes the form of a ``detailed balance equation'':
 \begin{equation}
     \label{eq:detailedbalance}
     P(\phi_a)\,P(\phi_a\rightarrow\phi_b) = P(\phi_b)\,P(\phi_b\rightarrow\phi_a),
@@ -127,13 +130,14 @@ This formula will provide the explicit transition probabilities for the Metropol
 
 
 
+
 \section{Observables}
 
 To extract physics from Monte Carlo simulations, we define a set of ``observables''. These quantities manifest as expectation values of operators, calculated using the Euclidean path integral formula (Eq.~\ref{eq:pathintegraleuclidean}). We can classify these observables into two categories: primary and secondary observables. Primary observables are calculated as expectation values of global operators while secondary observables are derived from these quantities.
 
 \subsection{Primary Observables}
 \label{sec:primary observables}
-Each primary observable is defined on each configuration independently, meaning they do not encode ensemble statistics of the Markov Chain.\footnote{One slight exception is the magnetic susceptibility, which can be defined both ways.} In the $\phi^4$ model, we can develop an intuition around these quantities by visualizing the symmetric and broken phases. Fig~\ref{fig:primary observables} and Tab.~\ref{tab:primary observables} show examples of these quantities in three different configurations: one in the broken phase, one in the symmetric phase, and one at the transition. 
+Each primary observable is defined on each configuration independently, meaning they do not encode ensemble statistics of the Markov chain. In the $\phi^4$ model, we can develop an intuition around these quantities by visualizing the symmetric and broken phases. Fig~\ref{fig:primary observables} and Tab.~\ref{tab:primary observables} show examples of these quantities in three different configurations: one in the broken phase, one in the symmetric phase, and one at the transition. 
 
 There are two potential points of confusion here. The first lies in the definition of ``broken'' phase. Though the symmetric phase more closely resembles a pane of broken glass, it leaves $\phi\rightarrow-\phi$ symmetry \textit{un}-broken, thereby giving the title ``broken'' to the more visually uniform configuration. An additional potential pitfall is the distinction between the \textit{lattice average} and the \textit{ensemble average}. The first is a mean over all lattice sites while the second is a mean over all configurations in the Markov Chain.
 
@@ -141,20 +145,20 @@ There are two potential points of confusion here. The first lies in the definiti
     \begin{center}
       \begin{subfigure}[b]{0.3\textwidth}\centering
         \includegraphics[width=0.6\textwidth]{imgs/broken.png}
-        \caption{broken phase ($m_0^2=-1.0$)}
+        \caption{broken\\($m_0^2=-1.0$)}
       \end{subfigure}%
       \hfill
       \begin{subfigure}[b]{0.3\textwidth}\centering
         \includegraphics[width=0.6\textwidth]{imgs/transition.png}
-        \caption{transition ($m_0^2=-0.7$)}
+        \caption{transition\\($m_0^2=-0.7$)}
       \end{subfigure}%
       \hfill
       \begin{subfigure}[b]{0.3\textwidth}\centering
         \includegraphics[width=0.6\textwidth]{imgs/symmetric.png}
-        \caption{symmetric phase ($m_0^2=-0.4$)}
+        \caption{symmetric\\($m_0^2=-0.4$)}
       \end{subfigure}
       \hfill
-      \caption{\label{fig:primary observables} Visualization of broken phase, symmetric phase and transition. Simulation run on $64\times64$ lattice, plotted after 1000 sweep thermalization (see Sec~\ref{sec:thermalization})}
+      \caption{\label{fig:primary observables} Visualization of broken phase, symmetric phase and transition. Simulation run on $64\times64$ lattice, plotted after 1000 sweep thermalization (see Sec~\ref{sec:thermalization}), $\lambda=0.5$.}
   \end{center}
 \end{figure}
 
@@ -175,130 +179,140 @@ There are two potential points of confusion here. The first lies in the definiti
 \label{sec:avg mag}
 The average magnetization quantifies the total alignment of the field. In both the $\phi^4$ model and the NLSM, a value of zero indicates the symmetric phase while a nonzero value indicates broken symmetry. In the NLSM, a magnitude of one represents total alignment.
 
-Due to the $\phi\rightarrow-\phi$ symmetry of the $\phi^4$ model, the ensemble mean of the average magnetization $\langle \phi \rangle$ is $0$. Likewise, the $O(3)$ symmetry in the NLSM enforces $\langle \e \rangle$ = 0. To measure the alignment, we therefore use the magnitude of this quantity, defined in the $\phi^4$ model as 
+Due to the $\phi\rightarrow-\phi$ symmetry of the $\phi^4$ model, the ensemble mean of the average magnetization $\langle \bar\phi \rangle$ is $0$. Likewise, the $O(3)$ symmetry in the NLSM enforces $\langle \bar \e\, \rangle$ = 0. To measure the alignment, we therefore use the magnitude of this quantity, defined in the 1+1 $\phi^4$ model as 
 \begin{equation}
-|\bar\phi| \equiv \frac{1}{V}\left| \int d^2x \phi(x)\right|.
+|\bar\phi| \equiv \frac{1}{V}\left| \int d^2x \;\phi(x)\right|.
 \end{equation}
 and in the NLSM as
 \begin{equation}
-    \label{eq:chim nlsm}
-    |\bar\e| \equiv \frac{1}{V}\left|\int d^2x \e(x)\right|.
+    |\bar\e\,| \equiv \frac{1}{V}\left|\int d^2x \;\e(x)\right|.
 \end{equation}
 
-In the symmetric phase, both $\langle \bar\e\, \rangle$ and $\langle \bar\phi \rangle = 0$ while in the broken phase they are both nonzero.
+In the broken phase, both $\langle |\bar\e\, |\rangle$ and $\langle |\bar\phi| \rangle$ are nonzero but vanish in the symmetric phase.
 
 \subsubsection{Internal Energy}
 The internal energy is defined as \cite{berg1981}
 \begin{equation}
     E = \frac{2}{\beta V} \langle S \rangle
 \end{equation}
-in the NLSM.
-
+in the NLSM. We use this metric to compare our simulation with existing literature.\footnote{The internal energy is not part of the $\phi^4$ portion of this work.}
 
 \subsection{Secondary Observables}
-Unlike primary observables, secondary observables are defined for each \textit{ensemble}, not each configuration. We define three secondary observables: the magnetic susceptibility, the Binder cumulant and the bimodality. Since the Binder cumulant and the bimodality provide different perspectives on phase transitions, we will restrict our usage of these observables to the $\phi^4$ model.
+Unlike primary observables, secondary observables are defined for each \textit{ensemble}, not each configuration. We define three secondary observables: the magnetic susceptibility, the Binder cumulant and the bimodality. Since the Binder cumulant and the bimodality primarily provide different perspectives on phase transitions, we will restrict our usage of these observables to the $\phi^4$ model.
 
 \subsubsection{Magnetic Susceptibility}
-Though the magnitude of the average magnetization is the main phase transition indicator, its behaviour on the lattice makes the critical point difficult to identify. With a finite lattice spacing $a$, the transition becomes smoother around the critical point. An alternative metric is the magnetic susceptibility. The magnetic susceptibility is proportional to the variance of the magnetization and features a peak at the critical point. This peak is more identifiable than the smooth transition of the magnetization. 
+Though the magnitude of the average magnetization is the main phase transition indicator, the values become smooth around the critical point as the lattice spacing increases. This behaviour on the lattice makes the critical point difficult to identify. An alternative metric is the magnetic susceptibility. The magnetic susceptibility is proportional to the variance of the magnetization and features a peak at the critical point. This peak is more identifiable than the smooth transition of the magnetization. 
 
 Mathematically, this value is defined as 
 \begin{equation}
-    \chi_m \equiv V \big(\langle {\bar\e\,}^2 \rangle - \langle \bar\e\, \rangle^2\big)
+\chi_m \equiv V \big(\langle {\bar\e}\,^2 \rangle - \langle \bar\e\, \rangle^2\big)
 \end{equation}
 in the NLSM and
 \begin{equation}
     \chi_m \equiv V \big(\langle {\bar\phi}^2 \rangle - \langle \bar\phi \rangle^2\big)
 \end{equation}
-in the $\phi^4$ model. Manifestly, this expression appears as a secondary observable since it is not defined for each lattice configuration. 
+in the $\phi^4$ model. Following the symmetry argument in Sec.~\ref{sec:avg mag}, the second terms vanish and the susceptibility becomes 
+\begin{equation}
+    \label{eq:chim phi4}
+\chi_m = V \langle {\bar\e}\,^2 \rangle 
+\end{equation}
+in the NLSM and
+\begin{equation}
+    \label{eq:chim nlsm}
+    \chi_m = V \langle {\bar\phi^2} \rangle
+\end{equation}
+in the $\phi^4$ model.
 
 \subsubsection{Binder Cumulant}
 We define the Binder cumulant $U$ as \cite{binder1981}
 \begin{equation}
-    U \equiv 1-\frac{\langle \bar{\phi^4} \rangle}{3\langle \bar{\phi^2}\rangle^2}.
+U \equiv 1-\frac{\langle {\bar\phi}^4 \rangle}{3\langle {\bar\phi}^2\rangle^2}.
 \end{equation}
-Similar to the magnitude of the average magnetization, this formula yields $0$ in the symmetric phase and a nonzero value in the broken phase. This nonzero value is $U = 2/3$ for the Binder cumulant. The advantage of this metric is a fixed point with regards to a scaling transformation that corresponds with the critical point of the phase transition \cite{landau2000}. In our study, we use the Binder cumulant as further evidence of a phase transition.
+Similar to the magnitude of the average magnetization, this formula yields $0$ in the symmetric phase and a nonzero value in the broken phase. The Binder cumulant of the broken phase exhibits a universal value of $U = 2/3$. The advantage of this metric is a fixed point of the scaling transformation which corresponds with the critical point of the phase transition \cite{landau2000}. In other words, the Binder cumulants for different length scales should all intersect at the critical point. In our study, we use the Binder cumulant as further evidence of a phase transition in the $\phi^4$ model.
+
 
 \subsection{Bimodality}
-The final phase transition indicator we use is the bimodality. In the symmetric phase, the average magnetization $\bar\phi$ centers around $0$ while in the broken phase, these values cluster around two peaks. Qualitatively, this metric measures the separation of these peaks.
+The final phase transition indicator that we use is the bimodality. In the symmetric phase, the average magnetization $\bar\phi$ centers around $0$ while in the broken phase, these values cluster around two peaks. This metric quantitatively measures the separation of these peaks.
 
-We begin by measuring $\bar\phi$ for each configuration. We separate each value into an odd number number of bins, ensuring that there is a bin centered at $\bar\phi=0$. We then calculate the number of configurations $n_0$ in the center bin and the number of configurations $n_{max}$ in the fullest bin. The bimodality is then calculated as
+To calculate the bimodality, we begin by measuring $\bar\phi$ for each configuration. We separate each value into an odd number number of bins, ensuring that there is a bin centered at $\bar\phi=0$. We then calculate the number of configurations $n_0$ in the center bin and the number of configurations $n_{max}$ in the fullest bin. The bimodality is then calculated as
 \begin{equation}
     B = 1 - \frac{n_0}{n_{max}}.
 \end{equation}
-When the configurations are centered around $\bar\phi=0$, i.e. in the symmetric phase, this value is $B=0$. When the configurations are aligned such that $\bar\phi\neq0$, i.e. in the broken phase, this value becomes $B=1$.
+When the configurations are centered around $\bar\phi=0$, i.e. in the symmetric phase, this value is $B=0$. When the configurations are aligned such that $\bar\phi\neq0$, i.e. in the broken phase, this value becomes $B=1$. In this study, we separate $\phi$ into bins of width $\Delta \phi = 0.1$.
 \subsection{Jackknife Method}
-Though the uncertainties of primary observables are simple to calculate, this process is more complicated for secondary observables. While we could propagate the uncertainty of the Binder cumulant, such a process is not clear for the bimodality. Therefore, we utilize a method known as Jackknife resampling. 
+Though the uncertainties of primary observables are simple to calculate, this process is more complicated for secondary observables. While we could propagate the uncertainty of the Binder cumulant, such a process is not clear for the bimodality. Therefore, we utilize a method known as Jackknife resampling to calculate statistical errors of secondary observables. 
 
-We begin by calculating some observable $O$ on an ensemble of $N$ configurations. Then, for each configuration $i$, we calculate the same observable but exclude said configuration. This leaves us with a set of $N$ observables $O_i$. Assuming independent measurements, we can calculate the variance of $O$ as
+We begin by calculating the expectation value $O$ of some observable $\hat O$ on an ensemble of $N$ configurations. Then, for each configuration $i$, we calculate the expectation value of $\hat O$ while excluding said configuration, calling this quantity $O_i$. This leaves us with a set of $N$ expectation values $O_i$. Assuming independent measurements, we can calculate the variance of $\hat O$ as
 \begin{equation}
-    \mathrm{Var}(O) = \sum_{i} \left(C_i - C\right)^2.
+    \mathrm{Var}(\hat O) = \sum_{i} \left(O_i - O\right)^2.
 \end{equation}
-We use this formula to calculate all uncertainties in this study.
+We use this formula to calculate all statistical errors in this study.
 \section{Topological Observables}
 \label{sec:topological charge}
-The $O(3)$ NLSM features topological features originating from two properties: 
+The 1+1 $O(3)$ NLSM features topological features originating from two properties: 
 \begin{enumerate}
-    \item At $x\rightarrow\infty$, the field must become uniform since the Lagrangian must vanish. This allows us to model $x\rightarrow\infty$ as a single point on the field, forming a Riemann sphere in three dimensions.
-    \item The elements of the $O(3)$ non-linear sigma model are three-dimensional unit vectors, thereby existing on a three dimensional unit sphere. 
+    \item At $x\rightarrow\infty$, the field must become uniform since the Lagrangian must vanish. This allows us to model $x\rightarrow\infty$ as a single point on the field, forming a Riemann sphere with a two-dimensional surface.
+    \item The elements of the $O(3)$ NLSM are three-dimensional unit vectors, and thus also exist on a sphere. 
 \end{enumerate}
 
-With these two properties, we can view the field as a continuous mapping between two 3D spheres, denoted as $S^2$, and associate an integer number of wrappings to each mapping from $S^2$ to $S^2$. We can envision a tangible metaphor for this wrapping with a balloon and a baseball: by simply inserting the baseball into the balloon, we have established a mapping from every point on the balloon to every point on the baseball. We can create an equally valid map by twisting the balloon's mouth and wrapping the baseball again. In a purely mathematical world, we perform this process an infinite number of times, thereby associating every possible mapping with an integer. The group of integers is known as the \textit{homotopy group} of the non-linear sigma model. We associate every field configuration with an element of this group, known as the \textit{topological charge}, which we denote as $Q$. Configurations with $|Q|=1$ are known as instantons.
+With these two properties, we can view the field as a continuous mapping between two three-dimensional spheres, each denoted as $S^2$, and associate an integer number of wrappings to each mapping from $S^2$ to $S^2$. We can envision a tangible metaphor for this wrapping with a balloon and a baseball: by simply inserting the baseball into the balloon, we have established a mapping from every point on the balloon to every point on the baseball. We can create an equally valid map by twisting the balloon's mouth and wrapping the baseball again. In a purely mathematical world, we perform this process an infinite number of times, thereby associating every possible mapping with an integer. The group of integers is known as the \textit{homotopy group} of the $1+1$ $O(3)$ NLSM. We associate every field configuration with an element of this group, known as the \textit{topological charge}, which we denote as $Q$. Configurations with $|Q|=1$ are known as instantons.
 
 Following this quantity, we can define a topological susceptibility $\chi_t$
 \begin{equation}
 \chi_t \equiv \frac{1}{L^2} \Big( \langle Q^2 \rangle - \langle Q \rangle^2 \Big).
 \end{equation}
-In the trivial case, $\langle Q \rangle$ disappears and   
-\begin{equation}
-    \chi_t = \frac{\langle Q^2 \rangle - \langle}{L^2}.
-\end{equation}
-% TODO Highlight this is true for QCD and NLSM. Do you know why?
-
+This quantity relates to the stability of topological phases and we expect it to approach zero in the continuum limit \cite{berg1981}.
 \subsection{NLSM $\theta$ term}
-In the NLSM, we expect $\langle Q \rangle=0$. By introducing a $\theta$ term into the action,
+The NLSM is invariant under the transformation $\e \rightarrow -\e$, a change that flips the sign of the topological charge. This implies that $\langle Q \rangle$ disappears and therefore, that the NLSM vacuum is topologically trivial.  We can construct a nontrivial vacuum by introducing a $\theta$ term into the action:
 \begin{equation}
-    S[\e] \rightarrow S[\e] - i \theta Q[\phi],
+    S[\e\,] \rightarrow S[\e\,] - i \theta Q[\e\,].
 \end{equation}
-we can construct a topologically nontrivial model (that is, $\langle Q \rangle \neq 0$).
+With this topological action, $\langle Q \rangle = 0$ if and only if $\theta=0$.
+
+We can also redefine the topological susceptibility for the $\theta=0$ case as
+\begin{equation}
+    \label{eq:chit simple}
+    \chi_t = \frac{\langle Q^2 \rangle}{L^2}.
+\end{equation}
 
 \section{Ultraviolet Divergences}
 
-In Section~\ref{sec:pathintegral},  we defined a fundamental equation of quantum fields using a ``path integral'' which encompasses an uncountably infinite configuration space. However, we said nothing of the integral's convergence. In fact, many fundamental processes in QFT have divergent amplitudes, yielding nonsensical results. The most common type of divergence stems from high-momentum states, giving them the name ``ultraviolet divergences''. The remedy to this catastrophe is unintuitive. Essentially, we adopt infinite values for the parameters of the Lagrangian ($m_0^2$ and $\lambda$ in $\phi^4$ theory). Since neither of these two quantities is ever measured directly, we do not have to assume that their values are finite. In practice, this technique is involved and consists of two steps: regularization and renormalization.
+In Section~\ref{sec:pathintegral},  we defined a fundamental equation of quantum fields using a path integral which encompasses an uncountably infinite configuration space. However, we said nothing of the integral's convergence. In fact, many fundamental processes in QFT have divergent amplitudes, yielding nonsensical results. The most common type of divergence stems from high-momentum states, giving them the name ``ultraviolet divergences''. The remedy to this catastrophe is unintuitive. Essentially, we adopt infinite values for the parameters of the Lagrangian ($m_0^2$ and $\lambda$ in $\phi^4$ theory and $\beta$ in the NLSM). Since neither of these two quantities is ever measured directly, we do not have to assume that their values are finite. In practice, this technique consists of two steps: regularization and renormalization.
 
 
 \subsection{Regularization}
+
 Regularization is a process which introduces a new parameter into calculations. One example is a momentum cutoff. This technique transforms infinite momentum integrals as follows:  
 \begin{equation*}
     \int_0^\infty dk \rightarrow \int_0^\Lambda dk,
 \end{equation*}
-introducing $\Lambda$ as a regularization parameter. This process makes results $\Lambda$-dependent, but finite. Another example is dimensional regularization, which calculates results in terms of the spacetime dimension $D$ and analytically continues this parameter from just the integers into the real numbers. 
+introducing $\Lambda$ as a regularization parameter. This process makes results $\Lambda$-dependent, but finite. Another example is dimensional regularization, which calculates results in terms of the spacetime dimension $D$ and analytically continues this parameter from the integers into the real numbers. 
 
-In this study, we employ lattice regularization. This process discretizes the field, modeling the field $\phi(x)$ as a lattice $\phi_i$ where $i$ indexes lattice sites. The inherent parameter in this case is the lattice spacing $a$ which measures the width of each lattice chunk. This discretization effectively imposes a hard momentum cutoff of $k=\pi/a$. According to Bloch's theorem, any mode above this cutoff is equivalent to a lower-momentum mode since the high frequency information disappears on a discrete lattice.
+In this study, we employ a third technique: lattice regularization. This process discretizes the field, modeling $\phi(x)$ as a lattice $\phi(x_i)$ where $i$ indexes lattice sites. The inherent parameter in this case is the lattice spacing $a$ which measures the width of each lattice chunk. This discretization effectively imposes a hard momentum cutoff of $k=\pi/a$. According to Bloch's theorem, any mode above this cutoff is equivalent to a lower-momentum mode since the high frequency information disappears on a discrete lattice. We can view this cutoff in momentum space by considering a square with side length $2\pi/a$ centered at the origin. On the lattice, any mode outside this zone contains no more information than a corresponding mode inside. This area is known as a ``Brillouin zone'' and contains all possible momentum modes on the lattice, effectively imposing a hard cutoff. 
 
-We can view this cutoff in momentum space by considering a square with side length $2\pi/a$ centered at the origin. On the lattice, any mode outside this zone contains no more information than a corresponding mode inside. This area is known as a ``Brillouin zone'' and contains all possible momentum modes on the lattice, effectively imposing a hard cutoff. One of the main strengths of lattice regularization is preservation of gauge invariance, a property that makes lattice methods useful for QCD.
+One of the main strengths of lattice regularization is preservation of gauge invariance, a property that makes lattice methods useful for QCD.
 
 
 \subsection{Renormalization}
-After regularization, we redefine the Lagrangian parameters in terms of the regularization parameter using a handful of boundary conditions. Following \cite{bietenholz2018}, we require that $L/\xi$ remains constant, where $L$ is the side length of the system and $\xi$ is the coherence length. In perturbation theory, the renormalization process is arduous and includes the introduction of counter-terms into the Lagrangian. In the case of the NLSM it is impossible using counter-terms but can be performed numerically. In this study, we use predetermined values from \cite{bietenholz2018}.
-% TODO: cite this
+After regularization, we redefine the Lagrangian parameters in terms of the new parameter using a handful of boundary conditions. Following \cite{bietenholz2018}, we require that $L/\xi$ remains constant, where $L$ is the side length of the system and $\xi$ is the coherence length. In perturbation theory, the renormalization process is arduous and includes the introduction of counter-terms into the Lagrangian. In the case of the NLSM it is impossible using counter-terms but can be performed numerically. In this study, we use the second moment of the correlation length, notated $\xi_2$, which more precisely estimates the $\xi$ on the lattice \cite{bietenholz2018}. The specific values of $\beta$ and $\xi_2$ used in this work are taken from \cite{bietenholz2018}.
 
-At this point, we can calculate renormalized parameters of the Lagrangian. To achieve a physical theory, we take the limit as the regularization parameters approach their physical values. With a momentum cutoff, we take $\Lambda \rightarrow \infty$ and with dimensional regularization we usually take $d\rightarrow 4$. With lattice regularization, we approach the continuum, taking the lattice spacing $a\rightarrow 0$. 
+To achieve a physical theory, we take the limit as the regularization parameters approach their physical values. With a momentum cutoff, we take $\Lambda \rightarrow \infty$ and with dimensional regularization we usually take $D\rightarrow 4$. With lattice regularization, we approach the continuum, taking the lattice spacing $a\rightarrow 0$. 
 
-At this point, we have surely eliminated all divergences, right? Unfortunately, this is not always the case. External operators may also diverge due to regularization procedures. A prototypical example is the angular momentum operator on the lattice. Since a square lattice breaks continuous rotational symmetry, orthogonal angular momentum operators mix on the lattice and can cause divergences \cite{monahan2016}. 
+At this point, we have surely eliminated all divergences, right? Unfortunately, this is not always the case. External operators may also diverge due to regularization procedures. As we decrease the width of each lattice site, high frequency modes become more significant, leading to ultraviolet divergences. A prototypical example is the angular momentum operator on the lattice. Since a square lattice breaks continuous rotational symmetry, orthogonal angular momentum operators mix on the lattice and can cause divergences \cite{monahan2016}. 
 
-The topological susceptibility $\chi_t$ is one such value that diverges in the continuum limit. As we decrease the width of each lattice site, high frequency modes become more significant, leading to an ultraviolet divergence in the operator. 
+The topological susceptibility $\chi_t$ is one such value that diverges in the continuum limit, though the reasons for this divergence are not fully understood \cite{berg1981}. This question is central to this work. 
 
 \subsection{The Gradient Flow}
 \label{sec:gradflow}
-To remove this ultraviolet divergence, we adopt a technique is ``smearing'', a local averaging of the field \cite{solbrig2007}. Specifically, we use a technique known as the ``gradient flow'' \cite{monahan2015} which introduces a new half-dimension called ``flow time'', or $\tau$.\footnote{The term ``half-dimension'' indicates that $\tau>0$.}  The flow time parameterizes the smearing such that an evolution in flow time corresponds to suppressing ultraviolet divergences. 
+To remove this ultraviolet divergence, we adopt a technique known as ``smearing'', a local averaging of the field \cite{solbrig2008}. Specifically, we use a technique known as the ``gradient flow'' \cite{monahan2015} which introduces a new half-dimension\footnote{The term ``half-dimension'' indicates that the flow time is exclusively positive.} called ``flow time''.  The flow time $\tau$ parameterizes the smearing such that an evolution in flow time corresponds to suppressing ultraviolet divergences. 
 
 Specifically, the gradient flow pushes field configurations toward classical minima of the action. Additionally, renormalized correlation functions remain renormalized at nonzero flow time for gauge theories such as QCD \cite{luscher2013}. In 2D $\phi^4$ scalar field theory, the gradient flow is defined by the differential equation 
 \begin{equation}
     \frac{\partial \rho(\tau, x)}{\partial \tau} = \partial^2 \rho(\tau,x)
 \end{equation}
-where $\partial^2$ is the Laplacian in 4-D Euclidean spacetime and $\tau$ is the flow time. Here, $\rho$ is the field flowed into a nonzero flow time, bounded by the condition $\rho(\tau=0,x) = \phi(x)$. In the $\phi^4$ theory, we can solve this equation exactly to find \cite{monahan2016}
+where $\partial^2$ is the Laplacian in 2D Euclidean spacetime\footnote{Explicitly, $\partial^2 = \frac{\partial^2}{\partial t^2} + \nabla^2$} and $\tau$ is the flow time. Here, $\rho$ is the field flowed into a nonzero flow time, bounded by the condition $\rho(\tau=0,x) = \phi(x)$. In the $\phi^4$ theory, we can solve this equation exactly to find \cite{monahan2016}
 \begin{equation}
-    \rho(\tau, x) = \frac{1}{4 \pi \tau} \int d^2 y e^{-(x-y)^2/4\tau} \phi(y).
+    \rho(\tau, x) = \frac{1}{4 \pi \tau} \int d^2 y \; e^{-(x-y)^2/4\tau} \phi(y).
 \end{equation}
 This function forms a Gaussian, smoothly dampening high-momentum modes and removing ultraviolet divergences from evolved correlation functions \cite{makino2015a}. We can visualize this by plotting the $\phi$ field, shown in Fig.~\ref{fig:flow}. These plots demonstrate the reduction of high momentum modes.
 \begin{figure}[h]
@@ -325,7 +339,7 @@ This function forms a Gaussian, smoothly dampening high-momentum modes and remov
 Generally, we can choose any flow time equation that drives the field towards a classical minimum. Following \cite{bietenholz2018}, we can define the gradient flow for the NLSM via the differential equation
 \begin{equation}
     \label{eq:nsm_gradflow}
-    \partial_\tau \vec\rho (\tau,x) = \left( 1 - \vec\rho(\tau,x) \vec\rho(\tau,x)^T \right) \partial^2 \vec\rho(\tau,x),
+  \partial_\tau \e (\tau,x) = \left( 1 - \e(\tau,x) \e(\tau,x)^T \right) \partial^2 \e(\tau,x).
 \end{equation}
-where $\partial^2$ is the Laplacian operator in Euclidean space\footnote{Explicitly, $\partial^2 = \frac{\partial^2}{\partial t^2} + \nabla^2$}. We solve this equation numerically using the boundary condition $\vec\rho(0,x) = \e(x)$.
+We solve this equation numerically using the boundary condition $\e(\tau=0,x) = \e(x)$, a process described in Sec.~\ref{sec:runga-kutta}.
 

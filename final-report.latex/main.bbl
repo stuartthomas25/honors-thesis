@@ -459,55 +459,6 @@
       \verb https://linkinghub.elsevier.com/retrieve/pii/S0370269304003922
       \endverb
     \endentry
-    \entry{monahan2016}{inproceedings}{}
-      \name{author}{1}{}{%
-        {{hash=d83d08527dcc3c7f271748704f98ece2}{%
-           family={Monahan},
-           familyi={M\bibinitperiod},
-           given={Christopher},
-           giveni={C\bibinitperiod}}}%
-      }
-      \list{location}{1}{%
-        {Kobe International Conference Center, Kobe, Japan}%
-      }
-      \list{publisher}{1}{%
-        {Sissa Medialab}%
-      }
-      \strng{namehash}{d83d08527dcc3c7f271748704f98ece2}
-      \strng{fullhash}{d83d08527dcc3c7f271748704f98ece2}
-      \strng{bibnamehash}{d83d08527dcc3c7f271748704f98ece2}
-      \strng{authorbibnamehash}{d83d08527dcc3c7f271748704f98ece2}
-      \strng{authornamehash}{d83d08527dcc3c7f271748704f98ece2}
-      \strng{authorfullhash}{d83d08527dcc3c7f271748704f98ece2}
-      \field{sortinit}{1}
-      \field{sortinithash}{50c6687d7fc80f50136d75228e3c59ba}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{booktitle}{Proceedings of {{The}} 33rd {{International Symposium}} on {{Lattice Field Theory}} —{} {{PoS}}({{LATTICE}} 2015)}
-      \field{day}{15}
-      \field{eventtitle}{The 33rd {{International Symposium}} on {{Lattice Field Theory}}}
-      \field{langid}{english}
-      \field{month}{7}
-      \field{title}{The Gradient Flow in Simple Field Theories}
-      \field{urlday}{10}
-      \field{urlmonth}{7}
-      \field{urlyear}{2020}
-      \field{year}{2016}
-      \field{dateera}{ce}
-      \field{urldateera}{ce}
-      \field{pages}{052}
-      \range{pages}{1}
-      \verb{doi}
-      \verb 10.22323/1.251.0052
-      \endverb
-      \verb{urlraw}
-      \verb https://pos.sissa.it/251/052
-      \endverb
-      \verb{url}
-      \verb https://pos.sissa.it/251/052
-      \endverb
-      \keyw{important}
-    \endentry
     \entry{bruno2014}{article}{}
       \name{author}{4}{}{%
         {{hash=31e8cbc71552ec0b5ff0c678f90f3227}{%
@@ -559,6 +510,55 @@
       \verb{url}
       \verb https://doi.org/10.1007/JHEP08(2014)150
       \endverb
+    \endentry
+    \entry{monahan2016}{inproceedings}{}
+      \name{author}{1}{}{%
+        {{hash=d83d08527dcc3c7f271748704f98ece2}{%
+           family={Monahan},
+           familyi={M\bibinitperiod},
+           given={Christopher},
+           giveni={C\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Kobe International Conference Center, Kobe, Japan}%
+      }
+      \list{publisher}{1}{%
+        {Sissa Medialab}%
+      }
+      \strng{namehash}{d83d08527dcc3c7f271748704f98ece2}
+      \strng{fullhash}{d83d08527dcc3c7f271748704f98ece2}
+      \strng{bibnamehash}{d83d08527dcc3c7f271748704f98ece2}
+      \strng{authorbibnamehash}{d83d08527dcc3c7f271748704f98ece2}
+      \strng{authornamehash}{d83d08527dcc3c7f271748704f98ece2}
+      \strng{authorfullhash}{d83d08527dcc3c7f271748704f98ece2}
+      \field{sortinit}{1}
+      \field{sortinithash}{50c6687d7fc80f50136d75228e3c59ba}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of {{The}} 33rd {{International Symposium}} on {{Lattice Field Theory}} —{} {{PoS}}({{LATTICE}} 2015)}
+      \field{day}{15}
+      \field{eventtitle}{The 33rd {{International Symposium}} on {{Lattice Field Theory}}}
+      \field{langid}{english}
+      \field{month}{7}
+      \field{title}{The Gradient Flow in Simple Field Theories}
+      \field{urlday}{10}
+      \field{urlmonth}{7}
+      \field{urlyear}{2020}
+      \field{year}{2016}
+      \field{dateera}{ce}
+      \field{urldateera}{ce}
+      \field{pages}{052}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.22323/1.251.0052
+      \endverb
+      \verb{urlraw}
+      \verb https://pos.sissa.it/251/052
+      \endverb
+      \verb{url}
+      \verb https://pos.sissa.it/251/052
+      \endverb
+      \keyw{important}
     \endentry
     \entry{allessalom2008}{inproceedings}{}
       \name{author}{2}{}{%
@@ -630,8 +630,8 @@
       \strng{authorbibnamehash}{ba6cb210a17449b97f82fcf9b72d015e}
       \strng{authornamehash}{ba6cb210a17449b97f82fcf9b72d015e}
       \strng{authorfullhash}{ba6cb210a17449b97f82fcf9b72d015e}
-      \field{sortinit}{1}
-      \field{sortinithash}{50c6687d7fc80f50136d75228e3c59ba}
+      \field{sortinit}{2}
+      \field{sortinithash}{ed39bb39cf854d5250e95b1c1f94f4ed}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Quantum Field Theory in a Nutshell}
@@ -1217,8 +1217,8 @@
       \strng{authorbibnamehash}{8d0cc55c45a52b2739356468235dcdbf}
       \strng{authornamehash}{8d0cc55c45a52b2739356468235dcdbf}
       \strng{authorfullhash}{cc01798d7c909f9aa9362aed7fd245ae}
-      \field{sortinit}{4}
-      \field{sortinithash}{e071e0bcb44634fab398d68ad04e69f4}
+      \field{sortinit}{5}
+      \field{sortinithash}{5dd416adbafacc8226114bc0202d5fdd}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Numerical Recipes: {{Example}} Book {{C}}}
@@ -1411,8 +1411,8 @@
       \strng{authorbibnamehash}{f252038edd7f112d75da3bf0c1edecbc}
       \strng{authornamehash}{f252038edd7f112d75da3bf0c1edecbc}
       \strng{authorfullhash}{60816f7538af4874a8d3aab64c605ef0}
-      \field{sortinit}{5}
-      \field{sortinithash}{5dd416adbafacc8226114bc0202d5fdd}
+      \field{sortinit}{6}
+      \field{sortinithash}{7851c86048328b027313775d8fbd2131}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Nature Methods}

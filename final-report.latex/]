@@ -1,4 +1,4 @@
-Our study of the gradient flow in the NLSM is based on a computational system that simulates quantum fields numerically. We begin by implementing a numerical Monte Carlo method to simulate the lattice in two dimensions and verify our program with the well-studied $\phi^4$ scalar field theory. We then generalize our model to a vector field to simulate the NLSM and implement a numerical solution to the gradient flow. We use the data produced by this program to study the topological charge and susceptibility under the gradient flow.
+Our study of the gradient flow in the NLSM consists of computational system to simulate quantum fields numerically. We begin by implementing a numerical Monte Carlo method to simulate the lattice in two dimensions and verify our program with the well-studied $\phi^4$ scalar field theory. We then generalize our model to a vector field to simulate the NLSM and implement a numerical solution to the gradient flow. We use the data produced by this program to study the topological charge and susceptibility under the gradient flow.
 
 We first implement the $\phi^4$ model in Python. Afterwards, we transition to the NLSM, using C++ for increased efficiency . To compile the C++ simulation, we use the \texttt{gcc} compiler with the highest level of optimization.
 
@@ -39,7 +39,7 @@ such that the final discretized action becomes
 
 Likewise, we can discretize the NLSM. In this case, the derivative term becomes 
 \begin{equation}
-    \half \left(\partial_t\e\,\right)^2 + \half \left(\partial_x\e\,\right)^2 \rightarrow \frac{1}{a^2}\left[ 2 - \e(x+a\hat{t}\,)\cdot\e(x) - \e(x+a\hat{x})\cdot\e(x) \right].
+    \half \left(\partial_t\e,\right)^2 + \half \left(\partial_x\e\,\right)^2 \rightarrow \frac{1}{a^2}\left[ 2 - \e(x+a\hat{t}\,)\cdot\e(x) - \e(x+a\hat{x})\cdot\e(x) \right].
 \end{equation}
 Note that we have used the identity $\e\cdot\e = 1$. Inserting this into Eq.~\ref{eq:nlsm euclidean action} yields the discretized action
 \begin{equation}
@@ -52,9 +52,9 @@ Finally, we redefine the gradient flow in on the lattice. Since the gradient flo
     \label{eq:nsm_gradflow_disc}
     \partial_\tau \e (\tau, x) = \left( 1 - \e(\tau,x) \e(\tau,x)^T\right) \partial^2 \e(\tau,x),
 \end{equation}
- where the Laplacian operator $\partial^2$ is now defined as
+ where the Laplacian operator $\partial^2$ is defined as
 \begin{equation*}
-    \partial^2 \e(\tau,x) = \e(\tau, x+a \hat{t}) + \e(\tau,x-a\hat t) + \e(\tau, x+a \hat{x}) + \e(\tau,x-a\hat x) - 4 \e(t,x).
+    \partial^2 \e(\tau,x) = \e(\tau, x+a \hat{t}) + \e(\tau,x-a\hat t) + \e(\tau, x+a \hat{x}) + \e(\tau,x-a\hat x) - 4 \e(t)_x.
 \end{equation*}
 Unlike the $\phi^4$ gradient flow, this differential equation has no analytic solution. Therefore, we numerically solve for the gradient flow using a fourth-order Runge-Kutta approximation (see Sec.~\ref{sec:runga-kutta}).
 
@@ -65,13 +65,13 @@ Following the definitions in Sec.~\ref{sec:primary observables}, we redefine the
 \end{equation}
 in the $\phi^4$ model and 
 \begin{equation}
-    |\bar\e\,| \equiv \frac{1}{L^2}\left|\sum_i^{L^2} \e(x_i)\right|.
+    |\bar\e| \equiv \frac{1}{L^2}\left|\sum_i^{L^2} \e(x_i)\right|.
 \end{equation}
 in the NLSM, where $L^2 = V/a^2$.
 
 We can also rewrite the expressions for the magnetic susceptibility, originally defined in Eqs.~\ref{eq:chim phi4} and~\ref{eq:chim nlsm}. In the NLSM, the susceptibility becomes
 \begin{align}
-    \chi_m &= L^2 \left\langle \left( \sum_x \e(x) \right)^2\right\rangle  \\
+    \chi_m &= L^2 \left\langle \left( \sum_x e(x) \right)^2\right\rangle  \\
            &= L^2 \left\langle \sum_{x,y}\e(x)\cdot \e(y) \right\rangle. 
 \end{align}
 
@@ -117,7 +117,7 @@ As a function of $x^*$, the charge density is a function of the field on the pla
 \end{figure}
 In the NLSM, the field at each of these vertices is a point on the sphere $S^2$. Therefore, there is a signed area $A$ on the sphere associated with each triplet of points, as shown in Fig.~\ref{fig:sphere} (the sign changes with odd permutations of the ordering). We follow the derivation in \cite{berg1981} and split the plaquette into two triangles, as shown in Fig.~\ref{fig:plaquette}, with the ordering determining the sign. The topological charge density is defined using this signed area as
 \begin{equation}
-    q(x^*) = \frac{1}{4\pi} \bigg[A\Big(\e(x_1), \e(x_2), \e(x_3)\Big) + A\Big(\e(x_1), \e(x_3), \e(x_4)\Big) \bigg].
+    q(x^*) = \frac{1}{4\pi} \bigg[A\Big(\e(x_1), \e(x_3), \e(x_3)\Big) + A\Big(\e(x_1), \e(x_3), \e(x_4)\Big) \bigg].
 \end{equation}
 This value is defined if $A\neq 0, 2\pi$, or in other words, as long as the three points on the sphere are distinct and do not form a hemisphere. In numerical calculations, these points can be ignored. Therefore, we impose that the signed area is defined on the smallest spherical triangle, or mathematically
 \begin{equation}
@@ -127,7 +127,7 @@ This value is defined if $A\neq 0, 2\pi$, or in other words, as long as the thre
 
 Following \cite{berg1981}, this yields an expression for the signed area
 \begin{equation}
-    A(\e_1, \e_2, \e_3) = 2 \:\mathrm{arg}\Big(1+\e_1\cdot\e_2 + \e_2\cdot\e_3 + \e_3\cdot\e_1 + i\e_1 \cdot (\e_2\times\e_3)\Big).
+    A(\e_1, \e_2, \e_1) = 2 \:\mathrm{arg}\Big(1+\e_1\cdot\e_2 + \e_2\cdot\e_3 + \e_3\cdot\e_1 + i\e_1 \cdot (\e_2\times\e_3)\Big).
 \end{equation}
 Under periodic boundary conditions, these triangles on the sphere necessarily wrap $S^2$ an integer number of times, ensuring $Q$ is an integer. In the continuum limit, field must be uniform at $x\rightarrow\infty$ and therefore effectively forms a sphere (see Sec.~\ref{sec:topological charge}).
 \begin{figure}[h]
@@ -194,14 +194,14 @@ Following this quantity, we can define a topological susceptibility $\chi_t$
 \end{equation}
 In the trivial case, $\langle Q \rangle$ is equal to $0$ and   
 \begin{equation}
-    \chi_t = \frac{1}{L^2} \sum_{x^*,y^*} \langle q(x^*)q(y^*)\rangle.
+    \chi_t = \frac{1}{L^2} \sum_{x,y} \langle q(x)q(y)\rangle.
 \end{equation}
 Assuming periodic boundary conditions and therefore translational symmetry, this expression simplifies to 
 \begin{equation}
-    \chi_t = \frac{1}{L^2} \sum_{x^*} \langle q(x^*)q(0)\rangle.
+    \chi_t = \frac{1}{L^2} \sum_{x} \langle q(x)q(0)\rangle.
 \end{equation}
 
-On the lattice, this quantity is known to diverge in the continuum limit owing solely to the $x^*=0$ term \cite{bietenholz2018}. This divergence exists in QCD as well \cite{bruno2014}.
+On the lattice, this quantity is known to diverge in the continuum limit owing solely to the $x=0$ term \cite{bietenholz2018}. This divergence exists in QCD as well \cite{bruno2014}.
 
 
 \section{Monte Carlo Simulations}
@@ -214,7 +214,7 @@ We begin this random walk with a so-called ``hot start'' where each field value 
 We primarily use the Metropolis algorithm for the calculation of new Markov chain configurations. The method begins with proposing a new value for a single lattice point, which is accepted with a probability
 \begin{equation}
     P(\phi_a\rightarrow\phi_b) = \begin{cases} 
-        e^{S[\phi_a] - S[\phi_b]} & S[\phi_b] > S[\phi_a] \\
+        e^{S[\phi_a] - S[\phi_b]} & S[\phi_b] < S[\phi_a] \\
         1 & \mathrm{otherwise} \\
    \end{cases}
 \end{equation}
@@ -224,11 +224,11 @@ where $\phi_a$ is the initial configuration and $\phi_b$ is the proposed configu
 \subsection{Wolff Cluster Algorithm}
 Though the Metropolis algorithm will slowly find the absolute minimum of the theory, the presence of local minima can greatly prolong the convergence. Both the $\phi^4$ model and the NLSM feature gradients of the field and therefore large regions of aligned sites can cause metastable states. One method of removing these clusters involves identifying all clusters on the lattice and probabilistically flipping each, a technique known as the Swendsen-Wang algorithm \cite{swendsen1987}. 
 
-A more efficient approach is the Wolff algorithm \cite{wolff1989}, which \textit{grows} one cluster probabilistically and flips it unconditionally. In the case of $\phi^4$ theory, this flipping takes the form of a simple sign change. In the NLSM we choose a random unit vector $\vec r$ and consider the projection of the field on this vector. When the cluster flips, each site is flipped along this direction. To identify the cluster, a recursive algorithm adds new sites with a given probability, growing the cluster from a single randomly selected ``seed''. Starting with the seed, the probability of adding each neighboring site is given by the source site $x$ and the proposed site $x'$. Wolff defines this probability for arbitrary sigma models as 
+A more efficient approach is the Wolff algorithm \cite{wolff1989}, which \textit{grows} one cluster probabilistically and flips it unconditionally. In the case of $\phi^4$ theory, this flipping takes the form of a simple sign change. In the NLSM we choose a random unit vector $\vec r$ and consider the projection of the field on this vector. When the cluster flips, each site is flipped along this direction. To identify the cluster, the algorithm uses a recursive algorithm defined by the probability of adding a new site, growing the cluster from a single, randomly selected ``seed''. Starting with the seed, the probability of adding each neighboring site is given by the source site $x$ and the proposed site $x'$. Wolff defines this probability for arbitrary sigma models as 
 \begin{equation}
     \label{eq:phi4 wolff padd}
     P_{add}(\e(x),\e(x')) = \begin{cases} 
-        1 - e^{-2\beta [\vec{r} \cdot \e(x)][\vec{r} \cdot \e(x')]} & \mathrm{sgn}[\vec{r}\cdot\e(x)]=\mathrm{sgn}[\vec{r}\cdot\e(x')]\\
+        1 - e^{2\beta [\vec{r} \cdot \e(x)][\vec{r} \cdot \e(x')]} & \mathrm{sgn}[\vec{r}\cdot\e(x)]=\mathrm{sgn}[\vec{r}\cdot\e(x')]\\
         0 & \mathrm{otherwise} \\
    \end{cases}
 \end{equation}
@@ -238,23 +238,23 @@ This expression is designed to preserve the detailed balance equations. We can d
 \end{equation}
 where $\partial C$ is the set of pairs of sites on the boundary of $C$. Since $P_{add}=0$ for unaligned sites, these pairs contribute nothing to the value. We can also find the probability $P(f_C(\phi) \rightarrow \phi)$ with the same expression:
 \begin{equation}
-P\big(f_C(\phi)\rightarrow \phi \big) \propto \prod_{\langle x,x'\rangle \in \partial C}  \Big[1 - P_{add}\big(R\,\e(x),\e(x')\big)\Big],
+P\big(f_C(\phi)\rightarrow \phi \big) \propto \prod_{\langle x,x'\rangle \in \partial C}  \Big[1 - P_{add}\big(\e(x),R\;\e(x')\big)\Big],
 \end{equation}
-where the matrix $R$ is the reflection matrix along the vector $\vec{r}$.
+where the matrix $R$ which is a reflection matrix along the vector $\vec{r}$.
 
 From the discretized action of the NLSM model (Eq.~\ref{eq:nlsm discretized action}) and the detailed balance equation (Eq.~\ref{eq:detailedbalance2}), we derive
 \begin{equation}
-    \prod_{\langle x,x'\rangle \in \partial C}  \frac{ 1 - P_{add}\big(\e(x),\e(x')\big)}{ 1 - P_{add}\big(R\,\e(x),\e(x')\big)}  = \mathrm{exp}\left\{-\beta\sum_{\langle x,x'\rangle \in \partial C} [\e(x) - R\,\e(x)]\cdot\e(x')\right\}.
+    \prod_{\langle x,x'\rangle \in \partial C}  \frac{ 1 - P_{add}\big(\e(x),\e(x')\big)}{ 1 - P_{add}\big(\e(x),R\;\e(x')\big)}  = \mathrm{exp}\left\{\beta\sum_{\langle x,x'\rangle \in \partial C} \e(x)\cdot[R-1]\e(x')\right\}.
 \end{equation}
 Note that all the pairs within and outside the cluster cancel in the fraction on the left and the difference on the right. Using the definition of the reflection matrix
 \begin{equation}
-    R\,\e = \e - 2(\e\cdot\vec{r}\,)\e,
+    R\,\e = \e - 2(\e\cdot\vec{r})\e,
 \end{equation}
 we can simplify the equation to be 
 \begin{equation}
-    \prod_{\langle x,x'\rangle \in \partial C}  \frac{ 1 - P_{add}\big(\e(x),\e(x')\big)}{ 1 - P_{add}\big(R\,\e(x),\e(x')\big)}  = \prod_{\langle x,x'\rangle \in \partial C}\mathrm{exp}\big\{-2\beta[r\cdot\e(x)][r\cdot\e(x')]\big\}.
+    \prod_{\langle x,x'\rangle \in \partial C}  \frac{ 1 - P_{add}\big(\e(x),\e(x')\big)}{ 1 - P_{add}\big(\e(x),R\;\e(x')\big)}  = \prod_{\langle x,x'\rangle \in \partial C}\mathrm{exp}\big\{2\beta[r\cdot\e(x)][r\cdot\e(x')]\big\}.
 \end{equation}
-By substituting Eq.~\ref{eq:phi4 wolff padd} for $P_{add}$, it is clear to see this equation is satisfied.
+By plugging in Eq.~\ref{eq:phi4 wolff padd}, it is clear to see this equation is satisfied.
 
 Using this same reasoning, we can deduce an expression for $P_{add}$ in the $\phi^4$ model. Since this model is one dimensional, the reflection matrix $R$ is equivalent to $-1$. Adapting the NLSM detailed balance equation for the $\phi$ field, we find
 \begin{equation}
@@ -268,9 +268,9 @@ This equation is satisfied by the ansatz
         0 & \mathrm{otherwise} \\
    \end{cases}.
 \end{equation}
-We use this expression in the computational implementation of this algorithm.
+We will use this expression in the computational implementation of this algorithm.
 
-Fig.~\ref{fig:wolff} shows a real demonstration of this process. We can see a large cluster of negative field values becoming positive. Note that periodic boundary conditions apply, so the small peninsula of black at the bottom is actually part of the larger cluster. Furthermore, this visualization demonstrates the probabilistic nature of the Wolff algorithm. Since states are added probabilistically, there are some small holes in the cluster. These will be removed by following Metropolis sweeps.
+Fig.~\ref{fig:wolff} shows a real demonstration of this process. We can see a large cluster of negative field values becoming positive. Note that periodic boundary conditions apply, so the small island of black at the bottom is actually part of the larger cluster. Furthermore, this visualization demonstrates the probabilistic nature of the Wolff algorithm. Since states are added probabilistically, there are some small holes in the cluster. These will be removed by following Metropolis sweeps.
 \begin{figure}[h]
   \centering
       \begin{subfigure}[b]{0.5\textwidth}\centering
@@ -283,13 +283,13 @@ Fig.~\ref{fig:wolff} shows a real demonstration of this process. We can see a la
         \caption{after cluster flip}
       \end{subfigure}
       \hfill
-      \caption{\label{fig:wolff} An example of the Wolff cluster algorithm in the $\phi^4$ model. White represents positive values of $\phi$ while black represents negative. $\lambda=0.5$, $m_0^2=-0.9$.}
+      \caption{\label{fig:wolff} An example of the Wolff cluster algorithm in the $\phi^4$ model. White represents positive values of $\phi$ while black represents negative. $\lambda=0.5$, $m_0^2=-0.9$}
   
 \end{figure}
 
-\subsection{Checkerboard Algorithm}
+\subsection{Checkerboard algorithm}
 
-In order to parallelize the Metropolis algorithm, we use a checkerboard algorithm. We begin by splitting the lattice into ``white'' sites and ``black'' sites, like the tiles on a checkerboard. Since the Lagrangian density at each site does not depend on diagonal neighbors, each white site is independent of every other white site and likewise for black sites. Therefore, we can split the sites of each color into separate parallel processing nodes and independently run the Metropolis algorithm, ensuring that no site affects the Lagrangian density at any other site. We use this method to parallelize our program through the Message Passing Interface (MPI).
+In order to parallelize the Metropolis algorithm, we use a checkerboard algorithm. We begin by splitting the lattice into ``white'' sites and ``black'' sites, like the tiles on a checkerboard. Since the Lagrangian density at each site does not depend on diagonal neighbors, each white site is independent of every other white site and likewise for black sites. Therefore, we can split the sites of each color into separate parallel processing nodes and independently run the Metropolis algorithm, ensuring that no site affects the Lagrangian density at any other site. We use this method to parallelize the code through the Message Passing Interface (MPI).
 
 \subsection{Thermalization}
 \label{sec:thermalization}
@@ -320,7 +320,7 @@ We also compare the hot and cold starts by plotting a histogram of the actions i
 \subsection{Autocorrelation}
 Due to the nature of the Markov chain, each member of the ensemble is correlated to every other. Since each configuration is based on previous configurations, each pair of members in the Markov chain has a correlation which decreases exponentially based on the number of steps between. This value is known as the ``autocorrelation'' and scales as $e^{-t/\tau_{int}}$ where $t$ is the number of steps between configurations and $\tau_{int}$ is the autocorrelation time.\footnote{Though it is called a time, $\tau_{int}$ is in units of Markov Chain steps.} When performing simulations of the lattice, the number of sweeps between measurements should be much larger than $\tau_{int}$ since Monte Carlo methods generally assume independent observations.
 
-We use Wolff's automatic windowing procedure \cite{wolff2007} and the magnetic susceptibility $\chi_m$ to estimate the autocorrelation. Using Wolff's public MatLab code\footnote{\url{https://www.physik.hu-berlin.de/de/com/ALPHAsoft}}, we estimate the autocorrelation time for $L=24$ and $L=404$ lattices. This algorithm identifies the optimal window size with which to calculate the autocorrelation time. We perform this process on $L=24$ and $L=404$ lattices using a thermalization of $1000$ sweeps and $500$ total measurements. Note that this calculation includes a Wolff cluster algorithm every $5$ sweeps. The result of this calculation is shown in Fig.~\ref{fig:tauint}.
+We use Wolff's automatic windowing procedure \cite{wolff2007} and the magnetic susceptibility $\chi_m$ to estimate the autocorrelation. Using Wolff's public MatLab code\footnote{\url{https://www.physik.hu-berlin.de/de/com/ALPHAsoft}}, we estimate the autocorrelation time for $L=24$ and $L=404$ lattices. This algorithm identifies the optimal window size with which to calculate the autocorrelation time. We perform this process on $L=24$ and $L=404$ lattices using a thermalization of $1000$ sweeps and $500$ total measurements. Note that this calculation included a Wolff cluster algorithm every $5$ sweeps. The result of this calculation is shown in Fig.~\ref{fig:tauint}.
 \begin{figure}[h]
   \centering
       \begin{subfigure}[b]{0.5\textwidth}\centering
@@ -333,20 +333,20 @@ We use Wolff's automatic windowing procedure \cite{wolff2007} and the magnetic s
         \caption{$L=404$, $\tau_{int}=12.81$}
       \end{subfigure}
       \hfill
-      \caption{\label{fig:tauint} Plots of automatic windowing procedure used to calculate $\tau_{int}$ for the NLSM model. $W$ is summation window size.}
+      \caption{\label{fig:tauint} Plots of automatic windowing procedure used to calculate $\tau_{int}$ for the NLSM model.}
 \end{figure}
 
 Based on these two values for $\tau_{int}$, we decide to measure every $50$ sweeps for each simulation. This value will ensure that each measurement is effectively independent.
 
-\section{Runge-Kutta Algorithm}
+\subsection{Runge-Kutta Algorithm}
 \label{sec:runga-kutta}
-In order to calculate the gradient flow in the NLSM, we numerically solve the ordinary differential equation in Eq.~\ref{eq:nsm_gradflow_disc} using a fourth-order Runga-Kutta approximation. This algorithm refines the Euler method 
+In order to calculate the gradient flow, we numerically solve the differential equation using a fourth-order Runga-Kutta approximation. This algorithm refines the Euler method 
 \begin{equation*}
-    \e(\tau+h,x) \approx \e(\tau,x) + h f(\e(\tau,x))
+    \e(\tau+h,x) \approx \e(\tau)_x + h f(\e(\tau,x))
 \end{equation*}
-where $f(\e\,)$ is defined for convenience as 
+where $f(\e)$ is defined for convenience as 
 \begin{equation}
-    f(\e\,)=\partial_\tau \e (\tau,x)  = \left( 1 - \e(\tau,x) \e(\tau,x)^T\right) \partial^2 \e(\tau,x),
+    f(\e)=\partial_\tau \e (\tau,x)  = \left( 1 - \e(\tau,x) \e(\tau,x)^T\right) \partial^2 \e(\tau,x),
 \end{equation}
 following from Eq.~\ref{eq:nsm_gradflow_disc}. To the fourth order, this approximation becomes 
 %
@@ -356,25 +356,19 @@ following from Eq.~\ref{eq:nsm_gradflow_disc}. To the fourth order, this approxi
     k_2 &= h f\left(\e\left(\tau,x\right) + \frac{k_1}{2}\right) \\ 
     k_3 &= h f\left(\e\left(\tau,x\right) + \frac{k_2}{2}\right) \\ 
     k_4 &= h f\left(\e\left(\tau,x\right) + k_3\right) \\ 
-    \e(\tau+h,x) &= \e(\tau,x) + \frac{k_1}{6} + \frac{k_2}{3} + \frac{k_3}{3} + \frac{k_4}{6} + O(h^5).
+    \e(\tau+h)_x &= \e(\tau,x) + \frac{k_1}{6} + \frac{k_2}{3} + \frac{k_3}{3} + \frac{k_4}{6} + O(h^5).
 \end{align}
-This method is usually superior to Euler's method and the midpoint method in accuracy \cite{vetterling1992}.
+This method is usually superior to Euler's method and the midpoint method \cite{vetterling1992}.
 
 To increase the efficiency of this algorithm, we implement the step-doubling algorithm to adaptively adjust $h$. If the error of a Runge-Kutta step is greater than the tolerance, the same step is repeated with half the step size. Alternatively, if the error is less than half of the tolerance, the step size is doubled for the next calculation. Finally, if the step size is greater than the distance to the next measurement, that distance is used as the step size, using the normal value afterwards. Otherwise, the algorithm proceeds with the consistent step size. 
 
-To calculate the error, we compare one lattice $\e_1$ produced using a step of size $2h$ with another lattice $\e_2$ produced via two steps of size $h$. The error $\Delta$ can be estimated to up the fifth order of $h$ as \cite{vetterling1992}
-\begin{equation}
-\Delta = \frac{1}{15}\sqrt{\sum_x \left| \e_2(x) - \e_1(x) \right|}
-\end{equation}
-The tolerance used in this work is $\Delta_{max}=0.01$.
 
-
-\section{Topological Charge with a $\theta$-term}
+\section{Topological charge with a $\theta$ term}
 \label{sec:topotheta}
-In Sec.~\ref{sec:topological charge}, we discussed the introduction of a $\theta$ term into the action. This change makes the theory ``topological'', pushing $\langle Q \rangle$ away from zero. In order to calculate $\langle Q \rangle$ as a function of $Q$, we consider the path integral
+In Sec.~\ref{sec:topological charge}, we discussed the introduction of a $\theta$ term into the action. This change made the theory ``topological'', pushing $\langle Q \rangle$ away from zero. In order to calculate $\langle Q \rangle$ as a function of $Q$, we consider the path integral
 \begin{align}
-    \langle Q \rangle_\theta &=\int \mathcal{D}\e\:Q[\e\,]e^{-S[\e]+i\theta Q[\e]} \\
-                             &=\int \mathcal{D}\e\:\left( Q[\e\,]e^{i\theta Q[\e]} \right) e^{-S[\e]} \\
+    \langle Q \rangle_\theta &=\int \mathcal{D}\e\:Q[\e]e^{-S[\e]+i\theta Q[\e]} \\
+                             &=\int \mathcal{D}\e\:\left( Q[\e]e^{i\theta Q[\e]} \right) e^{-S[\e]} \\
                              &=\langle Q e^{i \theta Q} \rangle_{\theta=0}.
 \end{align}
 Therefore, we can calculate $\langle Q \rangle_\theta$ for arbitrary $\theta$ using the same simulation framework as the $\theta=0$ case.
@@ -385,8 +379,8 @@ We can also relate this function to the topological susceptibility. By expanding
 \end{equation}
 such that 
 \begin{align}
-    \mathrm{Im}\left[\frac{\partial}{\partial \theta}\Big|_{\theta=0} \langle Q \rangle_\theta\right] &= \langle Q^2 \rangle_{\theta=0}\\
+    -i \frac{\partial}{\partial \theta}\Big|_{\theta=0} \langle Q \rangle_\theta &= \langle Q^2 \rangle_{\theta=0}\\
                                                               &= \chi_t L^2.
 \end{align}
-Since $\chi_t$ diverges at $\theta=0$, we expect the plot of $\mathrm{Im}\langle Q\rangle_\theta$ to approach a vertical line in the in continuum limit. The numerical demonstration of this hypothesis is a goal of this work.
+Since $\chi_t$ diverges at $\theta=0$, we expect the plot of $\langle Q\rangle_\theta$ to approach a vertical line in the in continuum limit. The numerical demonstration of this hypothesis is a goal of this work.
 
