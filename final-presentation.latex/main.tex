@@ -51,7 +51,8 @@
 %\usetheme{Szeged}
 %\usetheme{Warsaw}
 
-\setbeamerfont{caption}{size=\scriptsize}
+
+%\setbeamerfont{caption}{size=\scriptsize}
 
 % As well as themes, the Beamer class has a number of color themes
 % for any slide theme. Uncomment each of these in turn to see how it
@@ -80,16 +81,18 @@
 }
 
 \usepackage{graphicx} % Allows including images
-
-\usepackage{subfigure}
+\usepackage{tikz}
+\usepackage[duration=30,disablemarkdown]{pdfpc}
+\usepackage[font=tiny, labelfont=bf]{caption}
+\usepackage{subcaption}
 \usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
 
-
+\renewcommand{\note}{\pdfpcnote}
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
 
-\title[Short title]{Defining condensates in low-dimensional spin models through the gradient flow} % The short title appears at the bottom of every slide, the full title is only on the title page
+\title[Short title]{Topology of the $O(3)$ non-linear sigma model under the gradient flow} % The short title appears at the bottom of every slide, the full title is only on the title page
 
 \author{Stuart Thomas} % Your name
 \institute[W\&M] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
@@ -97,79 +100,44 @@
 Christopher Monahan \\ % Your institution for the title page
 \medskip
 }
-\date{November 16, 2020} % Date, can be changed to a custom date
+\date{May 3, 2021} % Date, can be changed to a custom date
+
+\newcommand{\e}{\vec e}
+\renewcommand{\theequation}{\relax} 
 
 \begin{document}
 
 \begin{frame}
 \titlepage % Print the title page as the first slide
+\note{ - Test note one \\
+- Test note two%
+}
 \end{frame}
 
 
 \begin{frame}
-\frametitle{Lattice Quantum Chromodynamics}
-\begin{itemize}
-    \item Method to solve non-perturbative theories
-    \item Discretizes spacetime to numerically calculate fields.
-    \item Uses path integral formulation of Quantum Field Theory to solve for correlation functions.
-\end{itemize}
-
-\begin{block}{Problem}
-    As lattice spacing approaches zero, some operators do not remain finite. 
-\end{block}
-\end{frame}
-
-
-\begin{frame}
-\frametitle{Power-divergent mixing in lattice QCD}
-\begin{itemize}
-    \item On the lattice, some operators mix and lead to divergences in the continuum limit.
-    \item Example: breaking of rotational symmetry
-    \item Operators must have different mass dimension
-    \item In QCD:
-        \begin{itemize}
-            \item occurs with twist-2 operators
-            \item used to calculate parton distribution functions
-        \end{itemize}
-\end{itemize}
+    \frametitle{Quantum Field Theory}
+\begin{equation}
+    \label{eq:pathintegral}
+    \langle \hat O \rangle = \frac{1}{Z} \int \mathcal{D}\phi \: \hat O [\phi]\; e^{iS[\phi]}
+\end{equation}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Possible Solution: Smeared Operator Product Expansion (sOPE) }
-    \begin{itemize}
-        \item Expand non-local operators in a basis of smeared operators.
-        \item Takes the form of a Laurent series
-    \end{itemize}
-    \textbf{Smeared Operator}: locally averaged operator
-\end{frame}
-
-\begin{frame}
-\frametitle{The Gradient Flow}
-\begin{itemize}
-    \item A form of smearing
-    \item Introduces a new dimension, $\tau$, called the ``flow time,'' through which the field evolves as follows:
-    \begin{equation}
-        \frac{\partial \rho(\tau, x)}{\partial \tau} = \partial^2 \rho(\tau,x)
-    \end{equation}
-    with the boundary condition $\rho(0, x)=\phi(x)$.
-
-    \item Suppresses infinities while keeping observables constant.
-
-        \begin{figure}[h]
-  \centering
-      \subfigure[$\tau=0$]{\includegraphics[width=0.20\textwidth]{imgs/0.png}}
-      \subfigure[$\tau=0.5$]{\includegraphics[width=0.20\textwidth]{imgs/0_5.png}}
-      \subfigure[$\tau=2$]{\includegraphics[width=0.20\textwidth]{imgs/2.png}} 
-      \subfigure[$\tau=10$]{\includegraphics[width=0.20\textwidth]{imgs/10.png}}
-          \caption{Effect of flow time evolution on a random lattice in the symmetric phase. Red and blue indicate positive and negative values of the field in 2D spacetime.}
-  \label{fig:flow}
-\end{figure}
-
-\end{itemize}
+\frametitle{$\phi^4$ model}
+\begin{equation}
+    \label{eq:phi4 euclidean action}
+    S_E[\phi] = \int d^2 x_E \left[\frac{1}{2}\left(\partial_t \phi\right)^2 + \frac{1}{2} \left(\partial_x \phi \right)^2 + \frac{1}{2} m_0^2 \phi^2 + \frac{\lambda}{4}\phi^4\right].
+\end{equation}
 \end{frame}
 
 \begin{frame}
 \frametitle{Non-Linear $\sigma$ Model}
+\begin{equation}
+    \label{eq:nlsm euclidean action}
+    % S_E = \frac{\beta}{2} \int d^2x \; \partial^\mu \e \cdot \partial_\mu \e
+    S_E = \frac{\beta}{2} \int d^2x \; \left[ \left(\partial_t \e\, \right)^2+ \left( \partial_x \e\,\right)^2 \right]
+\end{equation}
 \begin{itemize}
     \item a nonperturbative model in Quantum Field Theory which provides a good toy model for Quantum Chromodynamics
     \item characterized by the action
@@ -186,6 +154,168 @@ Christopher Monahan \\ % Your institution for the title page
     \end{itemize}
 \end{itemize}
 \end{frame}
+
+\begin{frame}
+\frametitle{Monte Carlo and the Markov Chain}
+\end{frame}
+
+\begin{frame}
+\frametitle{Topological Charge}
+\begin{figure}
+    \includegraphics[width=0.3\paperwidth]{imgs/homotopy.png}
+    \caption{\label{fig:homotopy} Homotopy group}
+\end{figure}
+\note{- Test note one \\ - Test note two}
+\end{frame}
+
+\begin{frame}
+\frametitle{Topological Action}
+\begin{equation}
+    S[\e\,] \rightarrow S[\e\,] - i \theta Q[\e\,].
+\end{equation}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Topology Visualization}
+\begin{figure}[h]
+    \begin{subfigure}[b]{0.4\paperwidth}
+    \centering
+    \begin{tikzpicture}[scale=0.5, every node/.style={scale=0.7}]
+        \draw[step=4cm,gray,thin] (-2,-2) grid (6,6);
+        \draw[dotted] (0,0) -- (4,4);
+        \draw[thick](0,0) node[circle,fill,inner sep=0pt, minimum size=0.3cm]{} node[anchor=north west] {$x_1$} -- 
+                    (0,4) node[circle,fill,inner sep=0pt, minimum size=0.3cm]{} node[anchor=north west] {$x_2$} -- 
+                    (4,4) node[circle,fill,inner sep=0pt, minimum size=0.3cm]{} node[anchor=north west] {$x_3$} -- 
+                    (4,0) node[circle,fill,inner sep=0pt, minimum size=0.3cm]{} node[anchor=north west] {$x_4$} -- cycle ;
+                    \draw[] (2,2) node[circle,fill,inner sep=0pt, minimum size=0.3cm]{} node[anchor=north east]{$x^*$};
+
+
+        \draw[-stealth] (0.2,1) -- (0.2,3);
+        \draw[-stealth] (1,3.8) -- (3,3.8);
+        \draw[-stealth] (3,3.5) -- (1,1.5);
+
+        \draw[-stealth] (1,0.5) -- (3,2.5);
+        \draw[-stealth] (3.8,3) -- (3.8,1);
+        \draw[-stealth] (3,0.2) -- (1,0.2);
+    \end{tikzpicture}
+    %\caption{\label{fig:plaquette} Visualization of plaquette $x^*$. The dotted line separates the plaquette into two signed areas which are used to define the topological charge density $q(x^*)$. Arrows represent order of signed area.}
+    \end{subfigure} %
+    \begin{subfigure}[b]{0.4\paperwidth}
+    \centering
+    \begin{tikzpicture}[scale=0.7, every node/.style={scale=0.7}]
+        \pgfdeclarelayer{nodelayer}
+        \pgfdeclarelayer{edgelayer}
+        \pgfdeclareradialshading{sphere4}{\pgfpoint{-0.2cm}{0.5cm}}% 
+            {rgb(0cm)=(1,1,1);
+            rgb(1cm)=(0.5,0.5,0.5); rgb(1.05cm)=(1,1,1)}
+            %rgb(0.7cm)=(0.1,0.1,0.1); rgb(1cm)=(0.5,0.05,0); rgb(1.05cm)=(1,1,1)}
+        \pgfsetlayers{nodelayer,edgelayer}
+        \tikzstyle{label}=[fill=none, draw=none, shape=circle]
+        \tikzstyle{point}=[inner sep=0pt, minimum size=0.2cm,fill=black, draw, shape=circle]
+        %\tikzstyle{interior line}=[{Stealth[scale=1.5]}-,dotted,thick]
+        \tikzstyle{interior line}=[dotted,thick]
+
+        \tikzstyle{triangle}=[thick]
+        \tikzstyle{arrow}=[->, thick]
+        \begin{pgfonlayer}{nodelayer}
+            \node [style=point] (4) at (0.5, 2.5) {};
+            \node [style=point] (5) at (0.55, 0.625) {};
+            \node [style=point] (6) at (2.25, 0.75) {};
+            \node (7) at (0, 0) {};
+            \node (8) at (1.25, 1.375) {};
+            \node (9) at (2.425, 2.525) {};
+        \end{pgfonlayer}
+        \begin{pgfonlayer}{edgelayer}
+            \draw (0,0) circle (3cm);
+            %\shade[inner color=white,outer color=lightgray] (0,0) circle (3cm);
+            \shade[shading=sphere4] (0,0) circle (3cm);
+            \draw [bend left=15,style=triangle] (4.center) to (6.center);
+            \draw [bend left=355,style=triangle] (6.center) to (5.center);
+            \draw [bend right=5,style=triangle] (5.center) to (4.center);
+            \draw [style=interior line] (4.center) to (7.center);
+            \draw [style=interior line] (5.center) to (7.center);
+            \draw [style=interior line] (6.center) to (7.center);
+            \draw [fill=gray!80] (4.center) to [bend left=15] (6.center) to [bend left=355] (5.center) to [bend right=5] cycle;
+
+            %\draw [style=arrow] (8.center) to (9.center);
+
+            \node [style=label, anchor=north] at (2.25, 0.75) {\small $\e(x_1)$};
+            \node [style=label, anchor=north] at (0.55, 0.625) {\small $\e(x_2)$};
+            \node [style=label, anchor=east] at (0.5, 2.5) {\small $\e(x_3)$};
+            \node [style=point] at (4){};
+            \node [style=point] at (5){};
+            \node [style=point] at (6){};
+
+            \node [style=label] at (8) {\small $A$};
+        \end{pgfonlayer}
+    \end{tikzpicture}
+    \end{subfigure}
+    \caption{some plots}
+\end{figure}
+
+\end{frame}
+
+
+
+
+\begin{frame}
+    \frametitle{Wolff Cluster Algorithm}
+
+    \begin{figure}[h]
+      \centering
+          \begin{subfigure}[b]{0.5\textwidth}\centering
+            \includegraphics[width=0.6\textwidth]{imgs/wolffa.png}
+            \caption{before cluster flip}
+          \end{subfigure}%
+          \hfill
+          \begin{subfigure}[b]{0.5\textwidth}\centering
+            \includegraphics[width=0.6\textwidth]{imgs/wolffb.png}
+            \caption{after cluster flip}
+          \end{subfigure}
+          \hfill
+          \caption{\label{fig:wolff} An example of the Wolff cluster algorithm in the $\phi^4$ model. White represents positive values of $\phi$ while black represents negative. $\lambda=0.5$, $m_0^2=-0.9$.}
+  
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Lattice Quantum Chromodynamics}
+\begin{itemize}
+    \item Method to solve non-perturbative theories
+    \item Discretizes spacetime to numerically calculate fields.
+    \item Uses path integral formulation of Quantum Field Theory to solve for correlation functions.
+\end{itemize}
+
+\begin{block}{Problem}
+    As lattice spacing approaches zero, some operators do not remain finite. 
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{The Gradient Flow}
+\begin{itemize}
+    \item A form of smearing
+    \item Introduces a new dimension, $\tau$, called the ``flow time,'' through which the field evolves as follows:
+    \begin{equation}
+        \frac{\partial \rho(\tau, x)}{\partial \tau} = \partial^2 \rho(\tau,x)
+    \end{equation}
+    with the boundary condition $\rho(0, x)=\phi(x)$.
+
+    \item Suppresses infinities while keeping observables constant.
+
+        %\begin{figure}[h]
+  %\centering
+      %\subfigure[$\tau=0$]{\includegraphics[width=0.20\textwidth]{imgs/0.png}}
+      %\subfigure[$\tau=0.5$]{\includegraphics[width=0.20\textwidth]{imgs/0_5.png}}
+      %\subfigure[$\tau=2$]{\includegraphics[width=0.20\textwidth]{imgs/2.png}} 
+      %\subfigure[$\tau=10$]{\includegraphics[width=0.20\textwidth]{imgs/10.png}}
+          %\caption{Effect of flow time evolution on a random lattice in the symmetric phase. Red and blue indicate positive and negative values of the field in 2D spacetime.}
+  %\label{fig:flow}
+%\end{figure}
+
+\end{itemize}
+\end{frame}
+
 
 \begin{frame}
     \frametitle{Goals}
@@ -263,33 +393,15 @@ Christopher Monahan \\ % Your institution for the title page
     
 
     \end{enumerate}
-    \begin{figure}[h]
+    %\begin{figure}[h]
 
-      \centering
-          \subfigure[before]{\includegraphics[width=0.20\textwidth]{imgs/wolff1}}
-          \subfigure[after]{\includegraphics[width=0.20\textwidth]{imgs/wolff2}}
-          \caption{Wolff cluster algorithm applied on $\phi^4$ lattice in $1+1$ dimensions, red corresponding to positive values and green to negative}
-      \label{fig:flow}
-    \end{figure}
+      %\centering
+          %\subfigure[before]{\includegraphics[width=0.20\textwidth]{imgs/wolff1}}
+          %\subfigure[after]{\includegraphics[width=0.20\textwidth]{imgs/wolff2}}
+          %\caption{Wolff cluster algorithm applied on $\phi^4$ lattice in $1+1$ dimensions, red corresponding to positive values and green to negative}
+      %\label{fig:flow}
+    %\end{figure}
 \end{frame}
-
-\begin{frame}
-    \frametitle{Checkerboard Parallelization Algorithm}
-    \begin{itemize}
-        \item Split lattice into ``white'' and ``black'' sites. 
-        \item Then, perform metropolis sweep on white sites in parallel, then black sites.
-        \item Ensures independence of sweeps.
-\end{itemize}
-
-    \begin{figure}[h]
-
-      \centering
-          \includegraphics[width=0.5\textwidth]{imgs/checkerboard}
-          \caption{Illustration of checkerboard algorithm\footnote{Yang, Kun, et al. "High performance Monte Carlo simulation of Ising model on TPU clusters." Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis. 2019.}}
-    \end{figure}
-
-\end{frame}
-
 
 \begin{frame}
     \frametitle{$\phi^4$ model}
@@ -340,11 +452,11 @@ Christopher Monahan \\ % Your institution for the title page
 
 
 \begin{frame}
-\frametitle{Comparison between Python and C++ code}
+    \frametitle{Effect of $\theta$-term on $\langle Q \rangle$}
 \begin{figure}[h]
   \centering
-      \includegraphics[width=0.9\textwidth]{imgs/compare.png}
-      \caption{Absolute difference between Python and C++ results of average $\bar\phi$, Binder cumulant and susceptibility for various $m_0^2$ values. $\lambda=0.5$, $L=64$, $1000$ measurements, $1000$ sweep thermalization with measurements taken every $100$ sweeps. }
+      \includegraphics[width=0.8\textwidth]{imgs/theta.png}
+      %\caption{Absolute difference between Python and C++ results of average $\bar\phi$, Binder cumulant and susceptibility for various $m_0^2$ values. $\lambda=0.5$, $L=64$, $1000$ measurements, $1000$ sweep thermalization with measurements taken every $100$ sweeps. }
 
   \label{fig:flow}
 \end{figure}
