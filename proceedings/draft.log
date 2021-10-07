@@ -1,12 +1,12 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.26)  7 OCT 2021 15:49
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.4.26)  7 OCT 2021 16:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **draft.tex
 (./draft.tex
 LaTeX2e <2020-10-01> patch level 4
-L3 programming layer <2021-02-18> (/usr/local/texlive/2021/texmf-dist/tex/latex
-/base/article.cls
+L3 programming layer <2021-02-18>
+(/usr/local/texlive/2021/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2020/04/10 v1.4m Standard LaTeX document class
 (/usr/local/texlive/2021/texmf-dist/tex/latex/base/size11.clo
 File: size11.clo 2020/04/10 v1.4m Standard LaTeX file (size option)
@@ -24,18 +24,21 @@ File: size11.clo 2020/04/10 v1.4m Standard LaTeX file (size option)
 \bibindent=\dimen138
 ) (./pos.sty
 Package: pos 2018/11/13 v2.1 - beta
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/base/fontenc.sty
 Package: fontenc 2020/08/10 v2.0s Standard LaTeX package
-) (/usr/local/texlive/2021/texmf-dist/tex/latex/base/inputenc.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/base/inputenc.sty
 Package: inputenc 2020/08/01 v1.3d Input encoding file
 \inpenc@prehook=\toks15
 \inpenc@posthook=\toks16
-) (/usr/local/texlive/2021/texmf-dist/tex/latex/newtx/newtxtext.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/newtx/newtxtext.sty
 Package: newtxtext 2021/09/01 v1.656
 
 `newtxtext' v1.656, 2021/09/01 Text macros taking advantage of TeX-Gyre Termes 
-fonts (msharpe) (/usr/local/texlive/2021/texmf-dist/tex/latex/fontaxes/fontaxes
-.sty
+fonts (msharpe)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/fontaxes/fontaxes.sty
 Package: fontaxes 2020/07/21 v1.0e Font selection axes
 LaTeX Info: Redefining \upshape on input line 29.
 LaTeX Info: Redefining \itshape on input line 31.
@@ -49,43 +52,53 @@ LaTeX Info: Redefining \textssc on input line 48.
 LaTeX Info: Redefining \textulc on input line 49.
 )
 \ntx@fs=\dimen139
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/xkeyval/xkeyval.sty
 Package: xkeyval 2020/11/20 v2.8 package option processing (HA)
-(/usr/local/texlive/2021/texmf-dist/tex/generic/xkeyval/xkeyval.tex (/usr/local
-/texlive/2021/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+
+(/usr/local/texlive/2021/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/local/texlive/2021/texmf-dist/tex/generic/xkeyval/xkvutils.tex
 \XKV@toks=\toks17
 \XKV@tempa@toks=\toks18
+
 (/usr/local/texlive/2021/texmf-dist/tex/generic/xkeyval/keyval.tex))
 \XKV@depth=\count187
 File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
-)) (/usr/local/texlive/2021/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+))
+(/usr/local/texlive/2021/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
 \etb@tempcnta=\count188
-) (/usr/local/texlive/2021/texmf-dist/tex/generic/xstring/xstring.sty (/usr/loc
-al/texlive/2021/texmf-dist/tex/generic/xstring/xstring.tex
+)
+(/usr/local/texlive/2021/texmf-dist/tex/generic/xstring/xstring.sty
+(/usr/local/texlive/2021/texmf-dist/tex/generic/xstring/xstring.tex
 \integerpart=\count189
 \decimalpart=\count190
 )
 Package: xstring 2019/02/06 v1.83 String manipulations (CT)
-) (/usr/local/texlive/2021/texmf-dist/tex/latex/base/ifthen.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
-) (/usr/local/texlive/2021/texmf-dist/tex/latex/carlisle/scalefnt.sty) (/usr/lo
-cal/texlive/2021/texmf-dist/tex/latex/base/fontenc.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/carlisle/scalefnt.sty)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/base/fontenc.sty
 Package: fontenc 2020/08/10 v2.0s Standard LaTeX package
 LaTeX Font Info:    Trying to load font information for T1+ntxtlf on input line
  112.
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/newtx/t1ntxtlf.fd
 File: t1ntxtlf.fd 2021/05/24 v1.1 font definition file for T1/ntx/tlf
 )
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
 (Font)              scaled to size 10.95pt on input line 112.
-) (/usr/local/texlive/2021/texmf-dist/tex/latex/base/textcomp.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/base/textcomp.sty
 Package: textcomp 2020/02/02 v2.0n Standard LaTeX package
 LaTeX Font Info:    Changing ? sub-encoding to TS1/0 on input line 75.
 )
 \ntxt@cntz=\count191
 LaTeX Font Info:    Redeclaring math symbol \mathsterling on input line 325.
-) (/usr/local/texlive/2021/texmf-dist/tex/latex/amscls/amsthm.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/amscls/amsthm.sty
 Package: amsthm 2020/05/29 v2.20.6
 \thm@style=\toks19
 \thm@bodyfont=\toks20
@@ -96,24 +109,29 @@ Package: amsthm 2020/05/29 v2.20.6
 \thm@postskip=\skip50
 \thm@headsep=\skip51
 \dth@everypar=\toks24
-) (/usr/local/texlive/2021/texmf-dist/tex/latex/newtx/newtxmath.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/newtx/newtxmath.sty
 Package: newtxmath 2021/06/01 v1.655
 
 `newtxmath' v1.655, 2021/06/01 Math macros based originally on txfonts (msharpe
 ) (/usr/local/texlive/2021/texmf-dist/tex/latex/amsmath/amsmath.sty
 Package: amsmath 2020/09/23 v2.17i AMS math features
 \@mathmargin=\skip52
+
 For additional information on amsmath, use the `?' option.
 (/usr/local/texlive/2021/texmf-dist/tex/latex/amsmath/amstext.sty
 Package: amstext 2000/06/29 v2.01 AMS text
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/amsmath/amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0 generic functions
 \@emptytoks=\toks25
 \ex@=\dimen140
-)) (/usr/local/texlive/2021/texmf-dist/tex/latex/amsmath/amsbsy.sty
+))
+(/usr/local/texlive/2021/texmf-dist/tex/latex/amsmath/amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
 \pmbraise@=\dimen141
-) (/usr/local/texlive/2021/texmf-dist/tex/latex/amsmath/amsopn.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/amsmath/amsopn.sty
 Package: amsopn 2016/03/08 v2.02 operator names
 )
 \inf@bad=\count192
@@ -153,16 +171,21 @@ LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
 \mathdisplay@stack=\toks29
 LaTeX Info: Redefining \[ on input line 2923.
 LaTeX Info: Redefining \] on input line 2924.
-) (/usr/local/texlive/2021/texmf-dist/tex/generic/iftex/ifxetex.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/generic/iftex/ifxetex.sty
 Package: ifxetex 2019/10/25 v0.7 ifxetex legacy package. Use iftex instead.
+
 (/usr/local/texlive/2021/texmf-dist/tex/generic/iftex/iftex.sty
 Package: iftex 2020/03/06 v1.0d TeX engine tests
-)) (/usr/local/texlive/2021/texmf-dist/tex/generic/iftex/ifluatex.sty
+))
+(/usr/local/texlive/2021/texmf-dist/tex/generic/iftex/ifluatex.sty
 Package: ifluatex 2019/10/25 v1.5 ifluatex legacy package. Use iftex instead.
-) (/usr/local/texlive/2021/texmf-dist/tex/latex/oberdiek/centernot.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/oberdiek/centernot.sty
 Package: centernot 2016/05/16 v1.4 Centers the not symbol horizontally (HO)
 )
 \tx@cntz=\count270
+
 (/usr/local/texlive/2021/texmf-dist/tex/generic/kastrup/binhex.tex)
 \tx@Isdigit=\count271
 \tx@IsAlNum=\count272
@@ -273,38 +296,47 @@ LaTeX Info: Redefining \openbox on input line 2969.
 LaTeX Font Info:    Redeclaring math alphabet \mathfrak on input line 15.
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 16.
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/newtxtt/newtxtt.sty
 Package: newtxtt 2014/12/23 v1.051
 
-`newtxtt' v1.051, 2014/12/23 Typewriter text macros based on txfonts (msharpe) 
+`newtxtt' v1.051, 2014/12/23 Typewriter text macros based on txfonts (msharpe)
 (/usr/local/texlive/2021/texmf-dist/tex/latex/base/fontenc.sty
 Package: fontenc 2020/08/10 v2.0s Standard LaTeX package
 )
 LaTeX Font Info:    Setting newtxtt sub-encoding to TS1/0 on input line 9.
 LaTeX Font Info:    Setting newtxttz sub-encoding to TS1/0 on input line 10.
-) (/usr/local/texlive/2021/texmf-dist/tex/latex/graphics/graphicx.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 2020/09/09 v1.2b Enhanced LaTeX Graphics (DPC,SPQR)
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/graphics/graphics.sty
 Package: graphics 2020/08/30 v1.4c Standard LaTeX Graphics (DPC,SPQR)
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/graphics/trig.sty
 Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
-) (/usr/local/texlive/2021/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: pdftex.def on input line 105.
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/graphics-def/pdftex.def
 File: pdftex.def 2020/10/05 v1.2a Graphics/color driver for pdftex
 ))
 \Gin@req@height=\dimen149
 \Gin@req@width=\dimen150
-) (/usr/local/texlive/2021/texmf-dist/tex/latex/natbib/natbib.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/natbib/natbib.sty
 Package: natbib 2010/09/13 8.31b (PWD, AO)
 \bibhang=\skip55
 \bibsep=\skip56
 LaTeX Info: Redefining \cite on input line 694.
 \c@NAT@ctr=\count273
-) (/usr/local/texlive/2021/texmf-dist/tex/latex/caption/caption.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/caption/caption.sty
 Package: caption 2020/10/26 v3.5g Customizing captions (AR)
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/caption/caption3.sty
 Package: caption3 2020/10/21 v2.2e caption3 kernel (AR)
 \captionmargin=\dimen151
@@ -318,8 +350,10 @@ Package caption Info: Standard document class detected.
 )
 \c@caption@flags=\count274
 \c@continuedfloat=\count275
-) (/usr/local/texlive/2021/texmf-dist/tex/latex/xcolor/xcolor.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/xcolor/xcolor.sty
 Package: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/graphics-cfg/color.cfg
 File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
@@ -333,37 +367,49 @@ Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1368.
 Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1369.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
-) (/usr/local/texlive/2021/texmf-dist/tex/latex/hyperref/hyperref.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/hyperref/hyperref.sty
 Package: hyperref 2021-02-27 v7.00k Hypertext links for LaTeX
+
 (/usr/local/texlive/2021/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
 Package: ltxcmds 2020-05-10 v1.25 LaTeX kernel commands for general use (HO)
-) (/usr/local/texlive/2021/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
 Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
 )
+
 (/usr/local/texlive/2021/texmf-dist/tex/generic/infwarerr/infwarerr.sty
 Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
 )
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 Package pdftexcmds Info: \pdfdraftmode found.
-) (/usr/local/texlive/2021/texmf-dist/tex/generic/kvsetkeys/kvsetkeys.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/generic/kvsetkeys/kvsetkeys.sty
 Package: kvsetkeys 2019/12/15 v1.18 Key value parser (HO)
-) (/usr/local/texlive/2021/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
 Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
-) (/usr/local/texlive/2021/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/generic/pdfescape/pdfescape.sty
 Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
-) (/usr/local/texlive/2021/texmf-dist/tex/latex/hycolor/hycolor.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/hycolor/hycolor.sty
 Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
-) (/usr/local/texlive/2021/texmf-dist/tex/latex/letltxmacro/letltxmacro.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/letltxmacro/letltxmacro.sty
 Package: letltxmacro 2019/12/03 v1.6 Let assignment for LaTeX macros (HO)
-) (/usr/local/texlive/2021/texmf-dist/tex/latex/auxhook/auxhook.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/auxhook/auxhook.sty
 Package: auxhook 2019-12-17 v1.6 Hooks for auxiliary files (HO)
-) (/usr/local/texlive/2021/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/kvoptions/kvoptions.sty
 Package: kvoptions 2020-10-07 v3.14 Key value format for package options (HO)
 )
 \@linkdim=\dimen158
 \Hy@linkcounter=\count276
 \Hy@pagecounter=\count277
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2021-02-27 v7.00k Hyperref: PDFDocEncoding definition (HO)
 Now handling font encoding PD1 ...
@@ -374,10 +420,12 @@ File: hyperref-langpatches.def 2021-02-27 v7.00k Hyperref: patches for babel la
 nguages
 ) (/usr/local/texlive/2021/texmf-dist/tex/generic/intcalc/intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
-) (/usr/local/texlive/2021/texmf-dist/tex/generic/etexcmds/etexcmds.sty
+)
+(/usr/local/texlive/2021/texmf-dist/tex/generic/etexcmds/etexcmds.sty
 Package: etexcmds 2019/12/15 v1.7 Avoid name clashes with e-TeX commands (HO)
 )
 \Hy@SavedSpaceFactor=\count278
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/hyperref/puenc.def
 File: puenc.def 2021-02-27 v7.00k Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
@@ -394,14 +442,17 @@ Package hyperref Info: Backreferencing OFF on input line 4212.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4445.
 \c@Hy@tempcnt=\count279
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip17
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 4804.
 \XeTeXLinkMargin=\dimen159
+
 (/usr/local/texlive/2021/texmf-dist/tex/generic/bitset/bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
+
 (/usr/local/texlive/2021/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
@@ -418,6 +469,7 @@ Package hyperref Info: Link coloring with OCG OFF on input line 6100.
 Package hyperref Info: PDF/A mode ON on input line 6103.
 LaTeX Info: Redefining \ref on input line 6145.
 LaTeX Info: Redefining \pageref on input line 6149.
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/base/atbegshi-ltx.sty
 Package: atbegshi-ltx 2020/08/17 v1.0a Emulation of the original atbegshi packa
 ge
@@ -428,8 +480,10 @@ with kernel methods
 \c@Hfootnote=\count283
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/hyperref/hpdftex.def
 File: hpdftex.def 2021-02-27 v7.00k Hyperref driver for pdfTeX
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/base/atveryend-ltx.sty
 Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atvery packag
 e
@@ -450,11 +504,13 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 \Hy@SectionHShift=\skip57
 ) (/usr/local/texlive/2021/texmf-dist/tex/latex/l3kernel/expl3.sty
 Package: expl3 2021-02-18 L3 programming layer (loader) 
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2021-03-18 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count286
 \l__pdf_internal_box=\box49
-)) (/usr/local/texlive/2021/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
+))
+(/usr/local/texlive/2021/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
 (/usr/local/texlive/2021/texmf-dist/tex/latex/l3packages/xparse/xparse-2020-10-
 01.sty
 (/usr/local/texlive/2021/texmf-dist/tex/latex/l3packages/xparse/xparse-generic.
@@ -467,50 +523,55 @@ tex)))
 ) (./draft.aux)
 \openout1 = `draft.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/ntxmi/m/it on input line 30.
+LaTeX Font Info:    Checking defaults for OML/ntxmi/m/it on input line 32.
 LaTeX Font Info:    Trying to load font information for OML+ntxmi on input line
- 30.
+ 32.
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/newtx/omlntxmi.fd
 File: omlntxmi.fd 2015/08/25 Fontinst v1.933 font definitions for OML/ntxmi.
 )
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for U/ntxexa/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for U/ntxexa/m/n on input line 32.
 LaTeX Font Info:    Trying to load font information for U+ntxexa on input line 
-30.
+32.
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/newtx/untxexa.fd
 File: untxexa.fd 2012/04/16 Fontinst v1.933 font definitions for U/ntxexa.
 )
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for LMS/ntxsy/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for LMS/ntxsy/m/n on input line 32.
 LaTeX Font Info:    Trying to load font information for LMS+ntxsy on input line
- 30.
+ 32.
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/newtx/lmsntxsy.fd
 File: lmsntxsy.fd 2016/07/02 Fontinst v1.933 font definitions for LMS/ntxsy.
 )
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for LMX/ntxexx/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for LMX/ntxexx/m/n on input line 32.
 LaTeX Font Info:    Trying to load font information for LMX+ntxexx on input lin
-e 30.
+e 32.
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/newtx/lmxntxexx.fd
 File: lmxntxexx.fd 2016/07/03 Fontinst v1.933 font definitions for LMX/ntxexx.
 )
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
 \c@mv@tabular=\count289
 \c@mv@boldtabular=\count290
+
 (/usr/local/texlive/2021/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count291
@@ -528,6 +589,7 @@ LaTeX Font Info:    ... okay on input line 30.
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 85.
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
@@ -535,9 +597,11 @@ e
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: hyperref package is loaded.
 Package caption Info: End \AtBeginDocument code.
-Package hyperref Info: Link coloring ON on input line 30.
+Package hyperref Info: Link coloring ON on input line 32.
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/refcount/refcount.sty
 Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 )
@@ -547,139 +611,147 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count297
 )
-LaTeX Info: Redefining \ref on input line 30.
-LaTeX Info: Redefining \pageref on input line 30.
-LaTeX Info: Redefining \nameref on input line 30.
-(./draft.out) (./draft.out)
+LaTeX Info: Redefining \ref on input line 32.
+LaTeX Info: Redefining \pageref on input line 32.
+LaTeX Info: Redefining \nameref on input line 32.
+ (./draft.out) (./draft.out)
 \@outlinefile=\write3
 \openout3 = `draft.out'.
 
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 17.28pt on input line 31.
-LaTeX Font Info:    Trying to load font information for T1+qhv on input line 31
+(Font)              scaled to size 17.28pt on input line 33.
+LaTeX Font Info:    Trying to load font information for T1+qhv on input line 33
 .
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/tex-gyre/t1qhv.fd
 File: t1qhv.fd 2009/09/25 v1.2 font definition file for T1/qhv
 )
 LaTeX Font Info:    Font shape `T1/qhv/m/n' will be
-(Font)              scaled to size 15.55188pt on input line 31.
+(Font)              scaled to size 15.55188pt on input line 33.
 LaTeX Font Info:    Font shape `T1/qhv/b/n' will be
-(Font)              scaled to size 15.55188pt on input line 31.
+(Font)              scaled to size 15.55188pt on input line 33.
 LaTeX Font Info:    Trying to load font information for OT1+ntxtlf on input lin
-e 31.
+e 33.
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/newtx/ot1ntxtlf.fd
 File: ot1ntxtlf.fd 2021/05/24 v1.0 font definition file for OT1/ntx/tlf
 )
 LaTeX Font Info:    Font shape `OT1/ntxtlf/b/n' will be
-(Font)              scaled to size 17.28pt on input line 31.
+(Font)              scaled to size 17.28pt on input line 33.
 LaTeX Font Info:    Font shape `OT1/ntxtlf/b/n' will be
-(Font)              scaled to size 12.5pt on input line 31.
+(Font)              scaled to size 12.5pt on input line 33.
 LaTeX Font Info:    Font shape `OT1/ntxtlf/b/n' will be
-(Font)              scaled to size 9.4pt on input line 31.
+(Font)              scaled to size 9.4pt on input line 33.
 LaTeX Font Info:    Trying to load font information for U+ntxmia on input line 
-31.
+33.
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/newtx/untxmia.fd
 File: untxmia.fd 2018/04/14 Fontinst v1.933 font definitions for U/ntxmia.
 )
 LaTeX Font Info:    Trying to load font information for U+ntxsym on input line 
-31.
+33.
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/newtx/untxsym.fd
 File: untxsym.fd 2015/03/20 Fontinst v1.933 font definitions for U/ntxsym.
 )
 LaTeX Font Info:    Trying to load font information for U+ntxsyc on input line 
-31.
+33.
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/newtx/untxsyc.fd
 File: untxsyc.fd 2012/04/12 Fontinst v1.933 font definitions for U/ntxsyc.
 )
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 10.95pt on input line 31.
+(Font)              scaled to size 10.95pt on input line 33.
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 8.0pt on input line 31.
+(Font)              scaled to size 8.0pt on input line 33.
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 6.1pt on input line 31.
+(Font)              scaled to size 6.1pt on input line 33.
 LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
-(Font)              scaled to size 10.95pt on input line 31.
+(Font)              scaled to size 10.95pt on input line 33.
 LaTeX Font Info:    Font shape `T1/qhv/b/n' will be
-(Font)              scaled to size 9.85492pt on input line 31.
+(Font)              scaled to size 9.85492pt on input line 33.
 LaTeX Font Info:    Font shape `T1/qhv/b/n' will be
-(Font)              scaled to size 10.79993pt on input line 31.
+(Font)              scaled to size 10.79993pt on input line 33.
 \l_count_authors_int=\count298
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 12.0pt on input line 31.
+(Font)              scaled to size 12.0pt on input line 33.
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 8.8pt on input line 31.
+(Font)              scaled to size 8.8pt on input line 33.
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 6.6pt on input line 31.
+(Font)              scaled to size 6.6pt on input line 33.
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 12.0pt on input line 31.
+(Font)              scaled to size 12.0pt on input line 33.
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 9.0pt on input line 31.
+(Font)              scaled to size 9.0pt on input line 33.
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 9.0pt on input line 31.
+(Font)              scaled to size 9.0pt on input line 33.
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 7.3pt on input line 31.
+(Font)              scaled to size 7.3pt on input line 33.
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 5.5pt on input line 31.
+(Font)              scaled to size 5.5pt on input line 33.
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 7.3pt on input line 31.
-LaTeX Font Info:    Calculating math sizes for size <7.3> on input line 31.
+(Font)              scaled to size 7.3pt on input line 33.
+LaTeX Font Info:    Calculating math sizes for size <7.3> on input line 33.
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 5.32896pt on input line 31.
+(Font)              scaled to size 5.32896pt on input line 33.
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 4.01501pt on input line 31.
+(Font)              scaled to size 4.01501pt on input line 33.
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/it' will be
-(Font)              scaled to size 10.95pt on input line 31.
+(Font)              scaled to size 10.95pt on input line 33.
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/it' will be
-(Font)              scaled to size 10.0pt on input line 31.
+(Font)              scaled to size 10.0pt on input line 33.
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 10.0pt on input line 31.
+(Font)              scaled to size 10.0pt on input line 33.
 LaTeX Font Info:    Trying to load font information for T1+newtxtt on input lin
-e 31.
+e 33.
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/newtxtt/t1newtxtt.fd
 File: t1newtxtt.fd 2020/02/15 Font definitions for T1/newtxtt.
 )
 LaTeX Font Info:    Font shape `T1/newtxtt/m/n' will be
-(Font)              scaled to size 10.95pt on input line 31.
+(Font)              scaled to size 10.95pt on input line 33.
 LaTeX Font Info:    Font shape `T1/newtxtt/m/n' will be
-(Font)              scaled to size 10.0pt on input line 31.
+(Font)              scaled to size 10.0pt on input line 33.
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 10.0pt on input line 31.
+(Font)              scaled to size 10.0pt on input line 33.
 <PoSlogo.pdf, id=10, 430.60875pt x 45.16875pt>
 File: PoSlogo.pdf Graphic file (type pdf)
 <use PoSlogo.pdf>
-Package pdftex.def Info: PoSlogo.pdf  used on input line 31.
+Package pdftex.def Info: PoSlogo.pdf  used on input line 33.
 (pdftex.def)             Requested size: 430.60768pt x 45.16862pt.
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 6.0pt on input line 31.
+(Font)              scaled to size 6.0pt on input line 33.
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 6.5pt on input line 31.
+(Font)              scaled to size 6.5pt on input line 33.
 LaTeX Font Info:    Trying to load font information for TS1+ntxtlf on input lin
-e 31.
+e 33.
+
 (/usr/local/texlive/2021/texmf-dist/tex/latex/newtx/ts1ntxtlf.fd
 File: ts1ntxtlf.fd 2015/01/18 v1.0 fd file for TS1/ntxtlf
 )
 LaTeX Font Info:    Font shape `TS1/ntxtlf/m/n' will be
-(Font)              scaled to size 6.0pt on input line 31.
+(Font)              scaled to size 6.0pt on input line 33.
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 5.5pt on input line 31.
+(Font)              scaled to size 5.5pt on input line 33.
 LaTeX Font Info:    Font shape `T1/newtxtt/m/n' will be
-(Font)              scaled to size 6.0pt on input line 31.
-[1
+(Font)              scaled to size 6.0pt on input line 33.
+ [1
 
 {/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./PoSlo
 go.pdf>]
 LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
-(Font)              scaled to size 12.0pt on input line 34.
-[2] (./draft.aux)
+(Font)              scaled to size 12.0pt on input line 36.
+
+(./draft.bbl) [2] (./draft.aux)
 Package rerunfilecheck Info: File `draft.out' has not changed.
-(rerunfilecheck)             Checksum: 9F31500C5002C692940361527CF1B1C3;58.
+(rerunfilecheck)             Checksum: 4E4BF1B9375A21E5DE8091269A93E595;182.
  ) 
 Here is how much of TeX's memory you used:
- 14672 strings out of 480954
- 209404 string characters out of 5907137
- 488215 words of memory out of 5000000
- 31635 multiletter control sequences out of 15000+600000
- 522258 words of font info for 198 fonts, out of 8000000 for 9000
+ 14693 strings out of 480954
+ 209674 string characters out of 5907137
+ 488283 words of memory out of 5000000
+ 31640 multiletter control sequences out of 15000+600000
+ 527240 words of font info for 210 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  97i,13n,131p,744b,412s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/newtx/ntx-ec-tlf.enc}{/us
@@ -693,14 +765,16 @@ pe1/public/newtx/NewTXMI7.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/p
 ublic/newtxtt/newtxtt.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/publi
 c/tex-gyre/qhvb.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/tex-
 gyre/qtmr.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/newtx/txbs
-ys.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/newtx/txsys.pfb><
-/usr/local/texlive/2021/texmf-dist/fonts/type1/public/newtx/ztmb.pfb></usr/loca
-l/texlive/2021/texmf-dist/fonts/type1/public/newtx/ztmr.pfb></usr/local/texlive
-/2021/texmf-dist/fonts/type1/public/newtx/ztmri.pfb>
-Output written on draft.pdf (2 pages, 220947 bytes).
+ys.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/newtx/txexs.pfb><
+/usr/local/texlive/2021/texmf-dist/fonts/type1/public/newtx/txmiaX.pfb></usr/lo
+cal/texlive/2021/texmf-dist/fonts/type1/public/newtx/txsys.pfb></usr/local/texl
+ive/2021/texmf-dist/fonts/type1/public/newtx/ztmb.pfb></usr/local/texlive/2021/
+texmf-dist/fonts/type1/public/newtx/ztmr.pfb></usr/local/texlive/2021/texmf-dis
+t/fonts/type1/public/newtx/ztmri.pfb>
+Output written on draft.pdf (2 pages, 245281 bytes).
 PDF statistics:
- 98 PDF objects out of 1000 (max. 8388607)
- 66 compressed objects within 1 object stream
- 6 named destinations out of 1000 (max. 500000)
+ 113 PDF objects out of 1000 (max. 8388607)
+ 77 compressed objects within 1 object stream
+ 7 named destinations out of 1000 (max. 500000)
  14 words of extra memory for PDF output out of 10000 (max. 10000000)
 
