@@ -1,0 +1,19 @@
+# My stuff
+**.run.xml
+**/.auctex-auto
+**.synctex.gz
+**.aux
+**.bbl
+**.bcf
+**.blg
+**.fdb_latexmk
+**.fls
+**.out
+*.nav
+*.pdfpc
+*.run.xml
+*.snm
+*.synctex.gz
+*.tex
+*.upa
+*.vrb
