@@ -1,0 +1,54 @@
+\documentclass[english,11pt]{article}
+\usepackage[latin9]{inputenc}
+\usepackage[letterpaper]{geometry}
+\geometry{verbose}
+\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage[english]{babel}
+\usepackage{hyperref}
+\usepackage[%
+    style=phys,%
+    articletitle=false,biblabel=brackets,%
+    chaptertitle=false,pageranges=false,%
+    doi=false,maxnames=2,minnames=1,eprint=false
+  ]
+{biblatex}
+\addbibresource{library.bib}
+
+\makeatletter
+\renewcommand{\@makefnmark}{\makebox{\normalfont\@thefnmark}}
+\renewcommand\@makefntext[1]{%
+    {{\normalfont[\@thefnmark]}\enspace #1}
+  }
+\makeatother
+\renewcommand{\cite}[1]{[\footfullcite{#1}]}
+
+\setlength{\textheight}{8.6in}
+
+\begin{document}
+\setlength{\baselineskip}{24pt}
+\pagenumbering{gobble}
+
+\title{ Topology of a prototypical field theory on a discretized lattice\vspace{0.5cm} %
+\\ \large\sc COLL 400 Summary }
+\author{Stuart Thomas \\ Advisor: Christopher Monahan}
+\date{April 30, 2021}
+\maketitle
+
+\indent Quantum field theory (QFT) is an extraordinarily successful framework that describes particles as packets of energy on all-permeating fields. These fields consist of mathematical objects assigned to each point of space and time, existing in an infinite number of possible states. Paired with the Standard Model, QFT provides the prevailing basis for all small-scale physics and describes emergent phenomena such as vibrations in metals. Compared to experiment, QFT is remarkably accurate, famously predicting the electron $g$-factor to eleven significant figures~\cite{odom2006}, arguably the best prediction in all of science.
+
+However this power comes at a cost: the study of quantum fields is rife with infinities where there should not be. A na\"ive treatment of QFT predicts divergent (i.e. infinite) values for physical measurements, a clearly impossible result, and the process of removing these infinites is not simple. One specific technique includes breaking the field into discrete chunks, creating a so-called ``lattice''. Since this imposition is arbitrary, we expect physical quantities to approach fixed values as we decrease the size of the lattice chunks to zero, returning to a continuous field. However, some quantities still diverge.
+
+In this thesis, we consider one specific field: the non-linear sigma model (NLSM). This field is important because it describes solid magnets, has applications in string theory, and shares many attributes with the theory of the strong nuclear force. Based on this last application, the NLSM is known as a ``prototypical'' theory in nuclear physics, meaning that it shares many qualities with the real theory but is simpler.
+
+The NLSM features topologically stable sectors, meaning that a state in one sector cannot continuously change into a state of a different sector. This stability makes topology vitally important to cosmology and possibly key to building fault-tolerant quantum computers~\cite{kitaev1997}. We can quantify the stability of these topological sectors with the ``topological susceptibility''. Though the topological susceptibility should approach zero, indicating perfect stability, numerical simulations find that it diverges in the continuum limit, i.e. when the lattice chunks become infinitesimally small~\cite{berg1981}.
+
+To remedy this divergence, we apply a technique known as the ``gradient flow''. This mathematical operation ``smooths out'' high-frequency waves on the field, thereby reducing some infinities caused by the lattice. We study the effect of the gradient flow on the topological susceptibility using numerical methods and find that a divergence persists, demonstrating the gradient flow is not effective. This result supports a previous study \cite{bietenholz2018}, implying one of two possibilities: (1) there is an issue with the accepted definition of topology in the NLSM or (2), the NLSM is not well-defined in the continuum limit.
+
+We also study a variation of the NLSM which forces the vacuum field (i.e. the field without inserted particles) into a topological state. We analyze the effect of this perturbation on the overall topology and apply the gradient flow. These results support the divergence of the topological susceptibility in the original NLSM and provide new insights into the effect of the topological variation.
+
+
+\end{document}
+

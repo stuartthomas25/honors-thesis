@@ -14,7 +14,6 @@
 *.run.xml
 *.snm
 *.synctex.gz
-*.tex
 *.upa
 *.vrb
 formalities/**
