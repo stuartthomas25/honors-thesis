@@ -1002,7 +1002,53 @@ x Technical points:
 ### Writing questions
 
 - Case for headings?
+    - Title Case
 - Should the theta plot be greyscale viewable?
+    - Yes
+    - Also Fig. 4.3
+    - Put some colors back
+
+- Cold start
+    - Define $S$ in cold start Figure.
 - How much implication goes into Conclusion vs. Results
+
+- Include $\xi_2^2$ uncertainties.
+
+
+<!--Note that these fits do not describe the data and do not match with Bietenholz's fits.-->
+
+
+Note that `curve_fit` is used.
+
+Write about optimization, random number seed.
+
+
+Things from 
+
+# April 30
+
+- Presentation notes:
+    - Slide 2: mention in words what a field is
+    - Slide 3: wrong principal
+    - Slide 4: no period (perhaps add other equation?)
+    - Slide 5: describes boson, fix $m_0^2$
+    - Slide 6: fix redundancy
+    - Slide 7: don't say topology is a difficult topic, say folks might not be familiar
+    - Slide 10: pushes *fields*
+    - Slide 11: motivate research questions by saying that it works in QCD
+    - Slide 14: fix typo
+    - Slide 18: reference Wolff, cluster
+    - Slide 23: fix title, cite
+    
+Obvious Questions:
+    - Downsides of Wick rotation: can't do it for time dependent quantities
+    - $O(2)$ renormalizability, remove line
+    - Clarify the argument the 0 of the $\chi_t$ should be zero.
+
+Overall: 
+    - Remove periods
+    - Jackknife is not totally necessary
+    - 
+
 
 # References

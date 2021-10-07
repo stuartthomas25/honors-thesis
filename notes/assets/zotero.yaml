@@ -1,48 +1,37 @@
 ---
 references:
-- id: alles2007
-  abstract: >-
-    It has been conjectured that the mass spectrum of the O(3) non-linear sigma
-    model with a theta term in 2 dimensions may possess an excited state, which
-    decays when theta is lowered from pi below a critical value. Since the
-    direct numerical investigation of the model is prevented by a sign problem,
-    we try to infer some information on the mass spectrum at real theta by
-    studying the model at imaginary theta via analytic continuation. A modified
-    Swendsen-Wang cluster algorithm has been introduced to simulate the model
-    with the theta term.
+- id: allessalom2008
   accessed:
-    - year: 2020
-      month: 9
-      day: 18
+    - year: 2021
+      month: 4
+      day: 22
   author:
-    - family: Alles
-      given: B.
+    - family: Alles Salom
+      given: Bartolome
     - family: Papa
-      given: A.
-  container-title: arXiv:0711.1803 [hep-lat]
+      given: Alessandro
+  container-title: >-
+    Proceedings of The XXV International Symposium on Lattice Field Theory —
+    PoS(LATTICE 2007)
+  DOI: 10.22323/1.042.0287
+  event: The XXV International Symposium on Lattice Field Theory
+  event-place: Regensburg, Germany
   issued:
-    - year: 2007
-      month: 11
-      day: 12
-  source: arXiv.org
+    - year: 2008
+      month: 3
+      day: 21
+  language: en
+  page: '287'
+  publisher: Sissa Medialab
+  publisher-place: Regensburg, Germany
+  source: DOI.org (Crossref)
   title: >-
-    Numerical study of the mass spectrum in the 2D O(3) sigma model with a theta
+    Numerical Study of the mass spectrum in the 2D O(3) sigma model with a theta
     term
-  type: article-journal
-  URL: http://arxiv.org/abs/0711.1803
+  type: paper-conference
+  URL: https://pos.sissa.it/042/287
 
 - id: aoki2015
-  abstract: >-
-    We study the gradient ﬂow equation for the O(N) nonlinear sigma model in two
-    dimensions at large N . We parameterize solution of the ﬁeld at ﬂow time t
-    in powers of bare ﬁelds by introducing the coeﬃcient function Xn for the
-    n-th power term (n = 1, 3, · · · ). Reducing the ﬂow equation by keeping
-    only the contributions at leading order in large N , we obtain a set of
-    equations for Xn’s, which can be solved iteratively starting from n = 1. For
-    n = 1 case, we ﬁnd an explicit form of the exact solution. Using this
-    solution, we show that the two point function at ﬁnite ﬂow time t is ﬁnite.
-    As an application, we obtain the non-perturbative running coupling deﬁned
-    from the energy density. We also discuss the solution for n = 3 case.
   accessed:
     - year: 2020
       month: 7
@@ -66,21 +55,12 @@ references:
   number: '4'
   page: '156'
   source: arXiv.org
-  title: Gradient Flow of $O(N)$ nonlinear sigma model at large $N$
+  title: Gradient Flow of {$O(N)$} nonlinear sigma model at large {$N$}
   type: article-journal
   URL: http://arxiv.org/abs/1412.8249
   volume: '2015'
 
 - id: azcoiti2012
-  abstract: >-
-    We investigate the critical behaviour at theta=pi of the two-dimensional
-    O(3) nonlinear sigma model with topological term on the lattice. Our method
-    is based on numerical simulations at imaginary values of theta, and on
-    scaling transformations that allow a controlled analytic continuation to
-    real values of theta. Our results are compatible with a second order phase
-    transition, with the critical exponent of the SU(2)_1
-    Wess-Zumino-Novikov-Witten model, for sufficiently small values of the
-    coupling.
   accessed:
     - year: 2021
       month: 1
@@ -114,22 +94,6 @@ references:
   volume: '86'
 
 - id: balog2012
-  abstract: >-
-    We investigate the cutoff effects in 2-d lattice O(N) models for a variety
-    of lattice actions, and we identify a class of very simple actions for which
-    the lattice artifacts are extremely small. One action agrees with the
-    standard action, except that it constrains neighboring spins to a maximal
-    relative angle delta. We fix delta by demanding that a particular value of
-    the step scaling function agrees with its continuum result already on a
-    rather coarse lattice. Remarkably, the cutoff effects of the entire step
-    scaling function are then reduced to the per mille level. This also applies
-    to the theta-vacuum effects of the step scaling function in the 2-d O(3)
-    model. The cutoff effects of other physical observables including the
-    renormalized coupling and the mass in the isotensor channel are also reduced
-    drastically. Another choice, the mixed action, which combines the standard
-    quadratic with an appropriately tuned large quartic term, also has extremely
-    small cutoff effects. The size of cutoff effects is also investigated
-    analytically in 1-d and at N = infinity in 2-d.
   accessed:
     - year: 2020
       month: 9
@@ -176,26 +140,41 @@ references:
   publisher: Elsevier
   title: >-
     Definition and statistical distributions of a topological number in the
-    lattice $O(3)$ $\sigma$-model
+    lattice {$O(3)$} {$\sigma$}-model
   type: article-journal
   volume: '190'
 
+- id: bietenholz2010
+  accessed:
+    - year: 2021
+      month: 4
+      day: 20
+  author:
+    - family: Bietenholz
+      given: W.
+    - family: Gerber
+      given: U.
+    - family: Pepe
+      given: M.
+    - family: Wiese
+      given: U.-J.
+  container-title: Journal of High Energy Physics
+  container-title-short: J. High Energ. Phys.
+  DOI: 10.1007/JHEP12(2010)020
+  ISSN: 1029-8479
+  issue: '12'
+  issued:
+    - year: 2010
+      month: 12
+  language: en
+  page: '20'
+  source: arXiv.org
+  title: Topological Lattice Actions
+  type: article-journal
+  URL: http://arxiv.org/abs/1009.2146
+  volume: '2010'
+
 - id: bietenholz2018
-  abstract: >-
-    The 2d O(3) model is widely used as a toy model for ferromagnetism and for
-    Quantum Chromodynamics. With the latter it shares --- among other basic
-    aspects --- the property that the continuum functional integral splits into
-    topological sectors. Topology can also be defined in its lattice regularised
-    version, but semi-classical arguments suggest that the topological
-    susceptibility $\chi_{\rm t}$ does not scale towards a finite continuum
-    limit. Previous numerical studies confirmed that the quantity $\chi_{\rm
-    t}\, \xi^{2}$ diverges at large correlation length $\xi$. Here we
-    investigate the question whether or not this divergence persists when the
-    configurations are smoothened by the Gradient Flow (GF). The GF destroys
-    part of the topological windings; on fine lattices this strongly reduces
-    $\chi_{\rm t}$. However, even when the flow time is so long that the GF
-    impact range --- or smoothing radius --- attains $\xi/2$, we do still not
-    observe evidence of continuum scaling.
   accessed:
     - year: 2021
       month: 1
@@ -230,20 +209,6 @@ references:
   volume: '98'
 
 - id: binder1981
-  abstract: >-
-    The distribution functionPL(s) of the local order parameters in finite
-    blocks of linear dimensionL is studied for Ising lattices of
-    dimensionalityd=2, 3 and 4. Apart from the case where the block is a
-    subsystem of an infinite lattice, also the distribution in finite systems
-    with free [PL(f)(s)] and periodic [PL(p)(s)] boundary conditions is treated.
-    Above the critical pointTc, these distributions tend for largeL towards the
-    same gaussian distribution centered around zero block magnetization, while
-    belowTcthese distributions tend towards two gaussians centered at ±M, whereM
-    is the spontaneous magnetization appearing in the infinite systems. However,
-    belowTcthe wings of the distribution at small |s| are distinctly
-    nongaussian, reflecting two-phase coexistence. Hence the distribution
-    functions can be used to obtain the interface tension between ordered
-    phases.
   author:
     - family: Binder
       given: K.
@@ -287,19 +252,38 @@ references:
   language: en
   page: '117'
   source: DOI.org (Crossref)
-  title: Non-trivial $\theta$-vacuum effects in the 2-d O(3) model
+  title: Non-trivial {$\theta$}-vacuum effects in the 2-d O(3) model
   type: article-journal
   URL: http://link.springer.com/10.1007/JHEP04(2012)117
   volume: '2012'
 
+- id: bruno2014
+  author:
+    - family: Bruno
+      given: Mattia
+    - family: Schaefer
+      given: Stefan
+    - family: Sommer
+      given: Rainer
+    - literal: ALPHA Collaboration
+  container-title: Journal of High Energy Physics
+  container-title-short: Journal of High Energy Physics
+  DOI: 10.1007/JHEP08(2014)150
+  ISSN: 1029-8479
+  issue: '8'
+  issued:
+    - year: 2014
+      month: 8
+      day: 26
+  page: '150'
+  title: >-
+    Topological susceptibility and the sampling of field space in {$N_f = 2$}
+    lattice QCD simulations
+  type: article-journal
+  URL: https://doi.org/10.1007/JHEP08(2014)150
+  volume: '2014'
+
 - id: callan1985
-  abstract: >-
-    We formulate the propagation of strings in background fields, including the
-    effects of metric, antisymmetric tensor, and dilaton expectation values, as
-    well as gauge field backgrounds in the case of heterotic strings. The
-    inclusion of background fermion fields is sketched. The equations of motion
-    of all these fields are shown to be the consequence of (super) conformal
-    invariance of the string.
   author:
     - family: Callan
       given: C.G.
@@ -321,14 +305,28 @@ references:
   URL: https://www.sciencedirect.com/science/article/pii/0550321385905061
   volume: '262'
 
+- id: chang1976
+  author:
+    - family: Chang
+      given: Shau-Jin
+  container-title: Physical Review D
+  container-title-short: Phys. Rev. D
+  DOI: 10.1103/PhysRevD.13.2778
+  issue: '10'
+  issued:
+    - year: 1976
+      month: 5
+  number-of-pages: '0'
+  page: 2778–2788
+  publisher: American Physical Society
+  title: >-
+    Existence of a second-order phase transition in a two-dimensional <span
+    class="nocase">φ⁴</span> field theory
+  type: article-journal
+  URL: https://link.aps.org/doi/10.1103/PhysRevD.13.2778
+  volume: '13'
+
 - id: deldebbio2005
-  abstract: >-
-    We compute the topological susceptibility for the SU(3) Yang--Mills theory
-    by employing the expression of the topological charge density operator
-    suggested by Neuberger's fermions. In the continuum limit we find r_0^4 chi
-    = 0.059(3), which corresponds to chi=(191 +/- 5 MeV)^4 if F_K is used to set
-    the scale. Our result supports the Witten--Veneziano explanation for the
-    large mass of the eta'.
   accessed:
     - year: 2021
       month: 1
@@ -385,6 +383,61 @@ references:
   type: chapter
   URL: http://www.feynmanlectures.caltech.edu/
   volume: II
+
+- id: giusti2004
+  accessed:
+    - year: 2021
+      month: 4
+      day: 21
+  author:
+    - family: Giusti
+      given: L.
+    - family: Rossi
+      given: G.C.
+    - family: Testa
+      given: M.
+  container-title: Physics Letters B
+  container-title-short: Physics Letters B
+  DOI: 10.1016/j.physletb.2004.03.010
+  ISSN: '03702693'
+  issue: 1-2
+  issued:
+    - year: 2004
+      month: 5
+  language: en
+  page: 157-166
+  source: DOI.org (Crossref)
+  title: Topological susceptibility in full QCD with Ginsparg–Wilson fermions
+  type: article-journal
+  URL: https://linkinghub.elsevier.com/retrieve/pii/S0370269304003922
+  volume: '587'
+
+- id: goddard1986
+  accessed:
+    - year: 2021
+      month: 4
+      day: 21
+  author:
+    - family: Goddard
+      given: P
+    - family: Mansfield
+      given: P
+  container-title: Reports on Progress in Physics
+  container-title-short: Rep. Prog. Phys.
+  DOI: 10.1088/0034-4885/49/7/001
+  ISSN: 0034-4885, 1361-6633
+  issue: '7'
+  issued:
+    - year: 1986
+      month: 7
+      day: 1
+  language: en
+  page: 725-781
+  source: DOI.org (Crossref)
+  title: Topological structures in field theories
+  type: article-journal
+  URL: https://iopscience.iop.org/article/10.1088/0034-4885/49/7/001
+  volume: '49'
 
 - id: hasenbusch1995
   accessed:
@@ -456,31 +509,6 @@ references:
   volume: '14'
 
 - id: ioffe2003
-  abstract: >-
-    The paper presents a short review of our knowledge today on vacuum
-    condensates in quantum chromodynamics (QCD). The condensates are deﬁned as
-    vacuum averages of the operators which arise due to nonperturbative eﬀects.
-    The important role of condensates in determining physical properties of
-    hadrons and of their low-energy interactions in QCD is underlined. The
-    special value of the quark condensate, connected to the existence of baryon
-    masses, is mentioned. Vacuum condensates induced by external ﬁelds are
-    discussed. QCD at low energy is checked on the basis of the data on hadronic
-    τ decay. In theoretical analysis, the terms of perturbation theory (PT) up
-    to α3s are accounted for; in the operator product expansion (OPE), those up
-    to dimension 8. The total probability of the decay τ → hadrons (with zero
-    strangeness) and of the τ -decay structure functions are best described at
-    αs(m2τ ) = 0.330 ± 0.025. It is shown that the Borel sum rules for τ -decay
-    structure functions along the rays in the q2-complex plane are in agreement
-    with experiment, having an accuracy of ∼2% at the values of the Borel
-    parameter |M 2| > 0.8 GeV2. The magnitudes of dimension 6 and 8 condensates
-    were found, and the limitations on gluon condensates were obtained. The sum
-    rules for the charmed-quark vector-current polarization operator were
-    analyzed in three loops (i.e., in order α2s). The value of the charmed-quark
-    mass (in an M S regularization scheme) was found to be mc(m2c) = 1.275 ±
-    0.015 GeV, and the value of gluon condensate was estimated as 0|(αs/π)G2|0 =
-    0.009 ± 0.007 GeV4. The general conclusion is that the QCD described by PT +
-    OPE is in good agreement with experiment at Q2 1 GeV2. c 2003 MAIK
-    “Nauka/Interperiodica”.
   accessed:
     - year: 2020
       month: 11
@@ -505,6 +533,33 @@ references:
   URL: http://link.springer.com/10.1134/1.1540654
   volume: '66'
 
+- id: kitaev1997
+  accessed:
+    - year: 2021
+      month: 4
+      day: 21
+  author:
+    - family: Kitaev
+      given: A Yu
+  container-title: Russian Mathematical Surveys
+  container-title-short: Russ. Math. Surv.
+  DOI: 10.1070/RM1997v052n06ABEH002155
+  ISSN: 0036-0279, 1468-4829
+  issue: '6'
+  issued:
+    - year: 1997
+      month: 12
+      day: 31
+  language: en
+  page: 1191-1249
+  source: DOI.org (Crossref)
+  title: 'Quantum computations: algorithms and error correction'
+  title-short: Quantum computations
+  type: article-journal
+  URL: >-
+    http://stacks.iop.org/0036-0279/52/i=6/a=R02?key=crossref.9a3dd3d906e4a9338822c6992ae26e8a
+  volume: '52'
+
 - id: kleinert2001
   author:
     - family: Kleinert
@@ -515,7 +570,7 @@ references:
     - year: 2001
   language: en
   source: Zotero
-  title: Critical Properties of $\phi^4$-Theories
+  title: Critical Properties of {$\phi\^4$}-Theories
   type: book
 
 - id: kleinert2016
@@ -541,35 +596,7 @@ references:
   title: Non-perturbative renormalization on the lattice
   type: article-journal
 
-- id: landau2000
-  abstract: >-
-    This book deals with all aspects of Monte Carlo simulation of complex
-    physical systems encountered in condensed-matter physics and statistical
-    mechanics as well as in related fields, for example polymer science and
-    lattice gauge theory. It includes many applications, examples, and exercises
-    throughout.
-  author:
-    - family: Landau
-      given: David P
-    - family: Binder
-      given: Kurt
-  event-place: Cambridge ; New York
-  ISBN: 0-511-15122-5
-  issued:
-    - year: 2000
-  language: English
-  publisher: Cambridge University Press
-  publisher-place: Cambridge ; New York
-  title: >-
-    A guide to monte carlo simulations in statistical physics david p. Landau,
-    kurt binder.
-  type: book
-
 - id: loinaz1998
-  abstract: >-
-    We perform a Monte Carlo simulation calculation of the critical coupling
-    constant for the continuum {\lambda \over 4} \phi^4_2 theory. The critical
-    coupling constant we obtain is [{\lambda \over \mu^2}]_crit=10.24(3).
   accessed:
     - year: 2020
       month: 7
@@ -593,23 +620,12 @@ references:
   source: arXiv.org
   title: >-
     Monte Carlo Simulation Calculation of Critical Coupling Constant for
-    Continuum $\phi^4_2$
+    Continuum {$\phi\^4_2$}
   type: article-journal
   URL: http://arxiv.org/abs/hep-lat/9712008
   volume: '58'
 
 - id: luscher2010
-  abstract: >-
-    Theoretical and numerical studies of the Wilson flow in lattice QCD suggest
-    that the gauge field obtained at flow time t>0 is a smooth renormalized
-    field. The expectation values of local gauge-invariant expressions in this
-    field are thus well-defined physical quantities that probe the theory at
-    length scales on the order of sqrt(t). Moreover, by transforming the QCD
-    functional integral to an integral over the gauge field at a specified flow
-    time, the emergence of the topological (instanton) sectors in the continuum
-    limit becomes transparent and is seen to be caused by a dynamical effect
-    that rapidly separates the sectors when the lattice spacing is reduced from
-    0.1 fm to smaller values.
   accessed:
     - year: 2021
       month: 2
@@ -635,17 +651,6 @@ references:
   volume: '2010'
 
 - id: luscher2013
-  abstract: >-
-    In the last few years, the Yang–Mills gradient ﬂow was shown to be an
-    attractive tool for non-perturbative studies of non-Abelian gauge theories.
-    Here a simple extension of the ﬂow to the quark ﬁelds in QCD is considered.
-    As in the case of the pure-gauge gradient ﬂow, the renormalizability of
-    correlation functions involving local ﬁelds at positive ﬂow times can be
-    established using a representation through a local ﬁeld theory in 4 + 1
-    dimensions. Applications of the extended ﬂow in lattice QCD include
-    non-perturbative renormalization and O(a) improvement as well as accurate
-    calculations of the chiral condensate and of the pseudo-scalar decay
-    constant in the chiral limit.
   accessed:
     - year: 2021
       month: 3
@@ -700,19 +705,6 @@ references:
   volume: '2015'
 
 - id: makino2015a
-  abstract: >-
-    It is known that the gauge field and its composite operators evolved by the
-    Yang--Mills gradient flow are ultraviolet (UV) finite without any
-    multiplicative wave function renormalization. In this paper, we prove that
-    the gradient flow in the 2D $O(N)$ non-linear sigma model possesses a
-    similar property: The flowed $N$-vector field and its composite operators
-    are UV finite without multiplicative wave function renormalization. Our
-    proof in all orders of perturbation theory uses a $(2+1)$-dimensional field
-    theoretical representation of the gradient flow, which possesses local gauge
-    invariance without gauge field. As application of the UV finiteness of the
-    gradient flow, we construct the energy--momentum tensor in the lattice
-    formulation of the $O(N)$ non-linear sigma model that automatically restores
-    the correct normalization and the conservation law in the continuum limit.
   accessed:
     - year: 2020
       month: 7
@@ -743,20 +735,6 @@ references:
   volume: '2015'
 
 - id: mejia-diaz2018
-  abstract: >-
-    We study the impact of the Gradient Flow on the topology in various models
-    of lattice field theory. The topological susceptibility $\chi_{\rm t}$ is
-    measured directly, and by the slab method, which is based on the topological
-    content of sub-volumes ("slabs") and estimates $\chi_{\rm t}$ even when the
-    system remains trapped in a fixed topological sector. The results obtained
-    by both methods are essentially consistent, but the impact of the Gradient
-    Flow on the characteristic quantity of the slab method seems to be different
-    in 2-flavour QCD and in the 2d O(3) model. In the latter model, we further
-    address the question whether or not the Gradient Flow leads to a finite
-    continuum limit of the topological susceptibility (rescaled by the
-    correlation length squared, $\xi^{2}$). This ongoing study is based on
-    direct measurements of $\chi_{\rm t}$ in $L \times L$ lattices, at $L/\xi
-    \simeq 6$.
   accessed:
     - year: 2021
       month: 1
@@ -872,20 +850,6 @@ references:
   URL: https://pos.sissa.it/251/052
 
 - id: morningstar2007
-  abstract: >-
-    This series of six lectures is an introduction to using the Monte Carlo
-    method to carry out nonperturbative studies in quantum field theories. Path
-    integrals in quantum field theory are reviewed, and their evaluation by the
-    Monte Carlo method with Markov-chain based importance sampling is presented.
-    Properties of Markov chains are discussed in detail and several proofs are
-    presented, culminating in the fundamental limit theorem for irreducible
-    Markov chains. The example of a real scalar field theory is used to
-    illustrate the Metropolis-Hastings method and to demonstrate the
-    effectiveness of an action-preserving (microcanonical) local updating
-    algorithm in reducing autocorrelations. The goal of these lectures is to
-    provide the beginner with the basic skills needed to start carrying out
-    Monte Carlo studies in quantum field theories, as well as to present the
-    underlying theoretical foundations of the method.
   accessed:
     - year: 2020
       month: 7
@@ -904,12 +868,6 @@ references:
   URL: http://arxiv.org/abs/hep-lat/0702020
 
 - id: munthe-kaas1999
-  abstract: >-
-    This paper presents a family of Runge{Kutta type integration schemes of
-    arbitrarily high order for di erential equations evolving on manifolds. We
-    prove that any classical Runge{Kutta method can be turned into an invariant
-    method of the same order on a general homogeneous manifold, and present a
-    family of algorithms that are relatively simple to implement.
   accessed:
     - year: 2021
       month: 2
@@ -948,13 +906,34 @@ references:
   title: Monte Carlo Methods in Statistical Physics
   type: book
 
+- id: odom2006
+  author:
+    - family: Odom
+      given: B.
+    - family: Hanneke
+      given: D.
+    - family: D'Urso
+      given: B.
+    - family: Gabrielse
+      given: G.
+  container-title: Physical Review Letters
+  container-title-short: Phys. Rev. Lett.
+  DOI: 10.1103/PhysRevLett.97.030801
+  issue: '3'
+  issued:
+    - year: 2006
+      month: 7
+  number-of-pages: '4'
+  page: '030801'
+  publisher: American Physical Society
+  title: >-
+    New measurement of the electron magnetic moment using a one-electron quantum
+    cyclotron
+  type: article-journal
+  URL: https://link.aps.org/doi/10.1103/PhysRevLett.97.030801
+  volume: '97'
+
 - id: polyakov1975
-  abstract: >-
-    Interaction of Goldstone particles in two dimensions lead to the infrared
-    catastrophe. In order to analyze it we apply to the problem the method of
-    the renormalization group. It is shown that due to interaction the regime of
-    the “asymptotic freedom” arises. The continuation to higher dimensions and
-    the applications of the result are briefly discussed.
   author:
     - family: Polyakov
       given: A.M.
@@ -978,11 +957,13 @@ references:
       given: David A
     - family: Loinaz
       given: William
+  genre: Senior Thesis (unpublished)
   issued:
     - year: 2006
       month: 5
       day: 12
   language: en
+  note: (unpublished)
   publisher: Amherst College
   source: Zotero
   title: Lattice Simulations of Nonperturbative Quantum Field Theories
@@ -1080,23 +1061,101 @@ references:
   author:
     - family: Vetterling
       given: William T
-    - family: Vetterling
-      given: William T
-    - family: Press
-      given: William H
     - family: Press
       given: William H
     - family: Teukolsky
       given: Saul A
     - family: Flannery
       given: Brian P
-    - family: Flannery
-      given: Brian P
+  event-place: Cambridge
   issued:
     - year: 1992
   publisher: Cambridge University Press
-  title: 'Numerical recipes: Example book c'
+  publisher-place: Cambridge
+  title: 'Numerical recipes: Example book C'
   type: book
+
+- id: virtanen2020
+  author:
+    - family: Virtanen
+      given: Pauli
+    - family: Gommers
+      given: Ralf
+    - family: Oliphant
+      given: Travis E.
+    - family: Haberland
+      given: Matt
+    - family: Reddy
+      given: Tyler
+    - family: Cournapeau
+      given: David
+    - family: Burovski
+      given: Evgeni
+    - family: Peterson
+      given: Pearu
+    - family: Weckesser
+      given: Warren
+    - family: Bright
+      given: Jonathan
+    - family: Walt
+      given: Stéfan J.
+      non-dropping-particle: van der
+    - family: Brett
+      given: Matthew
+    - family: Wilson
+      given: Joshua
+    - family: Millman
+      given: K. Jarrod
+    - family: Mayorov
+      given: Nikolay
+    - family: Nelson
+      given: Andrew R. J.
+    - family: Jones
+      given: Eric
+    - family: Kern
+      given: Robert
+    - family: Larson
+      given: Eric
+    - family: Carey
+      given: C J
+    - family: Polat
+      given: İlhan
+    - family: Feng
+      given: Yu
+    - family: Moore
+      given: Eric W.
+    - family: VanderPlas
+      given: Jake
+    - family: Laxalde
+      given: Denis
+    - family: Perktold
+      given: Josef
+    - family: Cimrman
+      given: Robert
+    - family: Henriksen
+      given: Ian
+    - family: Quintero
+      given: E. A.
+    - family: Harris
+      given: Charles R.
+    - family: Archibald
+      given: Anne M.
+    - family: Ribeiro
+      given: Antônio H.
+    - family: Pedregosa
+      given: Fabian
+    - family: Mulbregt
+      given: Paul
+      non-dropping-particle: van
+    - literal: SciPy 1.0 Contributors
+  container-title: Nature Methods
+  DOI: 10.1038/s41592-019-0686-2
+  issued:
+    - year: 2020
+  page: 261–272
+  title: 'SciPy 1.0: Fundamental algorithms for scientific computing in python'
+  type: article-journal
+  volume: '17'
 
 - id: wang1989
   accessed:
@@ -1138,6 +1197,35 @@ references:
   type: article-journal
   volume: '34'
 
+- id: wilson
+  author:
+    - family: Wilson
+      given: Kenneth G
+  language: en
+  page: '15'
+  source: Zotero
+  title: Confinement of quarks
+  type: article-journal
+
+- id: wilson1974
+  author:
+    - family: Wilson
+      given: Kenneth G.
+  container-title: Physical Review D
+  container-title-short: Phys. Rev. D
+  DOI: 10.1103/PhysRevD.10.2445
+  issue: '8'
+  issued:
+    - year: 1974
+      month: 10
+  number-of-pages: '0'
+  page: 2445–2459
+  publisher: American Physical Society
+  title: Confinement of quarks
+  type: article-journal
+  URL: https://link.aps.org/doi/10.1103/PhysRevD.10.2445
+  volume: '10'
+
 - id: wolff1989
   author:
     - family: Wolff
@@ -1158,17 +1246,6 @@ references:
   volume: '62'
 
 - id: wolff2007
-  abstract: >-
-    We explain in detail how to estimate mean values and assess statistical
-    errors for arbitrary functions of elementary observables in Monte Carlo
-    simulations. The method is to estimate and sum the relevant autocorrelation
-    functions, which is argued to produce more certain error estimates than
-    binning techniques and hence to help toward a better exploitation of
-    expensive simulations. An effective integrated autocorrelation time is
-    computed which is suitable to benchmark efficiencies of simulation
-    algorithms with regard to specific observables of interest. A Matlab code is
-    offered for download that implements the method. It can also combine
-    independent runs (replica) allowing to judge their consistency.
   accessed:
     - year: 2020
       month: 7
@@ -1198,7 +1275,7 @@ references:
       given: Anthony
   issued:
     - year: 2010
-  publisher: Princeton university press
+  publisher: Princeton University Press
   title: Quantum field theory in a nutshell
   type: book
   volume: '7'
