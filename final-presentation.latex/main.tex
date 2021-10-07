@@ -23,7 +23,7 @@
 % which change the colors and layouts of slides. Below this is a list
 % of all the themes, uncomment each in turn to see what they look like.
 
-\usetheme{default}
+%\usetheme{default}
 %\usetheme{AnnArbor}
 %\usetheme{Antibes}
 %\usetheme{Bergen}
@@ -40,7 +40,7 @@
 %\usetheme{Ilmenau}
 %\usetheme{JuanLesPins}
 %\usetheme{Luebeck}
-%\usetheme{Madrid}
+\usetheme{Madrid}
 %\usetheme{Malmoe}
 %\usetheme{Marburg}
 %\usetheme{Montpellier}
@@ -50,8 +50,7 @@
 %\usetheme{Singapore}
 %\usetheme{Szeged}
 %\usetheme{Warsaw}
-
-
+\setbeamertemplate{navigation symbols}{}%remove navigation symbols
 %\setbeamerfont{caption}{size=\scriptsize}
 
 % As well as themes, the Beamer class has a number of color themes
@@ -79,20 +78,49 @@
 %\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
 \usefonttheme{serif}
 }
-
+\usepackage{transparent}
 \usepackage{graphicx} % Allows including images
 \usepackage{tikz}
 \usepackage[duration=30,disablemarkdown]{pdfpc}
 \usepackage[font=tiny, labelfont=bf]{caption}
 \usepackage{subcaption}
 \usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage[%
+    style=phys,%
+    articletitle=false,biblabel=brackets,%
+    chaptertitle=false,pageranges=false,%
+    doi=false,maxnames=2,minnames=1,eprint=false%
+  ]
+{biblatex}
+\addbibresource{library.bib}
+\makeatletter
+\renewcommand{\@makefnmark}{\makebox{\normalfont[\@thefnmark]}}
+\renewcommand\@makefntext[1]{%
+    {{\normalfont[\@thefnmark]}\enspace #1}
+  }
+\makeatother
+%\renewcommand{\cite}[1]{[\footfullcite{#1}]}
+\renewenvironment{equation}
+    {
+    \begin{equation*}
+    }
+    { 
+    \end{equation*}
+    }
 
+%\renewenvironment{align}
+    %{
+    %\begin{align*}
+    %}
+    %{ 
+    %\end{align*}
+    %}
 \renewcommand{\note}{\pdfpcnote}
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
 
-\title[Short title]{Topology of the $O(3)$ non-linear sigma model under the gradient flow} % The short title appears at the bottom of every slide, the full title is only on the title page
+\title[Honors Presentation]{Topology of the $O(3)$ non-linear sigma model under the gradient flow} % The short title appears at the bottom of every slide, the full title is only on the title page
 
 \author{Stuart Thomas} % Your name
 \institute[W\&M] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
@@ -103,85 +131,356 @@ Christopher Monahan \\ % Your institution for the title page
 \date{May 3, 2021} % Date, can be changed to a custom date
 
 \newcommand{\e}{\vec e}
-\renewcommand{\theequation}{\relax} 
 
 \begin{document}
+\setbeamerfont{footnote}{size=\tiny}
+\begin{frame}
+\titlepage % Print the title page as the first slide
+\end{frame}
 
 \begin{frame}
 \titlepage % Print the title page as the first slide
-\note{ - Test note one \\
-- Test note two%
-}
 \end{frame}
 
 
 \begin{frame}
-    \frametitle{Quantum Field Theory}
-\begin{equation}
+\frametitle{Quantum Field Theory}
+   \centering
+   \Huge particles $\Rightarrow$ fields
+   \vspace{1cm}
+\Large
+   \begin{itemize}
+       \item<2-> particle physics and condensed matter
+       \item<3-> incorporates many-particle quantum mechanics and special relativity
+       \item<4-> remarkably accurate \footfullcite{odom2006}
+
+   \end{itemize}
+   \note{What is a field? a mathematical object at every point of space and time.}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Path Integral Formulation}
+    \Large\centering
+``quantum principle of least action'' 
+\begin{equation*}
     \label{eq:pathintegral}
     \langle \hat O \rangle = \frac{1}{Z} \int \mathcal{D}\phi \: \hat O [\phi]\; e^{iS[\phi]}
-\end{equation}
+\end{equation*}
+\note{Note vacuum}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Wick Rotation}
+    \Large
+    \begin{align*}
+        t &\Rightarrow it \\
+        \textrm{Minkowski Spacetime} &\Rightarrow \textrm{Euclidean Spacetime}
+    \end{align*}
+\vspace{0.1cm}
+\hrule
+\vspace{0.1cm}
+    \onslide<2->{\begin{equation*}
+        \langle \hat O \rangle = \frac{1}{Z} \int \mathcal{D}\phi \: \hat O [\phi]\; e^{iS[\phi]}
+    \end{equation*}
+    \[\Downarrow\]}
+    \only<2>{\begin{equation*}
+        \label{eq:pathintegraleuclidean}
+        \langle \hat O \rangle = \frac{1}{Z} \int \mathcal{D}\phi \: \hat O [\phi]\; e^{-S_E[\phi]}
+    \end{equation*}}
+    \onslide<3>{\begin{equation*}
+        \langle \hat O \rangle = \frac{1}{Z} \int \mathcal{D}\phi \: \hat O [\phi]\; \textcolor{red}{e^{-S_E[\phi]}}
+    \end{equation*}}
+\centering
+\note{Downside: only possible for time-independent observables}
 \end{frame}
 
 \begin{frame}
 \frametitle{$\phi^4$ model}
-\begin{equation}
+\begin{block}{Euclidean Action}
+\begin{equation*}
     \label{eq:phi4 euclidean action}
-    S_E[\phi] = \int d^2 x_E \left[\frac{1}{2}\left(\partial_t \phi\right)^2 + \frac{1}{2} \left(\partial_x \phi \right)^2 + \frac{1}{2} m_0^2 \phi^2 + \frac{\lambda}{4}\phi^4\right].
-\end{equation}
+    S_E[\phi] = \int d^2 x_E \left[\frac{1}{2}\left(\partial_t \phi\right)^2 + \frac{1}{2} \left(\partial_x \phi \right)^2 + \frac{1}{2} m_0^2 \phi^2 + \frac{\lambda}{4}\phi^4\right]
+\end{equation*}
+\end{block}
+\begin{itemize}
+    \item real scalar field
+    \item describes a boson
+    \item spontaneous symmetry breaking at $\lambda=0.5$, $m_0^2=-0.72$
+\end{itemize}
+\note{Check our simulation}
 \end{frame}
 
 \begin{frame}
 \frametitle{Non-Linear $\sigma$ Model}
-\begin{equation}
+\begin{block}{Euclidean Action}
+\begin{equation*}
     \label{eq:nlsm euclidean action}
     % S_E = \frac{\beta}{2} \int d^2x \; \partial^\mu \e \cdot \partial_\mu \e
     S_E = \frac{\beta}{2} \int d^2x \; \left[ \left(\partial_t \e\, \right)^2+ \left( \partial_x \e\,\right)^2 \right]
-\end{equation}
+\end{equation*}
+\end{block}
 \begin{itemize}
-    \item a nonperturbative model in Quantum Field Theory which provides a good toy model for Quantum Chromodynamics
-    \item characterized by the action
-        \begin{equation*}
-            S = \frac{1}{2g} \int d^2x \: \partial_\mu \vec{\phi}(x) \cdot \partial^\mu \vec{\phi}(x)
-        \end{equation*}
-    where the $\vec{\phi}(x)$ is a 3-component vector with norm 1 and $g$ is a coupling constant. 
-\item Merits 
-    \begin{itemize}
-        \item mass gap
-        \item asymptotic freedom
-        \item $O(2)$ renormalizability
-        \item in condensed matter, models Heisenberg ferromagnets
-    \end{itemize}
+    \item<1-> $O(3)$ non-linear sigma model (NLSM) in 1+1 dimensions
+    \item<2-> $\e$ is 3-component vector constrained by $|\e\,|=1$
+    \item<3-> Applications
+        \begin{itemize}
+            \item Prototypical model for strong nuclear force
+            \item Models Heisenberg ferromagnets
+            \item Applications to string theory
+        \end{itemize}
+    \item<4-> Merits 
+        \begin{itemize}
+            \item mass gap
+            \item asymptotic freedom
+        \end{itemize}
 \end{itemize}
 \end{frame}
 
 \begin{frame}
-\frametitle{Monte Carlo and the Markov Chain}
+    \frametitle{Topology of 1+1 $O(3)$ NLSM}
+    \begin{columns}
+
+    \begin{column}{0.5\textwidth}
+    \begin{enumerate}
+        \item<1-> Envision spacetime as a sphere
+        \item<2-> The NLSM field $\e$ becomes mapping between Riemann spheres ($S^2 \rightarrow S^2$).
+        \item<3-> Associates every configuration with topological charge $Q$
+        \item<4-> Topology is important to cosmology\footnotemark[2]\ and fault-tolerant quantum computing\footnotemark[3]. 
+    \end{enumerate}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \begin{figure}
+            \includegraphics[width=0.3\paperwidth]{imgs/homotopy.png}
+            \caption{\label{fig:homotopy} Homotopy group of $S^1\rightarrow S^1$}
+        \end{figure}
+    \end{column}
+    \end{columns}
+    \footnotetext[2]{\fullcite{goddard1986}}
+    \footnotetext[3]{\fullcite{kitaev1997}}
+\note{Many people are not familiar with topology \\%
+    1. Since the Lagrangian must disappear at infinity, the field must be uniform for all points as x -> infty. \\%
+    2. We can classify every mapping with an integer. Use ball and balloon metaphor}
 \end{frame}
 
 \begin{frame}
-\frametitle{Topological Charge}
-\begin{figure}
-    \includegraphics[width=0.3\paperwidth]{imgs/homotopy.png}
-    \caption{\label{fig:homotopy} Homotopy group}
+    \frametitle{Non-trivial NLSM}
+    \begin{equation*}
+        S[\e\,] \rightarrow S[\e\,] - i \theta Q[\e\,].
+    \end{equation*}
+    Nonzero $\theta$ implies nonzero $\langle Q \rangle$.
+\end{frame}
+
+\begin{frame}
+    \frametitle{Topological Susceptibility}
+    \centering
+    Proportional to variance of topological charge
+    \begin{equation}
+        \chi_t \equiv \frac{\langle Q^2 \rangle - \langle Q \rangle^2}{L^2}
+    \end{equation}
+    \onslide<2->{
+        \vfill
+        \hrule
+        \vfill
+        \begin{columns}
+            \begin{column}{0.5\textwidth}
+                \centering
+            In trivial NLSM:
+            \begin{equation}
+                \chi_t = \frac{\langle Q^2 \rangle}{L^2}
+            \end{equation}
+            \end{column}
+        
+        %\only<3->{
+            \begin{column}{0.5\textwidth}
+                \centering
+            In nontrivial NLSM:
+            \begin{equation}
+                \chi_t \propto \frac{\partial\langle Q \rangle}{\partial \theta} 
+            \end{equation}
+            \end{column}
+        %}
+        \end{columns}
+    }
+    \onslide<3->\begin{block}{Main Problem}
+        Topological stability predicts $\chi_t=0$, but $\chi_t$ diverges in numerical results \footfullcite{berg1981}.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{The Gradient Flow}
+\begin{itemize}
+    \item<1-> Successful in removing $\chi_t$ divergence in QCD (model of the strong nuclear force).
+    \item<2-> Reduces high-momentum modes
+    \item<3-> Introduces a new dimension, $\tau$, called the ``flow time,'' which pushes fields towards action minima 
+    \item<4-> In the $\phi^4$ model
+    \begin{equation*}
+        \frac{\partial \rho(\tau, x)}{\partial \tau} = \partial^2 \rho(\tau,x)
+    \end{equation*}
+    with the boundary condition $\rho(0, x)=\phi(x)$.
+
+\end{itemize}
+\onslide<4->\begin{figure}[h]
+  \centering
+      \begin{subfigure}[b]{0.2\textwidth}\centering
+        \includegraphics[width=0.9\textwidth]{imgs/gf0.png}
+        \caption{$\tau=0$}
+      \end{subfigure}%
+      \begin{subfigure}[b]{0.2\textwidth}\centering
+        \includegraphics[width=0.9\textwidth]{imgs/gf1.png}
+        \caption{$\tau=0.001$}
+      \end{subfigure}%
+      \begin{subfigure}[b]{0.2\textwidth}\centering
+        \includegraphics[width=0.9\textwidth]{imgs/gf2.png}
+        \caption{$\tau=0.01$}
+      \end{subfigure}%
+      \begin{subfigure}[b]{0.2\textwidth}\centering
+        \includegraphics[width=0.9\textwidth]{imgs/gf3.png}
+        \caption{$\tau=0.1$}
+      \end{subfigure}%
+      \caption{\label{fig:flow} Effect of flow time evolution on a random lattice in the symmetric phase. White represents positive values of $\phi$ while black represents negative.}
 \end{figure}
-\note{- Test note one \\ - Test note two}
+\note{Effect of flow time evolution on a random lattice in the symmetric phase. Red and blue indicate positive and negative values of the field in 2D spacetime.}
 \end{frame}
 
 \begin{frame}
-\frametitle{Topological Action}
-\begin{equation}
-    S[\e\,] \rightarrow S[\e\,] - i \theta Q[\e\,].
-\end{equation}
+   \centering
+   \begin{block}{Research Question}
+       Can the gradient flow remove the topological susceptibility divergence in the NLSM?
+   \end{block}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Topology Visualization}
-\begin{figure}[h]
+\frametitle{Methods}
+\begin{enumerate}
+    \item Construct Monte Carlo simulation following Euclidean path integral formalism
+    \item Apply gradient flow to configurations
+    \item Measure topological susceptibility
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Fields on the Lattice}
+    \begin{align*}
+        x & \rightarrow ia \hat{t} + j a \hat{x} \\
+        \int dtdx &\rightarrow a^2 \sum_i
+    \end{align*}
+
+    where $a$ is the lattice spacing. 
+
+    \vspace{0.3cm}\hrule\vspace{0.3cm}
+
+    Periodic boundary conditions:
+    \begin{equation}
+        \phi\left(x_{i+L,j}\right) = \phi\left(x_{i,j+L}\right) = \phi\left(x_{i,j}\right)
+    \end{equation}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Markov chain Monte Carlo}
+    \onslide<1-> Due to Boltzmann factor $e^{-S}$, we need only consider configurations near action minima.
+    \begin{itemize}
+        \item<2-> Starting at configuration $\phi_a$, we transition to configuration $\phi_b$ with probability 
+        \[P(\phi_a \rightarrow \phi_b).\]
+    \end{itemize}
+    \note{Mention infinite path integral}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Metropolis Algorithm}
+    Changes a single site randomly
+    \begin{equation}
+        P(\phi_a\rightarrow\phi_b) = \begin{cases} 
+            e^{S[\phi_a] - S[\phi_b]} & S[\phi_b] > S[\phi_a] \\
+            1 & \mathrm{otherwise} \\
+       \end{cases}
+    \end{equation}
+    Performing this process on every site forms a ``sweep''
+\end{frame}
+
+\begin{frame}
+    \frametitle{Wolff Cluster Algorithm}
+    Grows one cluster probabilistically, flips sign~\footfullcite{wolff1989}
+    \begin{figure}[h]
+      \centering
+          \begin{subfigure}[b]{0.5\textwidth}\centering
+            \includegraphics[width=0.6\textwidth]{imgs/wolffa.png}
+            \caption{before cluster flip}
+          \end{subfigure}%
+          \hfill
+          \begin{subfigure}[b]{0.5\textwidth}\centering
+            \includegraphics[width=0.6\textwidth]{imgs/wolffb.png}
+            \caption{after cluster flip}
+          \end{subfigure}
+          \hfill
+          %\caption{\label{fig:wolff} An example of the Wolff cluster algorithm in the $\phi^4$ model. White represents positive values of $\phi$ while black represents negative. $\lambda=0.5$, $m_0^2=-0.9$.}
+    \end{figure}
+    \note{What about NLSM?}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Thermalization}
+
+    How do we start the Markov chain?
+    \begin{columns}
+
+        \begin{column}{0.5\textwidth}
+            \begin{figure}[h]
+              \centering
+                  \begin{subfigure}[b]{0.8\textwidth}\centering
+                    \includegraphics[width=\textwidth]{imgs/therm24.png}
+                    \caption{$L=24$}
+                  \end{subfigure}
+                  \begin{subfigure}[b]{0.8\textwidth}\centering
+                    \includegraphics[width=\textwidth]{imgs/therm404.png}
+                    \caption{$L=404$}
+                  \end{subfigure}
+                  \hfill
+            \end{figure}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \onslide<2->{
+            \begin{figure}[h]
+              \centering
+                \includegraphics[width=0.9\textwidth]{imgs/coldstart.png}
+                \caption{Action histogram comparing hot vs. cold start after 1000 sweep thermalization}
+            \end{figure}
+            }
+        \end{column}
+    \end{columns}
+      \note{Plots of the action as a function of Monte Carlo time, starting with a random NLSM lattice. \\ Histogram of lattice-averaged actions $S/L^2$ with hot and cold starts. 1,000 sweep thermalization in $L=404$ lattice, 1,000 measurements taken every 50 sweeps.}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Autocorrelation}
+    How many sweeps per measurement?
+    \begin{figure}[h]
+      \centering
+          \begin{subfigure}[b]{0.5\textwidth}\centering
+            \includegraphics[width=0.9\textwidth]{imgs/tauint24.png}
+            \caption{$L=24$, $\tau_{int}=4.43$}
+          \end{subfigure}%
+          \hfill
+          \begin{subfigure}[b]{0.5\textwidth}\centering
+            \includegraphics[width=0.9\textwidth]{imgs/tauint404.png}
+            \caption{$L=404$, $\tau_{int}=12.81$}
+          \end{subfigure}
+          \hfill
+          \caption{\label{fig:tauint} Plots of automatic windowing\footfullcite{wolff2007} procedure used to calculate $\tau_{int}$ for the NLSM model. $W$ is summation window size.}
+    \end{figure}
+    Therefore, we measure every 50 sweeps with a Wolff cluster step every 5 sweeps.
+\end{frame}
+
+\begin{frame}
+    \frametitle{Topological Charge on the Lattice}
+    Following Berg \& L\"usher~\footfullcite{berg1981}, define topological charge density $q(x^*)$ for each plaquette $x^*$ such that
+    \begin{equation}
+        Q = \sum_{x^*} q(x^*)
+    \end{equation}
+    \begin{figure}[h]
     \begin{subfigure}[b]{0.4\paperwidth}
     \centering
-    \begin{tikzpicture}[scale=0.5, every node/.style={scale=0.7}]
-        \draw[step=4cm,gray,thin] (-2,-2) grid (6,6);
+    \begin{tikzpicture}[scale=0.4, every node/.style={scale=0.7}]
+        \draw[step=4cm,gray,thin] (-1,-1) grid (5,5);
         \draw[dotted] (0,0) -- (4,4);
         \draw[thick](0,0) node[circle,fill,inner sep=0pt, minimum size=0.3cm]{} node[anchor=north west] {$x_1$} -- 
                     (0,4) node[circle,fill,inner sep=0pt, minimum size=0.3cm]{} node[anchor=north west] {$x_2$} -- 
@@ -198,11 +497,12 @@ Christopher Monahan \\ % Your institution for the title page
         \draw[-stealth] (3.8,3) -- (3.8,1);
         \draw[-stealth] (3,0.2) -- (1,0.2);
     \end{tikzpicture}
+    \caption{a plaquette}
     %\caption{\label{fig:plaquette} Visualization of plaquette $x^*$. The dotted line separates the plaquette into two signed areas which are used to define the topological charge density $q(x^*)$. Arrows represent order of signed area.}
     \end{subfigure} %
     \begin{subfigure}[b]{0.4\paperwidth}
     \centering
-    \begin{tikzpicture}[scale=0.7, every node/.style={scale=0.7}]
+    \begin{tikzpicture}[scale=0.5, every node/.style={scale=0.7}]
         \pgfdeclarelayer{nodelayer}
         \pgfdeclarelayer{edgelayer}
         \pgfdeclareradialshading{sphere4}{\pgfpoint{-0.2cm}{0.5cm}}% 
@@ -249,364 +549,117 @@ Christopher Monahan \\ % Your institution for the title page
             \node [style=label] at (8) {\small $A$};
         \end{pgfonlayer}
     \end{tikzpicture}
+    \caption{signed area of triangle}
     \end{subfigure}
-    \caption{some plots}
-\end{figure}
+    \end{figure}
+    \begin{equation}
+        q(x^*) = \frac{1}{4\pi} \bigg[A\Big(\e(x_1), \e(x_2), \e(x_3)\Big) + A\Big(\e(x_1), \e(x_3), \e(x_4)\Big) \bigg].
+    \end{equation}
+\end{frame}
 
+\begin{frame}
+    \frametitle{Topological Charge Measurement}
+    \begin{figure}[h]
+    \centering
+      \includegraphics[width=0.6\textwidth]{imgs/hist.png}
+      \caption{Histogram of topological charge values $Q$ for trivial NLSM. $L=404$, 10,000 measurements.}
+\end{figure}
+      \note{Histogram of topological charge values $Q$ for trivial NLSM. $L=404$, 10,000 measurements, measurements very 50 sweeps, 1,000 sweep thermalization, $\tau=0$}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Gradient flow on NLSM}
+    We solve the Gradient Flow numerically using
+    \begin{itemize}
+        \item fourth-order Runge Kutta
+        \item adaptive step size
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{$\phi^4$ results}
+    \begin{figure}[h!]
+        \centering
+          \includegraphics[width=0.7\textwidth]{imgs/phi4.png}
+          \caption{\label{fig:phi4} The lattice average $|\langle\bar\phi\rangle|$, the magnetic susceptibility $\chi_m$, the Binder cumulant $U\:$ ~\footfullcite{binder1981} and the bimodality $B$ plotted as functions of $m_0^2$. $L=64$, $\lambda=0.5$. 1000 measurements}
+    \end{figure}
+    \note{First mention broken and symmetric phases}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Comparison with Berg \& L\"uscher}
+    \begin{figure}[h!]
+        \centering
+          \includegraphics[width=0.9\textwidth]{imgs/internal_energy.png}
+          \caption{\label{fig:bergluscher}Comparison with~\footfullcite{berg1981}, $L=100$, 1000 measurements.}
+    \end{figure}
 \end{frame}
 
 
 
+\begin{frame}
+    \frametitle{Topological Susceptibility in Flow Time}
+    \begin{figure}[h!]
+        \centering
+          \includegraphics[width=\textwidth]{imgs/bietenholz.png}
+          \caption{\label{fig:bietenholz} $\chi_t \xi_2^2$ as a  function of flow time $\tau$. Simulation run with 10,000 measurements }
+    \end{figure}
+\end{frame}
+
 
 \begin{frame}
-    \frametitle{Wolff Cluster Algorithm}
+    \frametitle{$\chi_t$ Divergence}
+    \begin{figure}[h!]
+        \begin{center}
+          \begin{subfigure}[b]{0.45\paperwidth}
 
-    \begin{figure}[h]
-      \centering
-          \begin{subfigure}[b]{0.5\textwidth}\centering
-            \includegraphics[width=0.6\textwidth]{imgs/wolffa.png}
-            \caption{before cluster flip}
+              \centering
+              \includegraphics[width=0.9\textwidth]{imgs/divergence.png}
+              \caption{$\tau = 0$}
           \end{subfigure}%
-          \hfill
-          \begin{subfigure}[b]{0.5\textwidth}\centering
-            \includegraphics[width=0.6\textwidth]{imgs/wolffb.png}
-            \caption{after cluster flip}
+          \begin{subfigure}[b]{0.45\paperwidth}
+              \centering
+              \includegraphics[width=0.9\textwidth]{imgs/divergence_flowed.png}
+              \caption{$\tau = 5t_0$}
           \end{subfigure}
-          \hfill
-          \caption{\label{fig:wolff} An example of the Wolff cluster algorithm in the $\phi^4$ model. White represents positive values of $\phi$ while black represents negative. $\lambda=0.5$, $m_0^2=-0.9$.}
-  
+        \end{center}
+        \caption{Divergent properties with comparison to~\footfullcite{bietenholz2018}, 10,000 measurements}
+    \end{figure}
+          \note{Simulation run with 10,000 measurements, once every 50 sweeps, 1,000 sweep thermalization. In the tau=0 case, we have compared our result with the curve fit found in Bietenholz}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Effect of $\theta$-term on $\langle Q \rangle$}
+    \begin{figure}[h]
+          \centering
+          \includegraphics[width=0.8\textwidth]{imgs/theta.png}
     \end{figure}
 \end{frame}
 
 \begin{frame}
-\frametitle{Lattice Quantum Chromodynamics}
-\begin{itemize}
-    \item Method to solve non-perturbative theories
-    \item Discretizes spacetime to numerically calculate fields.
-    \item Uses path integral formulation of Quantum Field Theory to solve for correlation functions.
-\end{itemize}
-
-\begin{block}{Problem}
-    As lattice spacing approaches zero, some operators do not remain finite. 
-\end{block}
-\end{frame}
-
-\begin{frame}
-\frametitle{The Gradient Flow}
-\begin{itemize}
-    \item A form of smearing
-    \item Introduces a new dimension, $\tau$, called the ``flow time,'' through which the field evolves as follows:
-    \begin{equation}
-        \frac{\partial \rho(\tau, x)}{\partial \tau} = \partial^2 \rho(\tau,x)
-    \end{equation}
-    with the boundary condition $\rho(0, x)=\phi(x)$.
-
-    \item Suppresses infinities while keeping observables constant.
-
-        %\begin{figure}[h]
-  %\centering
-      %\subfigure[$\tau=0$]{\includegraphics[width=0.20\textwidth]{imgs/0.png}}
-      %\subfigure[$\tau=0.5$]{\includegraphics[width=0.20\textwidth]{imgs/0_5.png}}
-      %\subfigure[$\tau=2$]{\includegraphics[width=0.20\textwidth]{imgs/2.png}} 
-      %\subfigure[$\tau=10$]{\includegraphics[width=0.20\textwidth]{imgs/10.png}}
-          %\caption{Effect of flow time evolution on a random lattice in the symmetric phase. Red and blue indicate positive and negative values of the field in 2D spacetime.}
-  %\label{fig:flow}
-%\end{figure}
-
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}
-    \frametitle{Goals}
+    \frametitle{Conclusions}
     \begin{itemize}
-        \item Computationally implement the simpler $\phi^4$ theory to verify code.
-        \item Transition to $O(3)$ nonlinear $\sigma$ model.
-        \item Calculate twist-2 operators and vacuum expectation value with gradient flow applied.
-        \item Other future paths:
-            \begin{itemize}
-                \item Consider topological charge
-                \item Explore Wilson coefficients 
-            \end{itemize}
+        \item  Berg \& L\"uscher~\footfullcite{berg1981} provide three possible reasons
+            \begin{enumerate}
+                \only<1>{\item high-frequency modes cause divergence}
+                \only<2->{\item {\transparent{0.4} high-frequency modes cause divergence}}
+                \item the definition of $Q$ is problematic
+                \item the NLSM has no well-defined continuum limit
+            \end{enumerate}
 
+        \item<3-> Relatively high $\chi^2/DOF$ values indicate errors underestimated.
+        \item<4-> Clearer perspective on the effect $\theta$ helpful for condensed matter systems~\footfullcite{bogli2012}.
     \end{itemize}
 \end{frame}
-
 \begin{frame}
-    \frametitle{Broad Motivation}
-    To understand Deep Inelastic Scattering (DIS)
+    \frametitle{Acknowledgements}
     \begin{itemize}
-        \item Twist-2 operators $\rightarrow$ Mellin moments $\rightarrow$ Parton Distribution Functions $\rightarrow$ DIS Cross Sections
+        \item<1-> 1693 Scholars program (funding for summer research)
+        \item<2-> HPC Computing Group
+        \item<3-> Prof. Christopher Monahan
+        \item<4-> Friends and family
     \end{itemize}
 \end{frame}
-%------------------------------------------------
-
-\begin{frame}
-    \frametitle{Computational Methods}
-\begin{itemize}
-    \item Use a Markov Chain Monte Carlo method to simulate lattice in 2D and 3D
-        \begin{itemize}
-            \item Metropolis algorithm to generate random changes
-            \item Wolff cluster algorithm to remove metastable states
-            \item Implement checkerboard algorithm to parallelize Metropolis algorithm
-        \end{itemize}
-
-    \item \textbf{By sampling the lattice at set intervals, we can calculate statical estimates of arbitrary operators.}
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}
-    \frametitle{Markov Chain Monte Carlo}
-\begin{enumerate}
-    \item Start with random lattice (known as ``hot start'')
-    \item Repeatedly transition from old configuration $\mu$ to new configuration $\nu$ with probability $P(\mu\rightarrow\nu)$.
-    \item After a thermalization period, record observables at certain intervals. 
-    \item Take the statistical mean
-\end{enumerate}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Metropolis Algorithm}
-    For each site, propose a new value and accept change with probability
-        \begin{equation*}
-    P(\mu\rightarrow\nu) = \begin{cases} 
-        e^{-(S_\nu - S_\mu)} & S_\nu > S_\mu \\
-        1 & \mathrm{S_\nu \leq S_\mu} \\
-       \end{cases}
-        \end{equation*} 
-        A \textbf{sweep} consists of perfoming this on every site.
-
-\end{frame}
-
-\begin{frame}
-    \frametitle{Wolff Cluster Algorithm}
-        \textbf{Problem}: Markov Chain gets ``stuck'' in metastable states, i.e. local minima of the action.
-
-        \textbf{Solution}: Identify cluster of similar-values points and flip the sign.
-    \begin{enumerate}
-        \item Recursively grow a cluster with the probability of adding a new site
-        \begin{equation*}
-            P_{add} = 1-e^{-2\phi_a\cdot\phi_b}.
-        \end{equation*}
-        \item Flip sign of sites
-    
-
-    \end{enumerate}
-    %\begin{figure}[h]
-
-      %\centering
-          %\subfigure[before]{\includegraphics[width=0.20\textwidth]{imgs/wolff1}}
-          %\subfigure[after]{\includegraphics[width=0.20\textwidth]{imgs/wolff2}}
-          %\caption{Wolff cluster algorithm applied on $\phi^4$ lattice in $1+1$ dimensions, red corresponding to positive values and green to negative}
-      %\label{fig:flow}
-    %\end{figure}
-\end{frame}
-
-\begin{frame}
-    \frametitle{$\phi^4$ model}
-    \begin{itemize}
-        \item Given by the Euclidean action
-            \begin{equation}
-                S_E = \int d^D x \left[ \partial^\mu \phi \partial_\mu\phi + \frac{1}{2} m_0^2 \phi^2 + \frac{\lambda}{4}\phi^4\right]
-            \end{equation} 
-
-        \item Simplest interacting field
-        \item In 1+1 dimensions, exhibits spontaneous symmetry breaking at critical $m_0^2$.
-
-
-    \end{itemize}
-
-    We measure\ldots
-\begin{itemize}
-    \item Magnetization: $\langle |\bar\phi|\rangle$
-    \item Susceptibility: $\chi = \langle {\bar\phi}^2\rangle - \langle\bar\phi\rangle^2$
-    \item Binder cumulant: $U = 1 - \frac{\langle {\bar\phi}^4\rangle}{3 \langle {\bar\phi}^2\rangle^2}$
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Computational Implementation}
-    \begin{enumerate}
-        \item Begin with simple Python $\phi^4$ model with Cython for efficiency
-        \item Transition to C++ code, generalized to nonlinear $\sigma$ model
-        \item Compare results of Python and C++ code.
-    \end{enumerate}
-    \begin{block}{Parallelization}
-        Message Passing Interface: shared RAM between processes.
-    \end{block}
-\end{frame}
-
-
-
-
-\begin{frame}
-\frametitle{Spontaneous Symmetry Breaking in $\phi^4$ model}
-\begin{figure}[h]
-  \centering
-      \includegraphics[width=0.7\textwidth]{imgs/phi4.png}
-      \caption{Average $\bar\phi$, Binder cumulant and susceptibility for various $m_0^2$ values. $\lambda=0.5$, $L=64$, $1000$ measurements, $1000$ sweep thermalization with measurements taken every $100$ sweeps.}
-  \label{fig:flow}
-\end{figure}
-\end{frame}
-
-
-\begin{frame}
-    \frametitle{Effect of $\theta$-term on $\langle Q \rangle$}
-\begin{figure}[h]
-  \centering
-      \includegraphics[width=0.8\textwidth]{imgs/theta.png}
-      %\caption{Absolute difference between Python and C++ results of average $\bar\phi$, Binder cumulant and susceptibility for various $m_0^2$ values. $\lambda=0.5$, $L=64$, $1000$ measurements, $1000$ sweep thermalization with measurements taken every $100$ sweeps. }
-
-  \label{fig:flow}
-\end{figure}
-\end{frame}
-
-\begin{frame}
-\frametitle{Future Work}
-\begin{itemize}
-    \item Fully implement nonlinear $\sigma$ model.
-    \item Calculate twist-2 operators and vacuum expectation value
-    \item Expand to 3 dimensions
-    \item Profile and optimize C++ code
-    \item Mathematical analysis of results
-\end{itemize}
-
-\end{frame}
-
-%%------------------------------------------------
-
-%\begin{frame}
-%\frametitle{Multiple Columns}
-%\begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
-
-%\column{.45\textwidth} % Left column and width
-%\textbf{Heading}
-%\begin{enumerate}
-%\item Statement
-%\item Explanation
-%\item Example
-%\end{enumerate}
-
-%\column{.5\textwidth} % Right column and width
-%Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lectus nisl, ultricies in feugiat rutrum, porttitor sit amet augue. Aliquam ut tortor mauris. Sed volutpat ante purus, quis accumsan dolor.
-
-%\end{columns}
-%\end{frame}
-%\begin{frame}
-%\frametitle{Blocks of Highlighted Text}
-
-%\begin{block}{Block 2}
-%Pellentesque sed tellus purus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum quis magna at risus dictum tempor eu vitae velit.
-%\end{block}
-
-%\begin{block}{Block 3}
-%Suspendisse tincidunt sagittis gravida. Curabitur condimentum, enim sed venenatis rutrum, ipsum neque consectetur orci, sed blandit justo nisi ac lacus.
-%\end{block}
-%\end{frame}
-
-%%------------------------------------------------
-
-%\begin{frame}
-%\frametitle{Multiple Columns}
-%\begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
-
-%\column{.45\textwidth} % Left column and width
-%\textbf{Heading}
-%\begin{enumerate}
-%\item Statement
-%\item Explanation
-%\item Example
-%\end{enumerate}
-
-%\column{.5\textwidth} % Right column and width
-%Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lectus nisl, ultricies in feugiat rutrum, porttitor sit amet augue. Aliquam ut tortor mauris. Sed volutpat ante purus, quis accumsan dolor.
-
-%\end{columns}
-%\end{frame}
-
-%%------------------------------------------------
-%\section{Second Section}
-%%------------------------------------------------
-
-%\begin{frame}
-%\frametitle{Table}
-%\begin{table}
-%\begin{tabular}{l l l}
-%\toprule
-%\textbf{Treatments} & \textbf{Response 1} & \textbf{Response 2}\\
-%\midrule
-%Treatment 1 & 0.0003262 & 0.562 \\
-%Treatment 2 & 0.0015681 & 0.910 \\
-%Treatment 3 & 0.0009271 & 0.296 \\
-%\bottomrule
-%\end{tabular}
-%\caption{Table caption}
-%\end{table}
-%\end{frame}
-
-%%------------------------------------------------
-
-%\begin{frame}
-%\frametitle{Theorem}
-%\begin{theorem}[Mass--energy equivalence]
-%$E = mc^2$
-%\end{theorem}
-%\end{frame}
-
-%%------------------------------------------------
-
-%\begin{frame}[fragile] % Need to use the fragile option when verbatim is used in the slide
-%\frametitle{Verbatim}
-%\begin{example}[Theorem Slide Code]
-%\begin{verbatim}
-%\begin{frame}
-%\frametitle{Theorem}
-%\begin{theorem}[Mass--energy equivalence]
-%$E = mc^2$
-%\end{theorem}
-%\end{frame}\end{verbatim}
-%\end{example}
-%\end{frame}
-
-%%------------------------------------------------
-
-%\begin{frame}
-%\frametitle{Figure}
-%Uncomment the code on this slide to include your own image from the same directory as the template .TeX file.
-%%\begin{figure}
-%%\includegraphics[width=0.8\linewidth]{test}
-%%\end{figure}
-%\end{frame}
-
-%%------------------------------------------------
-
-%\begin{frame}[fragile] % Need to use the fragile option when verbatim is used in the slide
-%\frametitle{Citation}
-%An example of the \verb|\cite| command to cite within the presentation:\\~
-
-%This statement requires citation \cite{p1}.
-%\end{frame}
-
-%%------------------------------------------------
-
-%\begin{frame}
-%\frametitle{References}
-%\footnotesize{
-%\begin{thebibliography}{99} % Beamer does not support BibTeX so references must be inserted manually as below
-%\bibitem[Smith, 2012]{p1} John Smith (2012)
-%\newblock Title of the publication
-%\newblock \emph{Journal Name} 12(3), 45 -- 678.
-%\end{thebibliography}
-%}
-%\end{frame}
-
-%%------------------------------------------------
-
-%\begin{frame}
-%\Huge{\centerline{The End}}
-%\end{frame}
-
-%%----------------------------------------------------------------------------------------
-
 \end{document} 
+
