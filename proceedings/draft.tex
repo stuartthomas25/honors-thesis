@@ -2,25 +2,24 @@
 % data according to the instructions in PoSauthmanual.pdf
 \documentclass[a4paper,11pt]{article}
 \usepackage{pos}
-\usepackage{amsmath,amsfonts,amssymb,eulervm,xspace}
-\usepackage{amsmath,amsfonts,amssymb}
+%\usepackage{amsmath,amsfonts,amssymb,eulervm,xspace} Currently causing a package clash for me.
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{subcaption}
 \newcommand{\e}{\vec e}
 \graphicspath{{../figures/}}
+\newcommand\chris[1]{\textcolor{teal}{CJM: #1}}
 
 
 \title{Topology of the $O(3)$ non-linear sigma model under the gradient flow}
 %% \ShortTitle{Short Title for header}
 
 \author*[a]{Stuart Thomas}
-\author[a]{Christopher Monahan}
+\author[a,b]{Christopher Monahan}
 
 \affiliation[a]{Department of Physics, William \& Mary,  Williamsburg, Virginia 23187, USA}
 
-%\affiliation[b]{Department, University,\\
-%Street number, City, Country}
+\affiliation[b]{Thomas Jefferson National Accelerator Facility, Newport News, Virginia, USA}
 
 \emailAdd{snthomas01@email.wm.edu}
 \emailAdd{cjmonahan@wm.edu}
@@ -39,23 +38,31 @@ The $O(3)$ non-linear sigma model (NLSM) is a prototypical field theory for QCD 
 \maketitle
 
 
+\section{Introduction}
+
+Spin models provide a framework for understanding the physics of strongly-coupled systems, from solid state and condensed matter systems to nuclear and particle physics. The non-linear sigma model (NLSM), in particular, has provided a rich arena in which to study nonperturbative effects. In solid-state systems, this model describes Heisenberg ferromagnets \cite{callan1985} and in nuclear physics, it acts as a prototype for quantum chromodynamics (QCD), the gauge theory of the strong nuclear force. In general, the NLSM shares key features with non-Abelian gauge theories such as QCD, including a mass gap and asymptotic freedom \cite{polyakov1975}, and has proved a useful model for exploring the effect of these properties in a simpler system.
+
+We consider the $O(3)$ NLSM in 1+1 dimensions (one dimension of space, one dimension of time). This theory exhibits topological properties, such as \textit{instantons}, or classical field solutions at local minima of the action in Euclidean space. These topologically protected solutions cannot evolve into the vacuum state via local fluctuations. This property has become critically important to quantum field theories in cosmology and high energy physics \cite{goddard1986}. \chris{Can we provide a more explicit example(s) here? Statement is very vague at the moment.} Additionally, topological stability may become a key tool for fault-tolerant quantum computers \cite{kitaev1997}. In these devices, topology protects the delicate quantum states necessary for information processing.
+
+
 \section{The Non-Linear Sigma Model}
-We study the $O(3)$ non-linear sigma model (NLSM) in 1+1 dimensions, defined by the Euclidean action
+
+We study the $O(3)$ NLSM in two dimensions \chris{[In Euclidean space it does not really make sense to distinguish time and space, unless we start in Minkowski spacetime and then Wick rotate.]}, defined by the Euclidean action
 \begin{equation*}
     \label{eq:nlsm euclidean action}
-    S_E = \frac{\beta}{2} \int d^2x \; \left[ \left(\partial_t \e\, \right)^2+ \left( \partial_x \e\,\right)^2 \right]
+    S_E = \frac{\beta}{2} \int d^2x \; \left[ \left(\partial_t \e\, \right)^2+ \left( \partial_x \e\,\right)^2 \right],
 \end{equation*}
-where, $\e$ is 3-component real vector constrained by $|\e\,|=1$ and $\beta$ is the inverse coupling constant. In solid-state systems, this model describes Heisenberg ferromagnets \cite{callan1985} and in nuclear physics, it acts as a prototype for quantum chromodynamics (QCD), the gauge theory that describes the strong nuclear force. In general, the NLSM shares key features with non-Abelian gauge theories such as QCD, including a mass gap and asymptotic freedom \cite{polyakov1975}. Therefore, the NLSM is a useful model for exploring the effect of these properties in a simpler system.
+where $\e$ is 3-component real vector constrained by $|\e\,|=1$ and $\beta$ is the inverse coupling constant. 
 
-Following~\cite{berg1981}, we define topological charge density $q(x^*)$ for each plaquette $x^*$ such that
+Following~\cite{berg1981}, we define the topological charge density, $q(x^*)$, for each plaquette $x^*$ such that the total topological charge is
 \begin{equation}
-    Q = \sum_{x^*} q(x^*)
+    Q = \sum_{x^*} q(x^*),
 \end{equation}
 where
 \begin{equation}
     q(x^*) = \frac{1}{4\pi} \bigg[A\Big(\e(x_1), \e(x_2), \e(x_3)\Big) + A\Big(\e(x_1), \e(x_3), \e(x_4)\Big) \bigg].
-  \end{equation}
-  The topology of the NLSM is visualized in Fig.~\ref{fig:topology}
+\end{equation}
+Here $A$ is the signed area of the triangle in target space, which we represent in the left-hand figure of Fig.~\ref{fig:topology}.
 \begin{figure}
   \centering
     \begin{subfigure}[b]{0.4\textwidth}
@@ -78,9 +85,11 @@ where
         \draw[-stealth] (3.8,3) -- (3.8,1);
         \draw[-stealth] (3,0.2) -- (1,0.2);
     \end{tikzpicture}
-    \caption{a plaquette broken up into two triangles}
+    \caption{Visualization of a plaquette $x^*$. The dotted line separates the plaquette into two signed areas, used to define the topological charge density $q(x^*)$. Arrows represent the order of signed area.}
     %\caption{\label{fig:plaquette} Visualization of plaquette $x^*$. The dotted line separates the plaquette into two signed areas which are used to define the topological charge density $q(x^*)$. Arrows represent order of signed area.}
+    \vspace*{-\baselineskip}
     \end{subfigure}
+    \hspace*{1cm}
     \begin{subfigure}[b]{0.4\textwidth}
     \centering
     \begin{tikzpicture}[scale=0.6, every node/.style={scale=1}]
@@ -130,11 +139,12 @@ where
             \node [style=label] at (8) {\small $A$};
         \end{pgfonlayer}
     \end{tikzpicture}
-    \caption{signed area of triangle in target space}
+    \caption{The signed area of a triangle in target space.}
     \end{subfigure}
     \caption{\label{fig:topology}}
 \end{figure}
 
+\chris{Need text here to explain the next equations}
 \begin{equation*}
     S[\e\,] \rightarrow S[\e\,] - i \theta Q[\e\,].
 \end{equation*}
@@ -144,7 +154,8 @@ A nonzero $\theta$ implies nonzero $\langle Q \rangle$. Furthermore,
 \end{equation}
 
 \section{Computational Methods}
-Our study of the gradient flow in the NLSM is based on a computational system that simulates quantum fields numerically. We begin by implementing a numerical Monte Carlo method to simulate the lattice in two dimensions and verify our program with the well-studied $\phi^4$ scalar field theory. We then generalize our model to a vector field to simulate the NLSM and implement a numerical solution to the gradient flow. We use the data produced by this program to study the topological charge and susceptibility under the gradient flow.
+\chris{Don't need to mention phi-4 model, or python, except to note that the phi-4 model served as a check of your code.}
+We implement a numerical Monte Carlo method to simulate the lattice in two dimensions and verify our program with the well-studied $\phi^4$ scalar field theory. We then generalize our model to a vector field to simulate the NLSM and implement a numerical solution to the gradient flow. We use the data produced by this program to study the topological charge and susceptibility under the gradient flow.
 
 We first implement the $\phi^4$ model in Python. Afterwards, we transition to the NLSM, using C++ for increased efficiency . To compile the C++ simulation, we use the \texttt{gcc} compiler with the highest level of optimization.
 
@@ -152,7 +163,7 @@ We first implement the $\phi^4$ model in Python. Afterwards, we transition to th
 \begin{figure}[h!]
     \begin{center}
         \begin{subfigure}[b]{0.45\textwidth}
-            \includegraphics[height=0.7\textwidth]{divergence.png}
+            %\includegraphics[height=0.7\textwidth]{divergence.png}
             \caption{$\tau = 0$}
         \end{subfigure}%
         \begin{subfigure}[b]{0.45\textwidth}
