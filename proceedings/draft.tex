@@ -62,7 +62,7 @@ where
 \begin{equation}
     q(x^*) = \frac{1}{4\pi} \bigg[A\Big(\e(x_1), \e(x_2), \e(x_3)\Big) + A\Big(\e(x_1), \e(x_3), \e(x_4)\Big) \bigg].
 \end{equation}
-Here $A$ is the signed area of the triangle in target space, which we represent in the left-hand figure of Fig.~\ref{fig:topology}.
+Here $A$ is the signed area of the triangle in target space, which we represent in the left-hand figure of Fig.~\ref{fig:topology}. This value is defined if $A\neq 0, 2\pi$, or in other words, as long as the three points on the sphere are distinct and do not form a hemisphere. In numerical calculations, these points can be ignored. Therefore, we impose that the signed area is defined on the smallest spherical triangle, or $-2\pi < A < 2\pi$.
 \begin{figure}
   \centering
     \begin{subfigure}[b]{0.4\textwidth}
@@ -153,11 +153,65 @@ A nonzero $\theta$ implies nonzero $\langle Q \rangle$. Furthermore,
     \chi_t \propto \left. \frac{d\,\mathrm{Im}\langle Q \rangle}{d\theta}\right|_{\theta=0}
 \end{equation}
 
-\section{Computational Methods}
-\chris{Don't need to mention phi-4 model, or python, except to note that the phi-4 model served as a check of your code.}
-We implement a numerical Monte Carlo method to simulate the lattice in two dimensions and verify our program with the well-studied $\phi^4$ scalar field theory. We then generalize our model to a vector field to simulate the NLSM and implement a numerical solution to the gradient flow. We use the data produced by this program to study the topological charge and susceptibility under the gradient flow.
+We define the topological susceptibility $\chi_t$
+\begin{equation}
+\chi_t \equiv \frac{1}{L^2} \Big( \langle Q^2 \rangle - \langle Q \rangle^2 \Big).
+\end{equation}
+In the trivial case, $\langle Q \rangle$ is equal to $0$ and on this lattice, this becomes   
+\begin{equation}
+    \chi_t = \frac{1}{L^2} \sum_{x^*,y^*} \langle q(x^*)q(y^*)\rangle  = \frac{1}{L^2} \sum_{x^*} \langle q(x^*)q(0)\rangle,
+\end{equation}
+where in the second equality we have assumed periodic boundary conditions. The topological susceptibility diverges in the continuum limit owing solely to the $x^*=0$ term \cite{bietenholz2018}. This divergence exists in QCD as well \cite{bruno2014}.
 
-We first implement the $\phi^4$ model in Python. Afterwards, we transition to the NLSM, using C++ for increased efficiency . To compile the C++ simulation, we use the \texttt{gcc} compiler with the highest level of optimization.
+
+
+\subsection{Gradient flow}
+
+\chris{Sentences/paragraph introducing continuous gradient flow here}
+
+\section{Numerical implementation}
+We implement a numerical Monte Carlo method to study the NLSM in two dimensions using the discretized action
+\begin{equation}
+    \label{eq:nlsm discretized action}
+    S_\mathrm{lat}[\e\,] = \sum_i \left[ 2 - \e(x+a\hat{t}\,)\cdot\e(x) - \e(x+a\hat{x})\cdot\e(x) \right].
+\end{equation}
+We generate configurations using the Metropolis \cite{} and Wolff cluster \cite{wolff1989} algorithms, implemented in C++ and parallelized through the Message Passing Interface with a checkerboard algorithm \cite{}. 
+
+We thermalize the configurations with 1000 sweeps, with a cluster update every five sweeps, and illustrate a sample Markov chain in Fig.~\ref{fig:therm}, where we plot the action as a function of Metropolis sweeps. We use Wolff's automatic windowing procedure \cite{wolff2007} to estimate the autocorrelation times for various observables, such as the magnetic susceptibility $\chi_m$. We measure observables every $50$ sweeps for each simulation.
+\begin{figure}[h]
+  \centering
+      \begin{subfigure}[b]{0.5\textwidth}\centering
+        \includegraphics[width=\textwidth]{therm24.png}
+        \caption{$L=24$}
+      \end{subfigure}%
+      \hfill
+      \begin{subfigure}[b]{0.5\textwidth}\centering
+        \includegraphics[width=\textwidth]{therm404.png}
+        \caption{$L=404$}
+      \end{subfigure}
+      \hfill
+      \caption{\label{fig:therm} Plots of the action as a function of Monte Carlo time, starting with a random NLSM lattice.}
+\end{figure}
+
+
+We apply the gradient flow equation
+\begin{equation}
+    \label{eq:nsm_gradflow_disc}
+    \partial_\tau \e (\tau, x) = \left( 1 - \e(\tau,x) \e(\tau,x)^T\right) \partial^2 \e(\tau,x),
+\end{equation}
+where the Laplacian operator $\partial^2$ is defined as
+\begin{equation*}
+    \partial^2 \e(\tau,x) = \e(\tau, x+a \hat{t}) + \e(\tau,x-a\hat t) + \e(\tau, x+a \hat{x}) + \e(\tau,x-a\hat x) - 4 \e(t,x).
+\end{equation*}
+
+We numerically solve the ordinary differential equation in Eq.~\ref{eq:nsm_gradflow_disc} using a fourth-order Runga-Kutta approximation. To increase the efficiency of this algorithm, we implement the step-doubling algorithm to adaptively adjust the step size. If the error of a Runge-Kutta step is greater than the tolerance, the same step is repeated with half the step size. Alternatively, if the error is less than half of the tolerance, the step size is doubled for the next calculation. Finally, if the step size is greater than the distance to the next measurement, that distance is used as the step size, using the normal value afterwards. Otherwise, the algorithm proceeds with the consistent step size. 
+
+To calculate the error, we compare one lattice $\e_1$ produced using a step of size $2h$ with another lattice $\e_2$ produced via two steps of size $h$. The error $\Delta$ can be estimated to up the fifth order of $h$ as \cite{vetterling1992}
+\begin{equation}
+\Delta = \frac{1}{15}\sqrt{\sum_x \left| \e_2(x) - \e_1(x) \right|}
+\end{equation}
+The tolerance used in this work is $\Delta_{max}=0.01$.
+
 
 \section{Results}
 \begin{figure}[h!]
