@@ -2,13 +2,16 @@
 % data according to the instructions in PoSauthmanual.pdf
 \documentclass[a4paper,11pt]{article}
 \usepackage{pos}
-%\usepackage{amsmath,amsfonts,amssymb,eulervm,xspace} Currently causing a package clash for me.
+% \usepackage{eulervm}
+% \usepackage{xspace}
+% \usepackage{inputenc}
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{subcaption}
 \newcommand{\e}{\vec e}
 \graphicspath{{../figures/}}
 \newcommand\chris[1]{\textcolor{teal}{CJM: #1}}
+\newcommand\stuart[1]{\textcolor{pink}{SNT: #1}}
 
 
 \title{Topology of the $O(3)$ non-linear sigma model under the gradient flow}
@@ -17,9 +20,12 @@
 \author*[a]{Stuart Thomas}
 \author[a,b]{Christopher Monahan}
 
-\affiliation[a]{Department of Physics, William \& Mary,  Williamsburg, Virginia 23187, USA}
 
-\affiliation[b]{Thomas Jefferson National Accelerator Facility, Newport News, Virginia, USA}
+\affiliation[a]{Department of Physics, William \& Mary, \\ 300 Ukrop Way, Williamsburg, VA, USA} %23187
+\affiliation[b]{Thomas Jefferson National Accelerator Facility, \\ 12000 Jefferson Avenue, Newport News, VA, USA} %23606
+% These match the PoS format a little better
+
+% \affiliation[b]{Thomas Jefferson National Accelerator Facility, Newport News, Virginia, USA}
 
 \emailAdd{snthomas01@email.wm.edu}
 \emailAdd{cjmonahan@wm.edu}
@@ -44,17 +50,21 @@ Spin models provide a framework for understanding the physics of strongly-couple
 
 We consider the $O(3)$ NLSM in 1+1 dimensions (one dimension of space, one dimension of time). This theory exhibits topological properties, such as \textit{instantons}, or classical field solutions at local minima of the action in Euclidean space. These topologically protected solutions cannot evolve into the vacuum state via local fluctuations. This property has become critically important to quantum field theories in cosmology and high energy physics \cite{goddard1986}. \chris{Can we provide a more explicit example(s) here? Statement is very vague at the moment.} Additionally, topological stability may become a key tool for fault-tolerant quantum computers \cite{kitaev1997}. In these devices, topology protects the delicate quantum states necessary for information processing.
 
+The protection of topological instantons in the 1+1 $O(3)$ NLSM relies on a vanishing topological susceptibilty. However, the convergence of this quantity is still unknown. \cite{bietenholz2018} While the some analytical arguments argue the topological susceptibility should approach zero in the continuum limit, numerical results on the lattice predict infinities \cite{berg1981}. In an attempt to shed light on this contradiction, we apply the gradient flow, a local smearing of operators which preserves gauge invariance. In quantum chromodynamics, this technique has corroborated a previous analytical result \cite{giusti2004} by removing ultraviolet divergences on the lattice \cite{bruno2014}. This success has motivated the gradient flow to calculate the topological susceptibility in the 1+1 $O(3)$ NLSM. Despite this intuition, recent studies demonstrate that the observable still diverges in the continuum limit \cite{bietenholz2018}.
+
+We also study a second perspective on the topological susceptibility arising from the introduction of a $\theta$-term into the field Lagrangian. This term drives the vacuum state into a topological phase \cite{allessalom2008}. Differentiating the field's partition function with respect to $\theta$ yields a value proportional to the topological susceptibility. The effect of nonzero $\theta$ on the theory therefore should reflect the divergence in the continuum limit. In this work we verify the divergence of the topological susceptibility and develop a clearer picture of how the $\theta$-term affects the topology of the 1+1 $O(3)$ NLSM.
+
+To numerically study the topological qualities of the NLSM, we first implement a Markov chain Monte Carlo simulation using Metropolis and Wolff cluster \cite{wolff1989} algorithms. Since the gradient flow has no exact solution in the NLSM we implement a numerical solution using a fourth-order Runge-Kutta approximation with automatic step sizing. By applying the gradient flow to every configuration in the sample, we can measure its effect on the topological charge and susceptibility.
 
 \section{The Non-Linear Sigma Model}
 
 We study the $O(3)$ NLSM in two dimensions \chris{[In Euclidean space it does not really make sense to distinguish time and space, unless we start in Minkowski spacetime and then Wick rotate.]}, defined by the Euclidean action
 \begin{equation*}
     \label{eq:nlsm euclidean action}
-    S_E = \frac{\beta}{2} \int d^2x \; \left[ \left(\partial_t \e\, \right)^2+ \left( \partial_x \e\,\right)^2 \right],
+    % S_E = \frac{\beta}{2} \int d^2x \; \left[ \left(\partial_t \e\, \right)^2+ \left( \partial_x \e\,\right)^2 \right],
+    S_E = \frac{\beta}{2} \int d^2x \; \sum_{i=1}^{2}\left(\partial_i \e\, \right)^2,
 \end{equation*}
-where $\e$ is 3-component real vector constrained by $|\e\,|=1$ and $\beta$ is the inverse coupling constant. 
-
-Following~\cite{berg1981}, we define the topological charge density, $q(x^*)$, for each plaquette $x^*$ such that the total topological charge is
+where $\e$ is 3-component real vector constrained by $|\e\,|=1$ and $\beta$ is the inverse coupling constant. Following~\cite{berg1981}, we define the topological charge density, $q(x^*)$, for each plaquette $x^*$ such that the total topological charge is
 \begin{equation}
     Q = \sum_{x^*} q(x^*),
 \end{equation}
@@ -62,7 +72,7 @@ where
 \begin{equation}
     q(x^*) = \frac{1}{4\pi} \bigg[A\Big(\e(x_1), \e(x_2), \e(x_3)\Big) + A\Big(\e(x_1), \e(x_3), \e(x_4)\Big) \bigg].
 \end{equation}
-Here $A$ is the signed area of the triangle in target space, which we represent in the left-hand figure of Fig.~\ref{fig:topology}. This value is defined if $A\neq 0, 2\pi$, or in other words, as long as the three points on the sphere are distinct and do not form a hemisphere. In numerical calculations, these points can be ignored. Therefore, we impose that the signed area is defined on the smallest spherical triangle, or $-2\pi < A < 2\pi$.
+Here, $A$ is the signed area of the triangle in target space, which we represent in the left-hand figure of Fig.~\ref{fig:signedarea}. This value is defined if $A\neq 0, 2\pi$, or in other words, as long as the three points on the sphere are distinct and do not form a hemisphere. In numerical calculations, these points can be ignored. Therefore, we impose that the signed area is defined on the smallest spherical triangle, or $-2\pi < A < 2\pi$.
 \begin{figure}
   \centering
     \begin{subfigure}[b]{0.4\textwidth}
@@ -139,29 +149,29 @@ Here $A$ is the signed area of the triangle in target space, which we represent 
             \node [style=label] at (8) {\small $A$};
         \end{pgfonlayer}
     \end{tikzpicture}
-    \caption{The signed area of a triangle in target space.}
+    \caption{\label{fig:signedarea} The signed area of a triangle in target space.}
     \end{subfigure}
     \caption{\label{fig:topology}}
 \end{figure}
-
-\chris{Need text here to explain the next equations}
-\begin{equation*}
-    S[\e\,] \rightarrow S[\e\,] - i \theta Q[\e\,].
-\end{equation*}
-A nonzero $\theta$ implies nonzero $\langle Q \rangle$. Furthermore,
-\begin{equation}
-    \chi_t \propto \left. \frac{d\,\mathrm{Im}\langle Q \rangle}{d\theta}\right|_{\theta=0}
-\end{equation}
 
 We define the topological susceptibility $\chi_t$
 \begin{equation}
 \chi_t \equiv \frac{1}{L^2} \Big( \langle Q^2 \rangle - \langle Q \rangle^2 \Big).
 \end{equation}
-In the trivial case, $\langle Q \rangle$ is equal to $0$ and on this lattice, this becomes   
+In the trivial case, $\langle Q \rangle$ is equal to $0$ and on this lattice, this becomes
 \begin{equation}
     \chi_t = \frac{1}{L^2} \sum_{x^*,y^*} \langle q(x^*)q(y^*)\rangle  = \frac{1}{L^2} \sum_{x^*} \langle q(x^*)q(0)\rangle,
 \end{equation}
 where in the second equality we have assumed periodic boundary conditions. The topological susceptibility diverges in the continuum limit owing solely to the $x^*=0$ term \cite{bietenholz2018}. This divergence exists in QCD as well \cite{bruno2014}.
+
+Additionally, we can generalize the NLSM to have a nonzero vacuum expectation value for the topological charge, manifested by the addition of a ``$\theta$-term'':
+\begin{equation*}
+    S[\e\,] \rightarrow S[\e\,] - i \theta Q[\e\,].
+\end{equation*}
+defining the ``nontrivial'' NLSM. We find that the topological susceptibility in the trivial case depends on the charge in the nontrival model:
+\begin{equation}
+    \chi_t \propto \left. \frac{d\,\mathrm{Im}\langle Q \rangle}{d\theta}\right|_{\theta=0}
+\end{equation}
 
 
 
