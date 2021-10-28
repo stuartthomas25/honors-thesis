@@ -14,6 +14,8 @@
 \graphicspath{{../figures/}}
 \newcommand\chris[1]{\textcolor{teal}{CJM: #1}}
 \newcommand\stuart[1]{\textcolor{pink}{SNT: #1}}
+% \newcommand\chris[1]{}
+% \newcommand\stuart[1]{}
 
 
 \title{Topology of the $O(3)$ non-linear sigma model under the gradient flow}
@@ -194,7 +196,7 @@ Seeking to resolve the ultraviolet divergence in the $\chi_{t}$, we adopt a tech
 
 We can choose any flow time equation that drives the field towards a classical minimum. Following \cite{bietenholz2018}, we can define the gradient flow for the NLSM via the differential equation
 \begin{equation}
-    \label{eq:nsm_gradflow}
+    \label{eq:nlsm_gradflow}
   \partial_\tau \e (\tau,x) = \left( 1 - \e(\tau,x) \e(\tau,x)^T \right) \partial^2 \e(\tau,x).
 \end{equation}
 We solve this equation numerically using the boundary condition $\e(\tau=0,x) = \e(x)$, a process described in Sec.~\ref{sec:numerics}.
@@ -226,16 +228,11 @@ We thermalize the configurations with 1000 sweeps, with a cluster update every f
 \end{figure}
 
 
-We apply the gradient flow equation
-\begin{equation}
-    \partial_\tau \e (\tau, x) = \left( 1 - \e(\tau,x) \e(\tau,x)^T\right) \partial^2 \e(\tau,x),
-\end{equation}
-replacing the continuous Laplacian operator $\partial^2$ with a discrete analogue
+We apply the gradient flow equation (Eq.~\ref{eq:nlsm_gradflow}) replacing the continuous Laplacian operator $\partial^2$ with a discrete analogue
 \begin{equation*}
     \partial^2 \e(\tau,x) = \e(\tau, x+a \hat{t}) + \e(\tau,x-a\hat t) + \e(\tau, x+a \hat{x}) + \e(\tau,x-a\hat x) - 4 \e(t,x).
 \end{equation*}
-
-We numerically solve the ordinary differential equation in Eq.~\ref{eq:nsm_gradflow} using a fourth-order Runga-Kutta approximation. To increase the efficiency of this algorithm, we implement the step-doubling algorithm to adaptively adjust the step size. If the error of a Runge-Kutta step is greater than the tolerance, the same step is repeated with half the step size. Alternatively, if the error is less than half of the tolerance, the step size is doubled for the next calculation. Finally, if the step size is greater than the distance to the next measurement, that distance is used as the step size, using the normal value afterwards. Otherwise, the algorithm proceeds with the consistent step size.
+and numerically solving the differential equation using a fourth-order Runga-Kutta approximation. To increase the efficiency of this algorithm, we implement the step-doubling algorithm to adaptively adjust the step size. If the error of a Runge-Kutta step is greater than the tolerance, the same step is repeated with half the step size. Alternatively, if the error is less than half of the tolerance, the step size is doubled for the next calculation. Finally, if the step size is greater than the distance to the next measurement, that distance is used as the step size, using the normal value afterwards. Otherwise, the algorithm proceeds with the consistent step size.
 
 To calculate the error, we compare one lattice $\e_1$ produced using a step of size $2h$ with another lattice $\e_2$ produced via two steps of size $h$. The error $\Delta$ can be estimated to up the fifth order of $h$ as \cite{vetterling1992}
 \begin{equation}
