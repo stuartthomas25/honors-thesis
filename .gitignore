@@ -18,4 +18,8 @@
 **.vrb
 **.log
 formalities/**
+<<<<<<< HEAD
 proceedings/draft.pdf
+=======
+personal**
+>>>>>>> 435ac34d33f0f6afd4365dc962b445b914ccd0fe

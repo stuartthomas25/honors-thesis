@@ -9,9 +9,13 @@
 \usepackage{tikz}
 \usepackage{subcaption}
 \newcommand{\e}{\vec e}
+\newcommand{\logchi}{7.4 }
+\newcommand{\powchi}{8.8 }
 \graphicspath{{../figures/}}
 \newcommand\chris[1]{\textcolor{teal}{CJM: #1}}
 \newcommand\stuart[1]{\textcolor{pink}{SNT: #1}}
+% \newcommand\chris[1]{}
+% \newcommand\stuart[1]{}
 
 
 \title{Topology of the $O(3)$ non-linear sigma model under the gradient flow}
@@ -43,12 +47,11 @@ The $O(3)$ non-linear sigma model (NLSM) is a prototypical field theory for QCD 
 \begin{document}
 \maketitle
 
-
 \section{Introduction}
-
+\label{sec:introduction}
 Spin models provide a framework for understanding the physics of strongly-coupled systems, from solid state and condensed matter systems to nuclear and particle physics. The non-linear sigma model (NLSM), in particular, has provided a rich arena in which to study nonperturbative effects. In solid-state systems, this model describes Heisenberg ferromagnets \cite{callan1985} and in nuclear physics, it acts as a prototype for quantum chromodynamics (QCD), the gauge theory of the strong nuclear force. In general, the NLSM shares key features with non-Abelian gauge theories such as QCD, including a mass gap and asymptotic freedom \cite{polyakov1975}, and has proved a useful model for exploring the effect of these properties in a simpler system.
 
-We consider the $O(3)$ NLSM in 1+1 dimensions (one dimension of space, one dimension of time). This theory exhibits topological properties, such as \textit{instantons}, or classical field solutions at local minima of the action in Euclidean space. These topologically protected solutions cannot evolve into the vacuum state via local fluctuations. This property has become critically important to quantum field theories in cosmology and high energy physics \cite{goddard1986}. \chris{Can we provide a more explicit example(s) here? Statement is very vague at the moment.} Additionally, topological stability may become a key tool for fault-tolerant quantum computers \cite{kitaev1997}. In these devices, topology protects the delicate quantum states necessary for information processing.
+We consider the $O(3)$ NLSM in 1+1 dimensions (one dimension of space, one dimension of time). This theory exhibits topological properties, such as \textit{instantons}, or classical field solutions at local minima of the action in Euclidean space. These topologically protected solutions cannot evolve into the vacuum state via local fluctuations. This property has become critically important to quantum field theories in cosmology and high energy physics, relating to the existence of magnetic monopoles\cite{goddard1986} and the mass of the $\eta'$ Goldstone boson \cite{witten1979, veneziano1979} \chris{Can we provide a more explicit example(s) here? Statement is very vague at the moment.} Additionally, topological stability may become a key tool for fault-tolerant quantum computers \cite{kitaev1997}. In these devices, topology protects the delicate quantum states necessary for information processing.
 
 The protection of topological instantons in the 1+1 $O(3)$ NLSM relies on a vanishing topological susceptibilty. However, the convergence of this quantity is still unknown. \cite{bietenholz2018} While the some analytical arguments argue the topological susceptibility should approach zero in the continuum limit, numerical results on the lattice predict infinities \cite{berg1981}. In an attempt to shed light on this contradiction, we apply the gradient flow, a local smearing of operators which preserves gauge invariance. In quantum chromodynamics, this technique has corroborated a previous analytical result \cite{giusti2004} by removing ultraviolet divergences on the lattice \cite{bruno2014}. This success has motivated the gradient flow to calculate the topological susceptibility in the 1+1 $O(3)$ NLSM. Despite this intuition, recent studies demonstrate that the observable still diverges in the continuum limit \cite{bietenholz2018}.
 
@@ -56,12 +59,15 @@ We also study a second perspective on the topological susceptibility arising fro
 
 To numerically study the topological qualities of the NLSM, we first implement a Markov chain Monte Carlo simulation using Metropolis and Wolff cluster \cite{wolff1989} algorithms. Since the gradient flow has no exact solution in the NLSM we implement a numerical solution using a fourth-order Runge-Kutta approximation with automatic step sizing. By applying the gradient flow to every configuration in the sample, we can measure its effect on the topological charge and susceptibility.
 
-\section{The Non-Linear Sigma Model}
+\section{The non-linear sigma model}
+\label{sec:nlsm}
+\chris{[In Euclidean space it does not really make sense to distinguish time and space, unless we start in Minkowski spacetime and then Wick rotate.]}
 
-We study the $O(3)$ NLSM in two dimensions \chris{[In Euclidean space it does not really make sense to distinguish time and space, unless we start in Minkowski spacetime and then Wick rotate.]}, defined by the Euclidean action
+\stuart{I think I resolved this}
+
+We study the $O(3)$ NLSM in two dimensions, defined by the Euclidean action
 \begin{equation*}
     \label{eq:nlsm euclidean action}
-    % S_E = \frac{\beta}{2} \int d^2x \; \left[ \left(\partial_t \e\, \right)^2+ \left( \partial_x \e\,\right)^2 \right],
     S_E = \frac{\beta}{2} \int d^2x \; \sum_{i=1}^{2}\left(\partial_i \e\, \right)^2,
 \end{equation*}
 where $\e$ is 3-component real vector constrained by $|\e\,|=1$ and $\beta$ is the inverse coupling constant. Following~\cite{berg1981}, we define the topological charge density, $q(x^*)$, for each plaquette $x^*$ such that the total topological charge is
@@ -70,21 +76,22 @@ where $\e$ is 3-component real vector constrained by $|\e\,|=1$ and $\beta$ is t
 \end{equation}
 where
 \begin{equation}
+  \label{eq:topodensity}
     q(x^*) = \frac{1}{4\pi} \bigg[A\Big(\e(x_1), \e(x_2), \e(x_3)\Big) + A\Big(\e(x_1), \e(x_3), \e(x_4)\Big) \bigg].
 \end{equation}
-Here, $A$ is the signed area of the triangle in target space, which we represent in the left-hand figure of Fig.~\ref{fig:signedarea}. This value is defined if $A\neq 0, 2\pi$, or in other words, as long as the three points on the sphere are distinct and do not form a hemisphere. In numerical calculations, these points can be ignored. Therefore, we impose that the signed area is defined on the smallest spherical triangle, or $-2\pi < A < 2\pi$.
+Here, $A$ is the signed area of the triangle in target space. Visually, the three points in each of the two terms in Eq.~\ref{eq:topodensity} form halves of the plaquette which we represent in Fig.~\ref{fig:plaquette}. The resultant signed area is represented in Fig.~\ref{fig:signedarea}. The value $A$ is defined if $A\neq 0, 2\pi$, or in other words, as long as the three points on the sphere are distinct and do not form a hemisphere. In numerical calculations, these points can be ignored. Therefore, we impose that the signed area is defined on the smallest spherical triangle, or $-2\pi < A < 2\pi$.
 \begin{figure}
   \centering
     \begin{subfigure}[b]{0.4\textwidth}
     \centering
-    \begin{tikzpicture}[scale=0.4, every node/.style={scale=1.2}]
+    \begin{tikzpicture}[scale=0.4, every node/.style={scale=0.9}]
         \draw[step=4cm,gray,thin] (-1,-1) grid (5,5);
         \draw[dotted] (0,0) -- (4,4);
-        \draw[thick](0,0) node[circle,fill,inner sep=0pt, minimum size=0.3cm]{} node[anchor=north west] {$x_1$} --
-                    (0,4) node[circle,fill,inner sep=0pt, minimum size=0.3cm]{} node[anchor=north west] {$x_2$} --
-                    (4,4) node[circle,fill,inner sep=0pt, minimum size=0.3cm]{} node[anchor=north west] {$x_3$} --
-                    (4,0) node[circle,fill,inner sep=0pt, minimum size=0.3cm]{} node[anchor=north west] {$x_4$} -- cycle ;
-                    \draw[] (2,2) node[circle,fill,inner sep=0pt, minimum size=0.3cm]{} node[anchor=north east]{$x^*$};
+        \draw[thick](0,0) node[circle,fill,inner sep=0pt, minimum size=0.2cm]{} node[anchor=north west] {$x_1$} --
+                    (0,4) node[circle,fill,inner sep=0pt, minimum size=0.2cm]{} node[anchor=north west] {$x_2$} --
+                    (4,4) node[circle,fill,inner sep=0pt, minimum size=0.2cm]{} node[anchor=north west] {$x_3$} --
+                    (4,0) node[circle,fill,inner sep=0pt, minimum size=0.2cm]{} node[anchor=north west] {$x_4$} -- cycle ;
+                    \draw[] (2,2) node[circle,fill,inner sep=0pt, minimum size=0.2cm]{} node[anchor=north west]{$x^*$};
 
 
         \draw[-stealth] (0.2,1) -- (0.2,3);
@@ -95,7 +102,7 @@ Here, $A$ is the signed area of the triangle in target space, which we represent
         \draw[-stealth] (3.8,3) -- (3.8,1);
         \draw[-stealth] (3,0.2) -- (1,0.2);
     \end{tikzpicture}
-    \caption{Visualization of a plaquette $x^*$. The dotted line separates the plaquette into two signed areas, used to define the topological charge density $q(x^*)$. Arrows represent the order of signed area.}
+    \caption{\label{fig:plaquette} Visualization of a plaquette $x^*$. The dotted line separates the plaquette into two signed areas, used to define the topological charge density $q(x^*)$. Arrows represent the order of signed area.}
     %\caption{\label{fig:plaquette} Visualization of plaquette $x^*$. The dotted line separates the plaquette into two signed areas which are used to define the topological charge density $q(x^*)$. Arrows represent order of signed area.}
     \vspace*{-\baselineskip}
     \end{subfigure}
@@ -154,17 +161,17 @@ Here, $A$ is the signed area of the triangle in target space, which we represent
     \caption{\label{fig:topology}}
 \end{figure}
 
-We define the topological susceptibility $\chi_t$
+From the definition of $Q$, we define the topological susceptibility as
 \begin{equation}
 \chi_t \equiv \frac{1}{L^2} \Big( \langle Q^2 \rangle - \langle Q \rangle^2 \Big).
 \end{equation}
-In the trivial case, $\langle Q \rangle$ is equal to $0$ and on this lattice, this becomes
+Since $\langle Q \rangle=0$ in the NLSM, this quantity becomes
 \begin{equation}
-    \chi_t = \frac{1}{L^2} \sum_{x^*,y^*} \langle q(x^*)q(y^*)\rangle  = \frac{1}{L^2} \sum_{x^*} \langle q(x^*)q(0)\rangle,
+    \chi_t = \frac{1}{L^2} \sum_{x^*} \langle q(x^*)q(0)\rangle,
 \end{equation}
-where in the second equality we have assumed periodic boundary conditions. The topological susceptibility diverges in the continuum limit owing solely to the $x^*=0$ term \cite{bietenholz2018}. This divergence exists in QCD as well \cite{bruno2014}.
+where we have assumed periodic boundary conditions. In the continuum limit, the topological susceptibility diverges owing solely to the $x^*=0$ term \cite{bietenholz2018}, a divergence that exists in QCD as well \cite{bruno2014}.
 
-Additionally, we can generalize the NLSM to have a nonzero vacuum expectation value for the topological charge, manifested by the addition of a ``$\theta$-term'':
+As an extension, we can generalize the NLSM to have a nonzero vacuum expectation value for the topological charge ($\langle Q \rangle\neq0$), manifested by the addition of a ``$\theta$-term'':
 \begin{equation*}
     S[\e\,] \rightarrow S[\e\,] - i \theta Q[\e\,].
 \end{equation*}
@@ -172,20 +179,37 @@ defining the ``nontrivial'' NLSM. We find that the topological susceptibility in
 \begin{equation}
     \chi_t \propto \left. \frac{d\,\mathrm{Im}\langle Q \rangle}{d\theta}\right|_{\theta=0}
 \end{equation}
+This final relation will allow us to prode the behavior of the topological susceptibility in the nontopological NLSM by considering the topological charge in the nontrivial theory.
 
 
 
-\subsection{Gradient flow}
 
-\chris{Sentences/paragraph introducing continuous gradient flow here}
+
+
+
+
+
+
+\section{Gradient flow}
+\label{sec:gradflow}
+Seeking to resolve the ultraviolet divergence in the $\chi_{t}$, we adopt a technique known as ``smearing'', a local averaging of the field \cite{solbrig2008}. Specifically, we use a technique known as the gradient flow \cite{monahan2015} which introduces a new half-dimension\footnote{The term ``half-dimension'' indicates that the flow time is exclusively positive.} called ``flow time''.  The flow time $\tau$ parameterizes the smearing such that an evolution in flow time corresponds to suppressing ultraviolet divergences, pushing field configurations toward classical minima of the action.
+
+We can choose any flow time equation that drives the field towards a classical minimum. Following \cite{bietenholz2018}, we can define the gradient flow for the NLSM via the differential equation
+\begin{equation}
+    \label{eq:nlsm_gradflow}
+  \partial_\tau \e (\tau,x) = \left( 1 - \e(\tau,x) \e(\tau,x)^T \right) \partial^2 \e(\tau,x).
+\end{equation}
+We solve this equation numerically using the boundary condition $\e(\tau=0,x) = \e(x)$, a process described in Sec.~\ref{sec:numerics}.
 
 \section{Numerical implementation}
+\label{sec:numerics}
 We implement a numerical Monte Carlo method to study the NLSM in two dimensions using the discretized action
+
 \begin{equation}
     \label{eq:nlsm discretized action}
-    S_\mathrm{lat}[\e\,] = \sum_i \left[ 2 - \e(x+a\hat{t}\,)\cdot\e(x) - \e(x+a\hat{x})\cdot\e(x) \right].
+    S_\mathrm{lat}[\e\,] = \sum_i \left[ 2 - \sum_{\mu=0}^{2}\e(x+a\hat{\mu}\,)\cdot\e(x)  \right]
 \end{equation}
-We generate configurations using the Metropolis \cite{} and Wolff cluster \cite{wolff1989} algorithms, implemented in C++ and parallelized through the Message Passing Interface with a checkerboard algorithm \cite{}. 
+where $a$ is a lattice constant and $\hat \mu$ are the Euclidean unit vectors. We generate configurations using the Metropolis \stuart{Does this need to be cited?} and Wolff cluster \cite{wolff1989} algorithms.
 
 We thermalize the configurations with 1000 sweeps, with a cluster update every five sweeps, and illustrate a sample Markov chain in Fig.~\ref{fig:therm}, where we plot the action as a function of Metropolis sweeps. We use Wolff's automatic windowing procedure \cite{wolff2007} to estimate the autocorrelation times for various observables, such as the magnetic susceptibility $\chi_m$. We measure observables every $50$ sweeps for each simulation.
 \begin{figure}[h]
@@ -204,17 +228,11 @@ We thermalize the configurations with 1000 sweeps, with a cluster update every f
 \end{figure}
 
 
-We apply the gradient flow equation
-\begin{equation}
-    \label{eq:nsm_gradflow_disc}
-    \partial_\tau \e (\tau, x) = \left( 1 - \e(\tau,x) \e(\tau,x)^T\right) \partial^2 \e(\tau,x),
-\end{equation}
-where the Laplacian operator $\partial^2$ is defined as
+We apply the gradient flow equation (Eq.~\ref{eq:nlsm_gradflow}) replacing the continuous Laplacian operator $\partial^2$ with a discrete analogue
 \begin{equation*}
     \partial^2 \e(\tau,x) = \e(\tau, x+a \hat{t}) + \e(\tau,x-a\hat t) + \e(\tau, x+a \hat{x}) + \e(\tau,x-a\hat x) - 4 \e(t,x).
 \end{equation*}
-
-We numerically solve the ordinary differential equation in Eq.~\ref{eq:nsm_gradflow_disc} using a fourth-order Runga-Kutta approximation. To increase the efficiency of this algorithm, we implement the step-doubling algorithm to adaptively adjust the step size. If the error of a Runge-Kutta step is greater than the tolerance, the same step is repeated with half the step size. Alternatively, if the error is less than half of the tolerance, the step size is doubled for the next calculation. Finally, if the step size is greater than the distance to the next measurement, that distance is used as the step size, using the normal value afterwards. Otherwise, the algorithm proceeds with the consistent step size. 
+and numerically solving the differential equation using a fourth-order Runga-Kutta approximation. To increase the efficiency of this algorithm, we implement the step-doubling algorithm to adaptively adjust the step size. If the error of a Runge-Kutta step is greater than the tolerance, the same step is repeated with half the step size. Alternatively, if the error is less than half of the tolerance, the step size is doubled for the next calculation. Finally, if the step size is greater than the distance to the next measurement, that distance is used as the step size, using the normal value afterwards. Otherwise, the algorithm proceeds with the consistent step size.
 
 To calculate the error, we compare one lattice $\e_1$ produced using a step of size $2h$ with another lattice $\e_2$ produced via two steps of size $h$. The error $\Delta$ can be estimated to up the fifth order of $h$ as \cite{vetterling1992}
 \begin{equation}
@@ -223,31 +241,101 @@ To calculate the error, we compare one lattice $\e_1$ produced using a step of s
 The tolerance used in this work is $\Delta_{max}=0.01$.
 
 
+
+
+
+
+
+
+
+
+
+
 \section{Results}
+\label{sec:results}
+In order to confirm the accuracy of the model, we compare results with existing literature. We first consider the results of Berg \& L\"uscher \cite{berg1981}, specifically the internal energy and magnetic susceptibility. Following \cite{berg1981}, we approximate the internal energy in the strong ($\beta<1$) and weak ($\beta>2$) regimes as
+\begin{equation}
+    \label{eq:analytic_energy}
+E \approx \begin{cases}
+    4-4y-8y^3-\frac{48}{5}y^5& \beta<1 \\
+\frac{2}{\beta} + \frac{4}{\beta^2} + 0.156\frac{1}{\beta^3}& \beta>2
+\end{cases}
+\end{equation}
+where
+\begin{equation}
+    y=\mathrm{coth}\beta-\frac{1}{\beta}.
+\end{equation}
+We compare this analytical result and simulated values of $\chi_m$ with the Monte Carlo simulation in Fig.~\ref{fig:bergluscher}.
+\begin{figure}[h!]
+    \centering
+      \includegraphics[width=0.6\textwidth]{internal_energy.png}
+      \caption{\label{fig:bergluscher}Comparison with \cite{berg1981}. First panel: internal energy compared with analytic  energy (Eq.~\ref{eq:analytic_energy}). Second panel: magnetic susceptibility compared with literature values.}
+\end{figure}
+These two charts show a high degree of agreement with the current literature however there is a slight discrepancy, prehaps arising from different Monte Carlo methods.
+
+We also seek to confirm the results from Bietenholz et al. \cite{bietenholz2018}. Specifically, we show the topological susceptibility $\chi_t$ diverges in the continuum limit even at finite flow time. Since $\chi_t$ is in units of inverse distance squared, we multiply by $\xi_2^2$, the square of the second moment correlation length, to achieve a scale-invariant value $\chi_t\xi_2^2$. Additionally, we use a parameter $t_0$ to scale the flow time such that $t_0\sim L^2$. In our Monte Carlo simulation, we utilize the same values as \cite{bietenholz2018} for $\xi_2$, $\beta$ and $t_0$.
+
+To begin the comparison, we plot $\chi_t\xi_2^2$ as a function of flow time $\tau$, shown in Fig.~\ref{fig:bietenholz}.
+\begin{figure}[h!]
+    \centering
+      \includegraphics[width=0.8\textwidth]{bietenholz.png}
+      \caption{\label{fig:bietenholz} $\chi_t L^2$ as a  function of flow time $\tau$. Simulation run with 10,000 measurements every 50 sweeps, 1,000 sweep thermalization.}
+\end{figure}
+We find that the flow time effectively decreases the topological susceptibility by dampening high-momentum modes. To analyze the divergence of $\chi_t$ in the continuum limit, we plot $\chi_t \xi_2^2$ as a function of lattice size $L$. We perform this simulation at flow times $\tau=0$ and $\tau=5t_0$ (Fig.~\ref{fig:divergence}).
 \begin{figure}[h!]
     \begin{center}
-        \begin{subfigure}[b]{0.45\textwidth}
-            %\includegraphics[height=0.7\textwidth]{divergence.png}
-            \caption{$\tau = 0$}
-        \end{subfigure}%
-        \begin{subfigure}[b]{0.45\textwidth}
-            \centering
-            \includegraphics[height=0.7\textwidth]{divergence_flowed.png}
-            \caption{$\tau = 5t_0$}
-        \end{subfigure}
+      \begin{subfigure}[b]{0.45\textwidth}
+          \centering
+          \includegraphics[width=\textwidth]{divergence.png}
+          \caption{$\tau = 0$}
+      \end{subfigure} %
+      \begin{subfigure}[b]{0.45\textwidth}
+          \centering
+          \includegraphics[width=\textwidth]{divergence_flowed.png}
+          \caption{$\tau = 5t_0$}
+      \end{subfigure}
+      \caption{\label{fig:divergence} $\chi_t\xi_2^2$ as a function of $L$. We fit the data with both a logarithmic and power fit. Simulation run with 10,000 measurements, once every 50 sweeps, 1,000 sweep thermalization. In the $\tau=0$ case, we have compared our result with the curve fit found in \cite{bietenholz2018}.}
     \end{center}
-        \caption{\label{fig:divergence} $\chi_t\xi_2^2$ as a function of $L$. $\xi_2$ is the second moment of the correlation function and $t_0$ is a scale-independent unit of flow time. We fit the data with both a logarithmic and power fit. Simulation run with 10,000 measurements every 50 sweeps, 1,000 sweep thermalization. In the $\tau=0$ case, we have compared our result with the curve fits found in \cite{bietenholz2018}.}
-        %\caption{Divergent properties with
-        %comparison to~\footfullcite{bietenholz2018}, 10,000 measurements}
 \end{figure}
+We fit the data with two options: a log fit
+\begin{equation}
+    \chi_t \xi_2^2 = a \mathrm{log}(b L + c)
+\end{equation}
+and a power law fit
+\begin{equation}
+    \chi_t \xi_2^2 = a L^b + c.
+\end{equation}
+We calculate the parameters to these functions using the \texttt{curve\_fit} tool in the \texttt{scipy} Python package \cite{virtanen2020}. When $\tau=5t_0$, the data fits these functions with $\chi^2/DOF$ of \logchi and \powchi respectively, indicating errors were underestimated. Both of these functions diverge as $L\rightarrow \infty$, indicating that the topological susceptibility also diverges in the continuum limit. Though there is a clear difference between the quantitative fit from \cite{bietenholz2018} and the fit calculated in this work, both demonstrate divergent behavior. This result supports the inherent divergence of $\chi_t$ in the continuum limit.
 
-\begin{figure}[h]
+
+\subsection{Topological charge in nontrivial theory}
+
+Following the method explained in Sec.~\ref{sec:nlsm}, we calculate the imaginary part of $\langle Q \rangle$ for arbitrary $\theta$. We perform this calculation for three values of the flow time $\tau$, shown in Fig~\ref{fig:theta}.
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.5\textwidth]{theta.png}
-    \caption{\label{fig:theta} Nontrivial $\mathrm{Im}\langle Q \rangle$ as a function of $\theta$. Simulation run with 10,000 measurements, every 50 sweeps, 1,000 sweep thermalization. Note the different scaling of the $y$-axis.}
-  \end{figure}
+      \includegraphics[width=0.6\textwidth]{theta-small.png}
+      \caption{\label{fig:theta} Imaginary part of $\langle Q \rangle$ as a function of $\theta$. Simulation run with 10,000 measurements, measurements very 50 sweeps, 1,000 sweep thermalization. Note the different scaling of the $y$-axis.}
+\end{figure}
+These plots demonstrate the divergence of the continuum limit in the $\tau=0$ and the flowed regimes. In the $\tau=0$ case, the slope increases sharply, reflecting the rapid divergence of $\chi_t$. However in the flowed regime, this divergence is much slower, reflecting the decreased values of $\chi_t$ shown in Fig.~\ref{fig:bietenholz}.
+
+
+
+
+
+
+\section{Discussion}
+
+Berg \& L\"uscher \cite{berg1981} originally illuminated this discrepancy between the renormalization group hypothesis (that $\chi_t \rightarrow 0$) and the numerical results, providing three possible causes:
+\begin{enumerate}
+    \item The definition of the topological charge does not scale to the continuum.
+    \item There are ultraviolet divergences.
+    \item There is no reasonable continuum limit.
+\end{enumerate}
+Since the gradient flow suppresses ultraviolet fluctuations, the persistence of a divergent topological susceptibility under the gradient flow undermines the second option, thereby supporting the other two.
+
+% Further discussions\footnote{We would like to thank Daniel Nogradi for these conference discussions} \cite{nogradi2012}
 
 
 \bibliographystyle{JHEP}
-\bibliography{library}
+\bibliography{../library}
 \end{document}
