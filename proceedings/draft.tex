@@ -49,8 +49,9 @@ The $O(3)$ non-linear sigma model (NLSM) is a prototypical field theory for QCD 
 
 \chris{TO DO:}
 \begin{enumerate}
- \item \chris{Incorporate new reference from conference.}
- \item \chris{Double check fits with e.g. lsqfit}
+ \item \chris{Stuart: Address comments in figures.}
+ \item \chris{Chris: Incorporate new reference from conference.}
+ \item \chris{Chris: Double check fits with e.g. lsqfit}
 \end{enumerate}
 
 \section{Introduction}
@@ -248,12 +249,13 @@ The tolerance used in this work is $\Delta_{max}=0.01$.
 
 \section{Results}
 \label{sec:results}
-In order to confirm the accuracy of the model, we compare results with existing literature. We first consider the results of Berg \& L\"uscher \cite{berg1981}, specifically the internal energy and magnetic susceptibility. Following \cite{berg1981}, we approximate the internal energy in the strong ($\beta<1$) and weak ($\beta>2$) regimes as
+
+We check our numerical implementation of the NLSM by comparison to studies of the internal energy and magnetic susceptibility in Refs.~\cite{berg1981} and \cite{bietenholz2018}. Following \cite{berg1981}, we approximate the internal energy in the strong ($\beta<1$) and weak ($\beta>2$) regimes as
 \begin{equation}
     \label{eq:analytic_energy}
 E \approx \begin{cases}
     4-4y-8y^3-\frac{48}{5}y^5& \beta<1 \\
-\frac{2}{\beta} + \frac{4}{\beta^2} + 0.156\frac{1}{\beta^3}& \beta>2
+\frac{2}{\beta} + \frac{4}{\beta^2} + 0.156\frac{1}{\beta^3}& \beta>2,
 \end{cases}
 \end{equation}
 where
@@ -263,20 +265,21 @@ where
 We compare this analytical result and simulated values of $\chi_m$ with the Monte Carlo simulation in Fig.~\ref{fig:bergluscher}.
 \begin{figure}[h!]
     \centering
-      \includegraphics[width=0.6\textwidth]{internal_energy.png}
-      \caption{\label{fig:bergluscher}Comparison with \cite{berg1981}. First panel: internal energy compared with analytic  energy (Eq.~\ref{eq:analytic_energy}). Second panel: magnetic susceptibility compared with literature values.}
+      \includegraphics[width=0.45\textwidth]{int_energy-0.png}
+      \includegraphics[width=0.45\textwidth]{int_energy-1.png}
+      \caption{\label{fig:bergluscher} Comparison with \cite{berg1981}. First panel: internal energy compared with analytic  energy (Eq.~\ref{eq:analytic_energy}). Second panel: magnetic susceptibility compared with literature values. \chris{Can you please remake these plots so that they both have x-axis labels? Please also make the labels on both axes bigger.}}
 \end{figure}
-These two charts show a high degree of agreement with the current literature however there is a slight discrepancy, prehaps arising from different Monte Carlo methods.
+The slight discrepancy between numerical results in the cross-over region provides an estimate of unquantified systematic uncertainties.
 
-We also seek to confirm the results from Bietenholz et al. \cite{bietenholz2018}. Specifically, we show the topological susceptibility $\chi_t$ diverges in the continuum limit even at finite flow time. Since $\chi_t$ is in units of inverse distance squared, we multiply by $\xi_2^2$, the square of the second moment correlation length, to achieve a scale-invariant value $\chi_t\xi_2^2$. Additionally, we use a parameter $t_0$ to scale the flow time such that $t_0\sim L^2$. In our Monte Carlo simulation, we utilize the same values as \cite{bietenholz2018} for $\xi_2$, $\beta$ and $t_0$.
+We also seek to confirm the results from Bietenholz et al. \cite{bietenholz2018}. In addition, we show the topological susceptibility $\chi_t$ diverges in the continuum limit even at finite flow time. Since $\chi_t$ is in units of inverse distance squared, we multiply by , to achieve a scale-invariant value $\chi_t\xi_2^2$. Additionally, we use a parameter $t_0$ to scale the flow time such that $t_0\sim L^2$. In our Monte Carlo simulation, we utilize the same values as \cite{bietenholz2018} for $\xi_2$, $\beta$ and $t_0$.
 
-To begin the comparison, we plot $\chi_t\xi_2^2$ as a function of flow time $\tau$, shown in Fig.~\ref{fig:bietenholz}.
+In Fig.~\ref{fig:bietenholz} we plot the dimensionless variable $\chi_t\xi_2^2$, where $\xi_2^2$ is the square of the second moment correlation length, as a function of flow time $\tau/t_0$, with $t_0 \sim L^2$.
 \begin{figure}[h!]
     \centering
       \includegraphics[width=0.8\textwidth]{bietenholz.png}
-      \caption{\label{fig:bietenholz} $\chi_t L^2$ as a  function of flow time $\tau$. Simulation run with 10,000 measurements every 50 sweeps, 1,000 sweep thermalization.}
+      \caption{\label{fig:bietenholz} Dimensionless magnetic susceptibility, $\chi_t L^2$, \chris{In the text/y-axis label you say this is $\chi_t\xi_2^2$?} as a  function of flow time $\tau/t_0$. Simulation run with 10,000 measurements every 50 sweeps, 1,000 sweep thermalization. \chris{Please make axis labels bigger.}}
 \end{figure}
-We find that the flow time effectively decreases the topological susceptibility by dampening high-momentum modes. To analyze the divergence of $\chi_t$ in the continuum limit, we plot $\chi_t \xi_2^2$ as a function of lattice size $L$. We perform this simulation at flow times $\tau=0$ and $\tau=5t_0$ (Fig.~\ref{fig:divergence}).
+Fig.~\ref{fig:bietenholz} shows that the flow time effectively decreases the topological susceptibility by dampening high-momentum modes. To analyze the divergence of $\chi_t$ in the continuum limit, we plot $\chi_t \xi_2^2$ as a function of lattice size $L$, for $\tau=0$ and $\tau=5t_0$, in Fig.~\ref{fig:divergence}.
 \begin{figure}[h!]
     \begin{center}
       \begin{subfigure}[b]{0.45\textwidth}
@@ -289,23 +292,23 @@ We find that the flow time effectively decreases the topological susceptibility 
           \includegraphics[width=\textwidth]{divergence_flowed.png}
           \caption{$\tau = 5t_0$}
       \end{subfigure}
-      \caption{\label{fig:divergence} $\chi_t\xi_2^2$ as a function of $L$. We fit the data with both a logarithmic and power fit. Simulation run with 10,000 measurements, once every 50 sweeps, 1,000 sweep thermalization. In the $\tau=0$ case, we have compared our result with the curve fit found in \cite{bietenholz2018}.}
+      \caption{\label{fig:divergence} $\chi_t\xi_2^2$ as a function of $L$. We fit the data with both a logarithmic and power fit. Simulation run with 10,000 measurements, once every 50 sweeps, 1,000 sweep thermalization. In the $\tau=0$ case, we have compared our result with the curve fit found in \cite{bietenholz2018}. \chris{Please make axis labels bigger.}}
     \end{center}
 \end{figure}
-We fit the data with two options: a log fit
+We fit the data with two fit functions: a log fit
 \begin{equation}
-    \chi_t \xi_2^2 = a \mathrm{log}(b L + c)
+    \chi_t \xi_2^2 = a \mathrm{log}(b L + c);
 \end{equation}
 and a power law fit
 \begin{equation}
     \chi_t \xi_2^2 = a L^b + c.
 \end{equation}
-We calculate the parameters to these functions using the \texttt{curve\_fit} tool in the \texttt{scipy} Python package \cite{virtanen2020}. When $\tau=5t_0$, the data fits these functions with $\chi^2/DOF$ of \logchi and \powchi respectively, indicating errors were underestimated. Both of these functions diverge as $L\rightarrow \infty$, indicating that the topological susceptibility also diverges in the continuum limit. Though there is a clear difference between the quantitative fit from \cite{bietenholz2018} and the fit calculated in this work, both demonstrate divergent behavior. This result supports the inherent divergence of $\chi_t$ in the continuum limit.
+We calculate the parameters to these functions using the \texttt{curve\_fit} tool in the \texttt{scipy} Python package \cite{virtanen2020}. When $\tau=5t_0$, the data fits these functions with $\chi^2/DOF$ of \logchi and \powchi respectively, indicating errors were underestimated. Both of these functions diverge as $L\rightarrow \infty$, indicating that the topological susceptibility also diverges in the continuum limit. Though there is a clear difference between the quantitative fit from \cite{bietenholz2018} and the fit calculated in this work, both demonstrate divergent behavior. This result supports the inherent divergence of $\chi_t$ in the continuum limit. \chris{I need to think more about how to address this discrepancy.}
 
 
 \subsection{Topological charge in nontrivial theory}
 
-Following the method explained in Sec.~\ref{sec:nlsm}, we calculate the imaginary part of $\langle Q \rangle$ for arbitrary $\theta$. We perform this calculation for three values of the flow time $\tau$, shown in Fig~\ref{fig:theta}.
+We calculate the imaginary part of $\langle Q \rangle$ for arbitrary $\theta$ and plot the results for three values of the flow time $\tau$ in Fig~\ref{fig:theta}.
 \begin{figure}[h!]
     \centering
       \includegraphics[width=0.6\textwidth]{theta-small.png}
@@ -319,6 +322,8 @@ These plots demonstrate the divergence of the continuum limit in the $\tau=0$ an
 
 
 \section{Discussion}
+
+\chris{This discussion will need to be updated to incorporate the new reference from our lattice conference discussions.}
 
 Berg \& L\"uscher \cite{berg1981} originally illuminated this discrepancy between the renormalization group hypothesis (that $\chi_t \rightarrow 0$) and the numerical results, providing three possible causes:
 \begin{enumerate}
