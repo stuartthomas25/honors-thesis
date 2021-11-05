@@ -265,9 +265,10 @@ where
 We compare this analytical result and simulated values of $\chi_m$ with the Monte Carlo simulation in Fig.~\ref{fig:bergluscher}.
 \begin{figure}[h!]
     \centering
-      \includegraphics[width=0.45\textwidth]{int_energy-0.png}
-      \includegraphics[width=0.45\textwidth]{int_energy-1.png}
-      \caption{\label{fig:bergluscher} Comparison with \cite{berg1981}. First panel: internal energy compared with analytic  energy (Eq.~\ref{eq:analytic_energy}). Second panel: magnetic susceptibility compared with literature values. \chris{Can you please remake these plots so that they both have x-axis labels? Please also make the labels on both axes bigger.}}
+      % \includegraphics[width=0.45\textwidth]{int_energy-0.png}
+      % \includegraphics[width=0.45\textwidth]{int_energy-1.png}
+      \includegraphics[width=0.9\textwidth]{berg_luscher.png}
+      \caption{\label{fig:bergluscher} Comparison with \cite{berg1981}. First panel: internal energy compared with analytic  energy (Eq.~\ref{eq:analytic_energy}). Second panel: magnetic susceptibility compared with literature values.}
 \end{figure}
 The slight discrepancy between numerical results in the cross-over region provides an estimate of unquantified systematic uncertainties.
 
@@ -277,22 +278,22 @@ In Fig.~\ref{fig:bietenholz} we plot the dimensionless variable $\chi_t\xi_2^2$,
 \begin{figure}[h!]
     \centering
       \includegraphics[width=0.8\textwidth]{bietenholz.png}
-      \caption{\label{fig:bietenholz} Dimensionless magnetic susceptibility, $\chi_t L^2$, \chris{In the text/y-axis label you say this is $\chi_t\xi_2^2$?} as a  function of flow time $\tau/t_0$. Simulation run with 10,000 measurements every 50 sweeps, 1,000 sweep thermalization. \chris{Please make axis labels bigger.}}
+      \caption{\label{fig:bietenholz} Dimensionless magnetic susceptibility, $\chi_t \xi_{2}^2$, as a  function of flow time $\tau/t_0$. Simulation run with 10,000 measurements every 50 sweeps, 1,000 sweep thermalization. }
 \end{figure}
 Fig.~\ref{fig:bietenholz} shows that the flow time effectively decreases the topological susceptibility by dampening high-momentum modes. To analyze the divergence of $\chi_t$ in the continuum limit, we plot $\chi_t \xi_2^2$ as a function of lattice size $L$, for $\tau=0$ and $\tau=5t_0$, in Fig.~\ref{fig:divergence}.
 \begin{figure}[h!]
     \begin{center}
       \begin{subfigure}[b]{0.45\textwidth}
           \centering
-          \includegraphics[width=\textwidth]{divergence.png}
+          \includegraphics[height=0.8\textwidth]{divergence.png}
           \caption{$\tau = 0$}
       \end{subfigure} %
       \begin{subfigure}[b]{0.45\textwidth}
           \centering
-          \includegraphics[width=\textwidth]{divergence_flowed.png}
+          \includegraphics[height=0.8\textwidth]{divergence_flowed.png}
           \caption{$\tau = 5t_0$}
       \end{subfigure}
-      \caption{\label{fig:divergence} $\chi_t\xi_2^2$ as a function of $L$. We fit the data with both a logarithmic and power fit. Simulation run with 10,000 measurements, once every 50 sweeps, 1,000 sweep thermalization. In the $\tau=0$ case, we have compared our result with the curve fit found in \cite{bietenholz2018}. \chris{Please make axis labels bigger.}}
+      \caption{\label{fig:divergence} $\chi_t\xi_2^2$ as a function of $L$. We fit the data with both a logarithmic and power fit. Simulation run with 10,000 measurements, once every 50 sweeps, 1,000 sweep thermalization. In the $\tau=0$ case, we have compared our result with the curve fit found in \cite{bietenholz2018}.}
     \end{center}
 \end{figure}
 We fit the data with two fit functions: a log fit
