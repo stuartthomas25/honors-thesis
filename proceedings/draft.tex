@@ -183,7 +183,7 @@ defining the ``nontrivial'' NLSM. We find that the topological susceptibility in
 \begin{equation}
     \chi_t \propto \left. \frac{d\,\mathrm{Im}\langle Q \rangle}{d\theta}\right|_{\theta=0}
 \end{equation}
-This final relation will allow us to probe the behavior of the topological susceptibility in the nontopological NLSM by considering the topological charge in the nontrivial theory. \chris{Might want to rephrase this? Lots of ``nons'' here.}
+This final relation will allow us to probe the behavior of the topological susceptibility in the trivial NLSM by considering the topological charge in the nontrivial theory.
 
 
 \section{Gradient flow}
@@ -205,7 +205,7 @@ We implement a numerical Monte Carlo method to study the NLSM in two dimensions 
     \label{eq:nlsm discretized action}
     S_\mathrm{lat}[\e\,] = \sum_i \left[ 2 - \sum_{\mu=0}^{2}\e(x+a\hat{\mu}\,)\cdot\e(x)  \right]
 \end{equation}
-where $a$ is a lattice constant and $\hat \mu$ are the Euclidean unit vectors. We generate configurations using the Metropolis \stuart{Does this need to be cited?} \chris{Technically probably yes, but in practice no. If you want to look up the reference, we can include it.} and Wolff cluster \cite{wolff1989} algorithms.
+where $a$ is a lattice constant and $\hat \mu$ are the Euclidean unit vectors. We generate configurations using the Metropolis \cite{metropolis1953} and Wolff cluster \cite{wolff1989} algorithms.
 
 We thermalize the configurations with 1000 sweeps, with a cluster update every five sweeps, and illustrate a sample Markov chain in Fig.~\ref{fig:therm}, where we plot the action as a function of Metropolis sweeps. We use Wolff's automatic windowing procedure \cite{wolff2007} to estimate the autocorrelation times for various observables, such as the magnetic susceptibility $\chi_m$. We measure observables every $50$ sweeps for each simulation.
 \begin{figure}[h]
