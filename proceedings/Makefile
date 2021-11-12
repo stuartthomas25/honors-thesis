@@ -14,7 +14,7 @@ all: draft.pdf
 # -synctex=1 is required to jump between the source PDF and the text editor.
 # -pvc (preview continuously) watches the directory for changes.
 # -quiet suppresses most status messages (https://tex.stackexchange.com/questions/40783/can-i-make-latexmk-quieter).
-draft.pdf: draft.tex
+draft.pdf: draft.tex ../library.bib
 	latexmk -bibtex $(PREVIEW_CONTINUOUSLY) -f -pdf -pdflatex="pdflatex -synctex=1 -interaction=nonstopmode" -use-make draft.tex
 
 # The .PHONY rule keeps make from processing a file named "watch" or "clean".
